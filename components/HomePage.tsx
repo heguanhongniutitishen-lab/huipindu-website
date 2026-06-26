@@ -95,7 +95,7 @@ export function HomePage() {
           <div className="rounded-[1.25rem] bg-[#eef7ff] p-3">
             <Image
               src="/images/brand/advantages.png"
-              alt="慧拼读英语学习系统优势介绍"
+              alt="慧拼读单词学习系统优势介绍"
               width={1242}
               height={1354}
               className="w-full rounded-lg object-cover shadow-sm"
@@ -188,20 +188,13 @@ export function HomePage() {
               ))}
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div>
             <Image
-              src="/images/brand/case-awards.jpg"
-              alt="慧拼读单词王挑战赛获奖学员"
-              width={1920}
-              height={1440}
-              className="aspect-[4/3] w-full rounded-lg object-cover shadow-sm"
-            />
-            <Image
-              src="/images/brand/cooperation-classroom.png"
-              alt="慧拼读合作校区日常课堂宣传"
-              width={1280}
-              height={1407}
-              className="aspect-[4/3] w-full rounded-lg object-cover object-top shadow-sm"
+              src="/images/brand/cooperation-system-partners.png"
+              alt="慧拼读合作加盟系统方案"
+              width={1452}
+              height={1080}
+              className="w-full rounded-lg object-cover shadow-sm"
             />
           </div>
         </div>

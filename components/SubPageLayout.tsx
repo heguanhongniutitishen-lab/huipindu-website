@@ -81,7 +81,7 @@ export function SubPageLayout({ page }: SubPageLayoutProps) {
                 <p className="text-sm font-black uppercase tracking-[0.18em] text-leaf-700">Wechat</p>
                 <h2 className="mt-3 text-3xl font-black tracking-normal text-ink">扫码咨询慧拼读</h2>
                 <p className="mt-4 text-base leading-8 text-ink/68">
-                  可添加老师微信，咨询课程体系、孩子学习方案、机构合作与区域代理政策。
+                  可添加老师微信，咨询合作方案与代理的政策（手机端可长按二维码识别添加）。
                 </p>
               </div>
 

@@ -12,7 +12,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "慧拼读 | 重庆市校艺好科技有限公司",
   description:
-    "慧拼读是一家专注于英语自然拼读系统的品牌，致力于为孩子打造科学、高效、充满趣味的英语学习系统。"
+    "慧拼读是一家专注于英语单词拼读系统的品牌，致力于为孩子打造科学、高效、充满趣味的单词学习系统。"
 };
 
 export default function RootLayout({
