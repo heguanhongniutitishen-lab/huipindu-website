@@ -1,5 +1,5 @@
 ﻿export const companyInfo = {
-  name: "重庆市校艺科技有限公司",
+  name: "重庆市校艺好科技有限公司",
   brand: "慧拼读",
   description:
     "慧拼读是一家专注于英语自然拼读系统的品牌，致力于为孩子打造科学、高效、充满趣味的英语学习系统。我们以自然拼读为核心，结合英语学习规律研发出系统化、循序渐进的单词学习系统，帮助孩子建立\"见词能读、听音能写\"的英语学习能力。"
@@ -15,28 +15,132 @@ export const navItems = [
 
 export const pageCopy = {
   about: {
+    eyebrow: "About",
     title: "品牌介绍",
-    description: companyInfo.description
+    description: companyInfo.description,
+    image: "/images/brand/advantages.png",
+    sections: [
+      {
+        title: "我们专注什么",
+        description:
+          "慧拼读围绕英语自然拼读与单词学习，帮助孩子从字母音、音节、拼读规律到听写表达逐步建立英语基础能力。"
+      },
+      {
+        title: "我们的教学理念",
+        description:
+          "学习不只靠死记硬背，而是让孩子理解发音规律、建立拼读意识，在高频练习和及时反馈中形成长期记忆。"
+      },
+      {
+        title: "我们的系统能力",
+        description:
+          "系统支持课堂训练、学习报告、复习打卡和数据管理，让老师、家长和机构能更清楚地看到学习过程与成长结果。"
+      }
+    ],
+    highlights: ["自然拼读为核心", "循序渐进课程", "AI辅助训练", "学习数据反馈"]
   },
   curriculum: {
+    eyebrow: "Curriculum",
     title: "课程体系",
     description:
-      "慧拼读课程以自然拼读和单词学习为核心，从拼读规律、单词训练、科学记忆到阅读与复习巩固逐步进阶，帮助孩子真正掌握英语学习方法。"
+      "慧拼读课程以自然拼读和单词学习为核心，从拼读规律、单词训练、科学记忆到阅读与复习巩固逐步进阶，帮助孩子真正掌握英语学习方法。",
+    image: "/images/brand/curriculum-system-classroom.png",
+    sections: [
+      {
+        title: "第一阶段：拼读启蒙",
+        description:
+          "认识字母音、常见音组和基础拼读规则，帮助孩子建立见词能读的第一层能力。"
+      },
+      {
+        title: "第二阶段：单词训练",
+        description:
+          "围绕高频词汇进行听、拼、读、写训练，配合系统练习提升单词识别与拼写准确度。"
+      },
+      {
+        title: "第三阶段：巩固提升",
+        description:
+          "通过阅读、语法、复习打卡和阶段测评，让孩子把拼读能力迁移到真实英语学习场景。"
+      }
+    ],
+    highlights: ["自然拼读规则", "单词专项训练", "科学记忆方法", "阅读语法提升", "阶段测评反馈", "复习打卡巩固"]
   },
   advantages: {
+    eyebrow: "Advantages",
     title: "产品优势",
     description:
-      "慧拼读通过系统化课程、智能训练、学习报告和机构运营后台，帮助孩子高效学习，也帮助教育机构提升教学交付与管理效率。"
+      "慧拼读通过系统化课程、智能训练、学习报告和机构运营后台，帮助孩子高效学习，也帮助教育机构提升教学交付与管理效率。",
+    image: "/images/brand/advantages-english-system.png",
+    sections: [
+      {
+        title: "学习路径清晰",
+        description:
+          "课程内容按能力层级拆解，孩子每一步学什么、练什么、怎么复习都有明确路径。"
+      },
+      {
+        title: "课堂交付高效",
+        description:
+          "老师可通过系统组织单词训练、错题纠正和阶段测评，让课堂互动更集中，反馈更及时。"
+      },
+      {
+        title: "运营数据可见",
+        description:
+          "机构可查看学员、课时、订单和学习数据，辅助校区管理与教学决策。"
+      }
+    ],
+    highlights: ["科学体系", "双模式教学", "智能管理", "高效提分", "稳定可靠", "盈利可持续"]
   },
   cooperation: {
+    eyebrow: "Cooperation",
     title: "合作加盟",
     description:
-      "慧拼读面向少儿英语机构、托管校区、社区教育中心和区域合作伙伴，提供英语自然拼读系统、教学支持与运营协同方案。"
+      "慧拼读面向少儿英语机构、托管校区、社区教育中心和区域合作伙伴，提供英语自然拼读系统、教学支持与运营协同方案。",
+    image: "/images/brand/cooperation-system-partners.png",
+    sections: [
+      {
+        title: "适合小初高教培机构",
+        description:
+          "为现有英语课程补充自然拼读与单词训练模块，提升课程体系完整度和学习效果。"
+      },
+      {
+        title: "适合托管与课后服务",
+        description:
+          "用标准化系统组织小班训练，帮助校区增加英语学习服务，提高家长认可度。"
+      },
+      {
+        title: "适合区域合作伙伴",
+        description:
+          "提供课程系统、产品资料和运营协同支持，便于合作伙伴开展本地市场推广。"
+      }
+    ],
+    highlights: ["课程系统支持", "教学交付支持", "运营管理支持", "校区活动支持"]
   },
   contact: {
+    eyebrow: "Contact",
     title: "联系我们",
     description:
-      "欢迎家长了解学习方案，也欢迎学校、机构与代理伙伴咨询合作模式。我们会根据你的使用场景提供更匹配的课程与系统方案。"
+      "欢迎家长了解学习方案，也欢迎学校、机构与代理伙伴咨询合作模式。我们会根据你的使用场景提供更匹配的课程与系统方案。",
+    image: "/images/brand/contact-storefront.png",
+    sections: [
+      {
+        title: "个人老师咨询",
+        description:
+          "适合个人英语老师、培训老师和想开展自然拼读课程的老师，咨询课程使用、教学交付和上课方式。"
+      },
+      {
+        title: "学校机构合作咨询",
+        description:
+          "面向学校、少儿英语机构、托管校区和课后服务场景，提供课程引入、系统使用和教学方案支持。"
+      },
+      {
+        title: "代理和区域合作",
+        description:
+          "了解区域代理、合作政策、产品资料、市场支持和本地推广方式。"
+      }
+    ],
+    highlights: ["个人老师咨询", "学校机构合作咨询", "代理和区域合作", "课程系统支持"],
+    contacts: [
+      { name: "王老师", phone: "17095752608", qr: "/images/brand/qr-wang.png" },
+      { name: "蒋老师", phone: "15715659761", qr: "/images/brand/qr-jiang.png" }
+    ]
   }
 } as const;
 

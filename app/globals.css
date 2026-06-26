@@ -95,14 +95,13 @@ a {
   border-bottom: 3px solid #053b82;
   border-left: 3px solid #053b82;
   border-radius: 0 0 0 16px;
-  box-shadow: -9px 8px 0 -5px #053b82;
   content: "";
   height: 16px;
-  left: -3px;
+  left: 4px;
   position: absolute;
-  top: 40px;
+  top: 42px;
   transform: rotate(13deg);
-  width: 21px;
+  width: 15px;
 }
 
 .site-cursor-letters {
