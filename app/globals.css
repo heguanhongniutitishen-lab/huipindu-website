@@ -37,3 +37,214 @@ a {
   background: #ffe06a;
   color: #1d2b23;
 }
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    cursor: none;
+  }
+}
+
+.site-cursor {
+  align-items: center;
+  display: flex;
+  gap: 3px;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+}
+
+.site-cursor-mic {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 2px, rgba(75, 92, 116, 0.6) 2px 3px),
+    repeating-linear-gradient(180deg, rgba(75, 92, 116, 0.66) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #ffffff 0%, #eef5ff 48%, #d6e6ff 100%);
+  border: 2px solid #053b82;
+  border-radius: 999px;
+  box-shadow: 0 5px 12px rgba(9, 93, 175, 0.22);
+  display: block;
+  height: 27px;
+  position: relative;
+  transform: translate(-3px, -13px) rotate(-10deg);
+  width: 18px;
+}
+
+.site-cursor-mic::before {
+  background: linear-gradient(180deg, #0b63ce 0%, #095daf 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px #053b82;
+  content: "";
+  height: 19px;
+  left: 5.5px;
+  position: absolute;
+  top: 25px;
+  width: 5px;
+}
+
+.site-cursor-mic::after {
+  border-bottom: 3px solid #053b82;
+  border-left: 3px solid #053b82;
+  border-radius: 0 0 0 16px;
+  box-shadow: -9px 8px 0 -5px #053b82;
+  content: "";
+  height: 16px;
+  left: -3px;
+  position: absolute;
+  top: 40px;
+  transform: rotate(13deg);
+  width: 21px;
+}
+
+.site-cursor-letters {
+  background: #ffffff;
+  border: 2px solid #ffd166;
+  border-radius: 999px;
+  box-shadow: 0 5px 14px rgba(6, 27, 59, 0.18);
+  color: #095daf;
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 4px 6px;
+  transform: translate(-4px, -17px);
+}
+
+.site-cursor-burst {
+  animation: cursor-letter-burst 760ms cubic-bezier(0.17, 0.84, 0.32, 1) forwards;
+  color: #095daf;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  position: fixed;
+  text-shadow: 0 2px 0 #ffd166, 0 7px 18px rgba(6, 27, 59, 0.22);
+  z-index: 10000;
+}
+
+@keyframes cursor-letter-burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+  }
+
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--cursor-burst-x)),
+        calc(-50% + var(--cursor-burst-y) + 28px)
+      )
+      scale(1.25)
+      rotate(var(--cursor-burst-rotate));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-motion section {
+    animation: home-section-rise 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .home-motion section:nth-of-type(2) {
+    animation-delay: 80ms;
+  }
+
+  .home-motion section:nth-of-type(3) {
+    animation-delay: 140ms;
+  }
+
+  .home-motion section:nth-of-type(4) {
+    animation-delay: 200ms;
+  }
+
+  .home-motion section:nth-of-type(5) {
+    animation-delay: 260ms;
+  }
+
+  .home-motion section:nth-of-type(6) {
+    animation-delay: 320ms;
+  }
+
+  .home-motion section:nth-of-type(7) {
+    animation-delay: 380ms;
+  }
+
+  .home-motion article,
+  .home-motion section [class*="shadow-sm"],
+  .home-motion section [class*="shadow-soft"] {
+    transition:
+      box-shadow 220ms ease,
+      transform 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .home-motion article:hover,
+  .home-motion section [class*="shadow-sm"]:hover,
+  .home-motion section [class*="shadow-soft"]:hover {
+    box-shadow: 0 18px 38px rgba(9, 93, 175, 0.14);
+    transform: translateY(-4px);
+  }
+
+  .home-motion img {
+    transition:
+      filter 320ms ease,
+      transform 320ms ease;
+  }
+
+  .home-motion img:hover {
+    filter: saturate(1.06);
+    transform: scale(1.01);
+  }
+
+  .home-motion section:first-of-type img {
+    animation: home-image-float 5s ease-in-out infinite;
+  }
+
+  .home-motion a {
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .home-motion a:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes home-section-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes home-image-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}

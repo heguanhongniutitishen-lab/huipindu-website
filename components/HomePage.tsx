@@ -17,7 +17,7 @@ export function HomePage() {
   const { hero, what, audience, curriculum, advantages, institutions, contact } = homeCopy;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f7fbff]">
+    <main className="home-motion min-h-screen overflow-hidden bg-[#f7fbff]">
       <Header />
 
       <section className="border-b border-[#dcecff] bg-[linear-gradient(180deg,#ffffff_0%,#eef7ff_100%)]">
