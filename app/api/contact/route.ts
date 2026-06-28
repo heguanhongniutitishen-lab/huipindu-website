@@ -25,6 +25,12 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#039;");
 }
 
+function normalizeFromEmail(value?: string) {
+  const fallback = "onboarding@resend.dev";
+  const email = value?.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)?.[0] || fallback;
+  return `Huipindu Website <${email}>`;
+}
+
 function createEmailHtml(payload: Required<Pick<ContactPayload, "name" | "phone" | "role" | "city" | "message">>) {
   const rows = [
     ["姓名", payload.name],
@@ -57,7 +63,7 @@ function createEmailHtml(payload: Required<Pick<ContactPayload, "name" | "phone"
 async function sendEmail(payload: Required<Pick<ContactPayload, "name" | "phone" | "role" | "city" | "message">>) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_NOTIFY_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL || "慧拼读官网 <onboarding@resend.dev>";
+  const from = normalizeFromEmail(process.env.CONTACT_FROM_EMAIL);
 
   if (!apiKey || !to) {
     throw new Error("邮件服务未配置，请设置 RESEND_API_KEY 和 CONTACT_NOTIFY_EMAIL。");
@@ -79,6 +85,11 @@ async function sendEmail(payload: Required<Pick<ContactPayload, "name" | "phone"
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
+    console.error("resend email failed", {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText
+    });
     throw new Error(errorText || "邮件发送失败。");
   }
 }
