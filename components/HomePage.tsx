@@ -1,5 +1,5 @@
 ﻿import Image from "next/image";
-import { homeCopy } from "@/content/site";
+import { homeCopy, siteImages } from "@/content/site";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { SectionHeading } from "./SectionHeading";
@@ -56,7 +56,7 @@ export function HomePage() {
 
           <div className="rounded-[1.5rem] border border-[#dcecff] bg-white p-3 shadow-soft">
             <Image
-              src="/images/brand/system-overview.png"
+              src={siteImages.hero}
               alt="慧拼读单词学习系统介绍海报"
               width={1280}
               height={1407}
@@ -94,7 +94,7 @@ export function HomePage() {
           </div>
           <div className="rounded-[1.25rem] bg-[#eef7ff] p-3">
             <Image
-              src="/images/brand/advantages.png"
+              src={siteImages.what}
               alt="慧拼读单词学习系统优势介绍"
               width={1242}
               height={1354}
@@ -129,7 +129,7 @@ export function HomePage() {
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <div className="order-2 rounded-[1.25rem] bg-[#eef7ff] p-3 lg:order-1">
             <Image
-              src="/images/brand/curriculum-system-classroom.png"
+              src={siteImages.curriculum}
               alt="慧拼读训练系统课堂界面展示"
               width={1792}
               height={1024}
@@ -164,7 +164,7 @@ export function HomePage() {
           </div>
           <div className="mt-10 rounded-[1.25rem] bg-white p-3 shadow-sm">
             <Image
-              src="/images/brand/advantages-english-system.png"
+              src={siteImages.advantages}
               alt="慧拼读英语系统全场景解决方案"
               width={1280}
               height={1168}
@@ -190,7 +190,7 @@ export function HomePage() {
           </div>
           <div>
             <Image
-              src="/images/brand/cooperation-system-partners.png"
+              src={siteImages.institutions}
               alt="慧拼读合作加盟系统方案"
               width={1452}
               height={1080}
