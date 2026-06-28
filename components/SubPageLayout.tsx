@@ -1,4 +1,5 @@
-import Image from "next/image";
+﻿import Image from "next/image";
+import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
@@ -76,29 +77,44 @@ export function SubPageLayout({ page }: SubPageLayoutProps) {
 
         {page.contacts ? (
           <section className="bg-white px-5 py-14 lg:px-8 lg:py-16">
-            <div className="mx-auto max-w-7xl">
-              <div className="max-w-3xl">
-                <p className="text-sm font-black uppercase tracking-[0.18em] text-leaf-700">Wechat</p>
-                <h2 className="mt-3 text-3xl font-black tracking-normal text-ink">扫码咨询慧拼读</h2>
-                <p className="mt-4 text-base leading-8 text-ink/68">
-                  可添加老师微信，咨询合作方案与代理的政策（手机端可长按二维码识别添加）。
-                </p>
+            <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+              <div>
+                <div className="max-w-3xl">
+                  <p className="text-sm font-black uppercase tracking-[0.18em] text-leaf-700">Contact</p>
+                  <h2 className="mt-3 text-3xl font-black tracking-normal text-ink">提交合作咨询</h2>
+                  <p className="mt-4 text-base leading-8 text-ink/68">
+                    填写信息后，系统会发送邮件通知负责人。你也可以直接扫码添加老师微信咨询。
+                  </p>
+                </div>
+                <div className="mt-8">
+                  <ContactForm />
+                </div>
               </div>
 
-              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:max-w-3xl">
-                {page.contacts.map((contact) => (
-                  <article key={contact.phone} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-5 text-center shadow-sm">
-                    <Image
-                      src={contact.qr}
-                      alt={`${contact.name} 联系二维码`}
-                      width={220}
-                      height={220}
-                      className="mx-auto h-36 w-36 rounded-lg bg-white object-contain p-2 sm:h-40 sm:w-40"
-                    />
-                    <h3 className="mt-4 text-lg font-black text-ink">{contact.name}</h3>
-                    <p className="mt-1 text-base font-black text-[#095daf]">{contact.phone}</p>
-                  </article>
-                ))}
+              <div>
+                <div className="max-w-3xl">
+                  <p className="text-sm font-black uppercase tracking-[0.18em] text-leaf-700">Wechat</p>
+                  <h2 className="mt-3 text-3xl font-black tracking-normal text-ink">扫码咨询慧拼读</h2>
+                  <p className="mt-4 text-base leading-8 text-ink/68">
+                    可添加老师微信，咨询合作方案与代理的政策（手机端可长按二维码识别添加）。
+                  </p>
+                </div>
+
+                <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                  {page.contacts.map((contact) => (
+                    <article key={contact.phone} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-5 text-center shadow-sm">
+                      <Image
+                        src={contact.qr}
+                        alt={`${contact.name} 联系二维码`}
+                        width={220}
+                        height={220}
+                        className="mx-auto h-36 w-36 rounded-lg bg-white object-contain p-2 sm:h-40 sm:w-40"
+                      />
+                      <h3 className="mt-4 text-lg font-black text-ink">{contact.name}</h3>
+                      <p className="mt-1 text-base font-black text-[#095daf]">{contact.phone}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
