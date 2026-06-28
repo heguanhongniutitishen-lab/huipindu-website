@@ -6,6 +6,13 @@
   },
   "siteImages": {
     "hero": "/images/brand/system-overview.png",
+    "heroGallery": [
+      "/images/brand/system-overview.png",
+      "/images/brand/advantages-teaching-solution.png",
+      "/images/brand/three-terminal-loop.png",
+      "/images/brand/curriculum-system-classroom.png",
+      "/images/brand/cooperation-system-partners.png"
+    ],
     "what": "/images/brand/advantages.png",
     "curriculum": "/images/brand/curriculum-system-classroom.png",
     "advantages": "/images/brand/advantages-english-system.png",

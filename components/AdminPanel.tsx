@@ -4,7 +4,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 
 type SiteContent = {
   companyInfo: { name: string; brand: string; description: string };
-  siteImages: Record<string, string>;
+  siteImages: Record<string, string | string[]>;
   navItems: Array<{ label: string; href: string }>;
   pageCopy: Record<string, any>;
   homeCopy: Record<string, any>;
@@ -29,7 +29,8 @@ const pageLabels: Record<string, string> = {
 };
 
 const imageLabels: Record<string, string> = {
-  hero: "首页首屏图",
+  hero: "首页首屏默认图",
+  heroGallery: "首页首屏轮播图",
   what: "首页慧拼读是什么",
   curriculum: "首页课程体系图",
   advantages: "首页核心优势图",
@@ -116,7 +117,11 @@ export function AdminPanel() {
         method: "POST",
         body: formData
       });
-      setContent(updateAtPath(content, path, result.path));
+      const nextContent = updateAtPath(content, path, result.path);
+      if (path[0] === "siteImages" && path[1] === "heroGallery" && path[2] === 0) {
+        nextContent.siteImages.hero = result.path;
+      }
+      setContent(nextContent);
       setStatus("图片已上传，请点击保存全部内容。");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "上传失败。");
@@ -240,17 +245,50 @@ function HomeImagesEditor({
   setValue: (path: Array<string | number>, value: unknown) => void;
   uploadImage: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
 }) {
+  const heroGallery = Array.isArray(content.siteImages.heroGallery)
+    ? content.siteImages.heroGallery
+    : [String(content.siteImages.hero || "")];
+  const gallerySlots = Array.from({ length: 5 }, (_, index) => heroGallery[index] || String(content.siteImages.hero || ""));
+  const normalImages = Object.entries(content.siteImages).filter(
+    (entry): entry is [string, string] => entry[0] !== "heroGallery" && typeof entry[1] === "string"
+  );
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {Object.entries(content.siteImages).map(([key, value]) => (
-        <ImageField
-          key={key}
-          label={imageLabels[key] || key}
-          value={value}
-          onChange={(next) => setValue(["siteImages", key], next)}
-          onUpload={(event) => uploadImage(event, ["siteImages", key])}
-        />
-      ))}
+    <div className="space-y-5">
+      <div className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+        <h3 className="text-lg font-black">首页首屏轮播图</h3>
+        <p className="mt-1 text-sm text-ink/60">最多 5 张，保存后首页首屏右侧会显示轮播圆点和翻页效果。</p>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {gallerySlots.map((value, index) => (
+            <ImageField
+              key={`hero-gallery-${index}`}
+              label={`轮播图 ${index + 1}`}
+              value={value}
+              onChange={(next) => {
+                const nextGallery = [...gallerySlots];
+                nextGallery[index] = next;
+                setValue(["siteImages", "heroGallery"], nextGallery);
+                if (index === 0) {
+                  setValue(["siteImages", "hero"], next);
+                }
+              }}
+              onUpload={(event) => uploadImage(event, ["siteImages", "heroGallery", index])}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {normalImages.map(([key, value]) => (
+          <ImageField
+            key={key}
+            label={imageLabels[key] || key}
+            value={value}
+            onChange={(next) => setValue(["siteImages", key], next)}
+            onUpload={(event) => uploadImage(event, ["siteImages", key])}
+          />
+        ))}
+      </div>
     </div>
   );
 }

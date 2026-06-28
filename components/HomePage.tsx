@@ -2,6 +2,7 @@
 import { homeCopy, siteImages } from "@/content/site";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { HeroGallery } from "./HeroGallery";
 import { SectionHeading } from "./SectionHeading";
 
 const moduleNav = [
@@ -54,16 +55,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-[#dcecff] bg-white p-3 shadow-soft">
-            <Image
-              src={siteImages.hero}
-              alt="慧拼读单词学习系统介绍海报"
-              width={1280}
-              height={1407}
-              className="max-h-[620px] w-full rounded-[1rem] object-cover object-top"
-              priority
-            />
-          </div>
+          <HeroGallery images={siteImages.heroGallery || [siteImages.hero]} />
         </div>
         <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-5 pb-8 lg:px-8">
           {moduleNav.map((item) => (
