@@ -7,7 +7,6 @@ import { SectionHeading } from "./SectionHeading";
 
 const moduleNav = [
   { label: "慧拼读是什么", href: "#what" },
-  { label: "适合谁使用", href: "#audience" },
   { label: "课程体系", href: "#curriculum" },
   { label: "核心优势", href: "#advantages" },
   { label: "适合机构", href: "#institutions" },
@@ -15,7 +14,7 @@ const moduleNav = [
 ];
 
 export function HomePage() {
-  const { hero, what, audience, curriculum, advantages, institutions, contact } = homeCopy;
+  const { hero, what, curriculum, advantages, institutions, contact } = homeCopy;
 
   return (
     <main className="home-motion min-h-screen overflow-hidden bg-[#f7fbff]">
@@ -96,27 +95,6 @@ export function HomePage() {
         </div>
       </section>
 
-      <section id="audience" className="bg-[#f7fbff] py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <SectionHeading
-            eyebrow="Module 02"
-            title={audience.title}
-            description="围绕孩子、家长、老师和机构四类角色设计使用路径，让学习训练、成长反馈和经营管理同步发生。"
-          />
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {audience.items.map((item) => (
-              <article key={item.title} className="rounded-lg border border-[#dcecff] bg-white p-6 shadow-sm">
-                <div className="mb-5 grid h-12 w-12 place-items-center rounded-full bg-[#095daf] text-lg font-black text-white">
-                  {item.title.slice(0, 1)}
-                </div>
-                <h3 className="text-xl font-black tracking-normal text-[#061b3b]">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-[#475569]">{item.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="curriculum" className="bg-white py-16 lg:py-20">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
           <div className="order-2 rounded-[1.25rem] bg-[#eef7ff] p-3 lg:order-1">
@@ -129,7 +107,7 @@ export function HomePage() {
             />
           </div>
           <div className="order-1 lg:order-2">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#f5a400]">Module 03</p>
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#f5a400]">Module 02</p>
             <h2 className="mt-3 text-3xl font-black tracking-normal text-[#061b3b] sm:text-4xl">{curriculum.title}</h2>
             <p className="mt-5 text-base leading-8 text-[#475569]">{curriculum.description}</p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -230,3 +208,4 @@ export function HomePage() {
     </main>
   );
 }
+
