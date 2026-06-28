@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { MouseEvent, useMemo, useState } from "react";
@@ -37,7 +37,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setTurning(false)}
     >
-      <div className="hero-gallery-book relative overflow-hidden rounded-[1rem] bg-[#eef7ff]">
+      <div className="hero-gallery-book relative max-h-[620px] overflow-hidden rounded-[1rem] bg-[#eef7ff]">
         {galleryImages.map((image, index) => (
           <Image
             key={`${image}-${index}`}
