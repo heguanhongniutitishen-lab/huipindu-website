@@ -34,6 +34,7 @@ const imageLabels: Record<string, string> = {
   what: "首页慧拼读是什么",
   curriculum: "首页课程体系图",
   advantages: "首页核心优势图",
+  advantagesVideo: "首页视频展示模块",
   institutions: "首页适合机构图"
 };
 
@@ -250,8 +251,9 @@ function HomeImagesEditor({
     : [String(content.siteImages.hero || "")];
   const gallerySlots = Array.from({ length: 5 }, (_, index) => heroGallery[index] || String(content.siteImages.hero || ""));
   const normalImages = Object.entries(content.siteImages).filter(
-    (entry): entry is [string, string] => entry[0] !== "heroGallery" && typeof entry[1] === "string"
+    (entry): entry is [string, string] => !["heroGallery", "advantagesVideo"].includes(entry[0]) && typeof entry[1] === "string"
   );
+  const advantagesVideo = String(content.siteImages.advantagesVideo || "");
 
   return (
     <div className="space-y-5">
@@ -275,6 +277,20 @@ function HomeImagesEditor({
               onUpload={(event) => uploadImage(event, ["siteImages", "heroGallery", index])}
             />
           ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+        <h3 className="text-lg font-black">视频展示模块</h3>
+        <p className="mt-1 text-sm text-ink/60">支持 MP4、WEBM，建议压缩到 40MB 以内。</p>
+        <div className="mt-4">
+          <MediaField
+            label="视频文件"
+            value={advantagesVideo}
+            onChange={(next) => setValue(["siteImages", "advantagesVideo"], next)}
+            onUpload={(event) => uploadImage(event, ["siteImages", "advantagesVideo"])}
+            type="video"
+          />
         </div>
       </div>
 
@@ -371,6 +387,48 @@ function ImageField({
         <label className="cursor-pointer rounded-lg bg-[#eef7ff] px-4 py-3 text-sm font-black text-[#095daf] shadow-sm">
           上传替换
           <input type="file" accept="image/png,image/jpeg,image/webp" onChange={onUpload} className="hidden" />
+        </label>
+      </div>
+    </div>
+  );
+}
+
+function MediaField({
+  label,
+  value,
+  onChange,
+  onUpload,
+  type
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  onUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  type: "image" | "video";
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4">
+      <Field label={label} value={value} onChange={onChange} />
+      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+        {value ? (
+          type === "video" ? (
+            <video src={value} className="h-28 w-44 rounded-lg bg-[#061b3b] object-cover" controls />
+          ) : (
+            <img src={value} alt={label} className="h-20 w-28 rounded-lg bg-[#f7fbff] object-cover" />
+          )
+        ) : (
+          <div className="grid h-28 w-44 place-items-center rounded-lg border border-dashed border-[#bfd8f3] bg-[#f7fbff] text-xs font-bold text-ink/55">
+            暂未上传
+          </div>
+        )}
+        <label className="cursor-pointer rounded-lg bg-[#eef7ff] px-4 py-3 text-sm font-black text-[#095daf] shadow-sm">
+          上传替换
+          <input
+            type="file"
+            accept={type === "video" ? "video/mp4,video/webm" : "image/png,image/jpeg,image/webp"}
+            onChange={onUpload}
+            className="hidden"
+          />
         </label>
       </div>
     </div>

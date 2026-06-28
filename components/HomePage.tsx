@@ -10,6 +10,7 @@ const moduleNav = [
   { label: "课程体系", href: "#curriculum" },
   { label: "核心优势", href: "#advantages" },
   { label: "适合机构", href: "#institutions" },
+  { label: "视频展示", href: "#video" },
   { label: "联系我们", href: "#contact" }
 ];
 
@@ -170,10 +171,39 @@ export function HomePage() {
         </div>
       </section>
 
+      <section id="video" className="bg-[#f7fbff] py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <SectionHeading
+            eyebrow="Module 06"
+            title="视频展示"
+            description="展示慧拼读系统功能、课堂应用场景和合作方案，后续可在后台上传替换视频。"
+          />
+          <div className="mt-10 rounded-[1.25rem] bg-white p-3 shadow-sm">
+            {siteImages.advantagesVideo ? (
+              <video
+                src={siteImages.advantagesVideo}
+                className="aspect-video w-full rounded-lg bg-[#061b3b] object-cover"
+                controls
+                playsInline
+                preload="metadata"
+                poster={typeof siteImages.advantages === "string" ? siteImages.advantages : undefined}
+              />
+            ) : (
+              <div className="grid aspect-video w-full place-items-center rounded-lg border border-dashed border-[#bfd8f3] bg-[#eef7ff] px-6 text-center">
+                <div>
+                  <p className="text-xl font-black text-[#095daf]">视频展示位</p>
+                  <p className="mt-3 text-sm font-semibold leading-7 text-[#475569]">可在后台上传视频，展示系统功能、课堂案例或合作方案。</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section id="contact" className="bg-[#061b3b] px-5 py-16 text-white lg:px-8 lg:py-20">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffd166]">Module 06</p>
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ffd166]">Module 07</p>
             <h2 className="mt-3 text-3xl font-black tracking-normal sm:text-4xl">{contact.title}</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-white/76">{contact.description}</p>
           </div>
