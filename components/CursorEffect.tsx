@@ -7,22 +7,21 @@ type CursorPosition = {
   y: number;
 };
 
-type BurstLetter = {
+type BurstWord = {
   id: number;
-  letter: string;
+  text: string;
   x: number;
   y: number;
   dx: number;
   dy: number;
   rotate: number;
+  side: "left" | "right";
 };
-
-const letters = ["A", "B", "C"];
 
 export function CursorEffect() {
   const [position, setPosition] = useState<CursorPosition>({ x: -100, y: -100 });
   const [isPointerDevice, setIsPointerDevice] = useState(false);
-  const [burstLetters, setBurstLetters] = useState<BurstLetter[]>([]);
+  const [burstWords, setBurstWords] = useState<BurstWord[]>([]);
 
   useEffect(() => {
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -39,26 +38,32 @@ export function CursorEffect() {
     };
 
     const handlePointerDown = (event: PointerEvent) => {
-      const burst = letters.flatMap((letter, groupIndex) =>
-        [-1, 1].map((side) => {
-          const id = nextId;
-          nextId += 1;
+      const burst: BurstWord[] = [
+        {
+          id: nextId++,
+          text: "慧拼读",
+          x: event.clientX,
+          y: event.clientY,
+          dx: -96,
+          dy: -42,
+          rotate: -16,
+          side: "left"
+        },
+        {
+          id: nextId++,
+          text: "English",
+          x: event.clientX,
+          y: event.clientY,
+          dx: 104,
+          dy: -38,
+          rotate: 14,
+          side: "right"
+        }
+      ];
 
-          return {
-            id,
-            letter,
-            x: event.clientX,
-            y: event.clientY,
-            dx: side * (48 + groupIndex * 18),
-            dy: -34 - groupIndex * 12,
-            rotate: side * (18 + groupIndex * 14)
-          };
-        })
-      );
-
-      setBurstLetters((current) => [...current, ...burst]);
+      setBurstWords((current) => [...current, ...burst]);
       window.setTimeout(() => {
-        setBurstLetters((current) => current.filter((item) => !burst.some((letter) => letter.id === item.id)));
+        setBurstWords((current) => current.filter((item) => !burst.some((word) => word.id === item.id)));
       }, 760);
     };
 
@@ -85,12 +90,12 @@ export function CursorEffect() {
         }}
       >
         <span className="site-cursor-mic" />
-        <span className="site-cursor-letters">ABC</span>
+        <span className="site-cursor-letters">跟我读</span>
       </div>
-      {burstLetters.map((item) => (
+      {burstWords.map((item) => (
         <span
           aria-hidden="true"
-          className="site-cursor-burst"
+          className={`site-cursor-burst site-cursor-burst-${item.side}`}
           key={item.id}
           style={
             {
@@ -102,7 +107,7 @@ export function CursorEffect() {
             } as CSSProperties
           }
         >
-          {item.letter}
+          {item.text}
         </span>
       ))}
     </>
