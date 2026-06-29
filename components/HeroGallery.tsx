@@ -33,11 +33,11 @@ export function HeroGallery({ images }: HeroGalleryProps) {
 
   return (
     <div
-      className="hero-gallery rounded-[1.5rem] border border-[#dcecff] bg-white p-3 shadow-soft"
+      className="hero-gallery rounded-xl border border-[#dcecff] bg-white p-2.5 shadow-[0_28px_90px_rgba(9,93,175,0.16)] sm:p-3"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setTurning(false)}
     >
-      <div className="hero-gallery-book relative max-h-[620px] overflow-hidden rounded-[1rem] bg-[#eef7ff]">
+      <div className="hero-gallery-book relative max-h-[660px] overflow-hidden rounded-lg bg-[#eef7ff]">
         {galleryImages.map((image, index) => (
           <Image
             key={`${image}-${index}`}
@@ -46,7 +46,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
             width={1280}
             height={1407}
             priority={index === 0}
-            className={`hero-gallery-page max-h-[620px] w-full object-cover object-top ${
+            className={`hero-gallery-page max-h-[660px] w-full object-cover object-top ${
               index === activeIndex ? "hero-gallery-page-active" : ""
             } ${turning && index === activeIndex ? "hero-gallery-page-turning" : ""}`}
           />
@@ -54,7 +54,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
         <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-white/70 shadow-[0_0_30px_rgba(9,93,175,0.28)]" />
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-2">
+      <div className="mt-3 flex items-center justify-center gap-2 sm:mt-4">
         {galleryImages.map((image, index) => (
           <button
             key={`${image}-dot-${index}`}

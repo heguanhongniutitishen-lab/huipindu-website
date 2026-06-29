@@ -44,9 +44,9 @@ export function CursorEffect() {
           text: "慧拼读",
           x: event.clientX,
           y: event.clientY,
-          dx: -96,
-          dy: -42,
-          rotate: -16,
+          dx: -86,
+          dy: -40,
+          rotate: -10,
           side: "left"
         },
         {
@@ -54,9 +54,9 @@ export function CursorEffect() {
           text: "English",
           x: event.clientX,
           y: event.clientY,
-          dx: 104,
-          dy: -38,
-          rotate: 14,
+          dx: 94,
+          dy: -40,
+          rotate: 10,
           side: "right"
         }
       ];
@@ -64,7 +64,7 @@ export function CursorEffect() {
       setBurstWords((current) => [...current, ...burst]);
       window.setTimeout(() => {
         setBurstWords((current) => current.filter((item) => !burst.some((word) => word.id === item.id)));
-      }, 760);
+      }, 680);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -90,7 +90,7 @@ export function CursorEffect() {
         }}
       >
         <span className="site-cursor-mic" />
-        <span className="site-cursor-letters">跟我读</span>
+        <span className="site-cursor-letters">ABC</span>
       </div>
       {burstWords.map((item) => (
         <span

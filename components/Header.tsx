@@ -3,10 +3,10 @@ import { BrandMark } from "./BrandMark";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-leaf-100 bg-[#fbfff7]/92 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-[#dcecff] bg-[#fbfff7]/92 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10 lg:py-4">
         <BrandMark />
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-ink/75 lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-semibold text-ink/75 lg:flex">
           {navItems.map((item) => (
             <a key={item.href} className="transition hover:text-leaf-700" href={item.href}>
               {item.label}
@@ -14,7 +14,7 @@ export function Header() {
           ))}
         </nav>
         <a
-          className="rounded-full bg-[#095daf] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#074b8d]"
+          className="shrink-0 rounded-full bg-[#095daf] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#074b8d] sm:px-5"
           href="/contact"
         >
           咨询合作
