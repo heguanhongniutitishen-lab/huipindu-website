@@ -88,14 +88,14 @@ export function CurriculumDetails({ levels }: CurriculumDetailsProps) {
       </div>
 
       {detail ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#061b3b]/58 px-3 py-4 backdrop-blur-sm sm:items-center sm:px-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#061b3b]/58 px-4 py-6 backdrop-blur-sm sm:px-5">
           <button
             type="button"
             aria-label="关闭课程详情"
             className="absolute inset-0"
             onClick={() => setActiveLevel(null)}
           />
-          <div className="relative w-full max-w-2xl rounded-xl bg-white p-5 shadow-[0_24px_80px_rgba(6,27,59,0.28)] sm:p-7">
+          <div className="relative max-h-[86vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-5 shadow-[0_24px_80px_rgba(6,27,59,0.28)] sm:p-7">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f5a400]">Course Detail</p>
