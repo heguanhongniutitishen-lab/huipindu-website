@@ -247,9 +247,9 @@ function HomeImagesEditor({
   uploadImage: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
 }) {
   const heroGallery = Array.isArray(content.siteImages.heroGallery)
-    ? content.siteImages.heroGallery
+    ? content.siteImages.heroGallery.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
     : [String(content.siteImages.hero || "")];
-  const gallerySlots = Array.from({ length: 5 }, (_, index) => heroGallery[index] || String(content.siteImages.hero || ""));
+  const gallerySlots = heroGallery.length ? heroGallery.slice(0, 5) : [String(content.siteImages.hero || "")].filter(Boolean);
   const normalImages = Object.entries(content.siteImages).filter(
     (entry): entry is [string, string] => !["heroGallery", "advantagesVideo"].includes(entry[0]) && typeof entry[1] === "string"
   );
@@ -259,25 +259,54 @@ function HomeImagesEditor({
     <div className="space-y-5">
       <div className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
         <h3 className="text-lg font-black">首页首屏轮播图</h3>
-        <p className="mt-1 text-sm text-ink/60">最多 5 张，保存后首页首屏右侧会显示轮播圆点和翻页效果。</p>
+        <p className="mt-1 text-sm text-ink/60">可放 1-5 张。只有 1 张时首页静态展示；多张时电脑端可鼠标切换，手机端可左右滑动。</p>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {gallerySlots.map((value, index) => (
-            <ImageField
-              key={`hero-gallery-${index}`}
-              label={`轮播图 ${index + 1}`}
-              value={value}
-              onChange={(next) => {
-                const nextGallery = [...gallerySlots];
-                nextGallery[index] = next;
-                setValue(["siteImages", "heroGallery"], nextGallery);
-                if (index === 0) {
-                  setValue(["siteImages", "hero"], next);
-                }
-              }}
-              onUpload={(event) => uploadImage(event, ["siteImages", "heroGallery", index])}
-            />
+            <div key={`hero-gallery-${index}`} className="rounded-lg bg-white p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h4 className="text-sm font-black">轮播图 {index + 1}</h4>
+                {gallerySlots.length > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextGallery = gallerySlots.filter((_, itemIndex) => itemIndex !== index);
+                      setValue(["siteImages", "heroGallery"], nextGallery);
+                      setValue(["siteImages", "hero"], nextGallery[0] || "");
+                    }}
+                    className="rounded-full bg-red-50 px-3 py-1.5 text-xs font-black text-red-600"
+                  >
+                    删除
+                  </button>
+                ) : null}
+              </div>
+              <ImageField
+                label={`图片地址`}
+                value={value}
+                onChange={(next) => {
+                  const nextGallery = [...gallerySlots];
+                  nextGallery[index] = next;
+                  setValue(["siteImages", "heroGallery"], nextGallery);
+                  if (index === 0) {
+                    setValue(["siteImages", "hero"], next);
+                  }
+                }}
+                onUpload={(event) => uploadImage(event, ["siteImages", "heroGallery", index])}
+              />
+            </div>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (gallerySlots.length >= 5) return;
+            const nextImage = gallerySlots[gallerySlots.length - 1] || String(content.siteImages.hero || "");
+            setValue(["siteImages", "heroGallery"], [...gallerySlots, nextImage]);
+          }}
+          disabled={gallerySlots.length >= 5}
+          className="mt-4 rounded-full bg-[#095daf] px-5 py-3 text-sm font-black text-white disabled:bg-slate-400"
+        >
+          {gallerySlots.length >= 5 ? "最多 5 张" : "新增轮播图"}
+        </button>
       </div>
 
       <div className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">

@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { MouseEvent, TouchEvent, useMemo, useState } from "react";
+import { MouseEvent, TouchEvent, useEffect, useMemo, useState } from "react";
 
 type HeroGalleryProps = {
   images: readonly string[];
@@ -12,6 +12,13 @@ export function HeroGallery({ images }: HeroGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [turning, setTurning] = useState(false);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const canSwitch = galleryImages.length > 1;
+
+  useEffect(() => {
+    if (activeIndex >= galleryImages.length) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex, galleryImages.length]);
 
   function selectImage(index: number) {
     if (index === activeIndex) return;
@@ -21,7 +28,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
   }
 
   function handleMouseMove(event: MouseEvent<HTMLDivElement>) {
-    if (galleryImages.length <= 1) return;
+    if (!canSwitch) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const percent = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 0.999);
     const nextIndex = Math.floor(percent * galleryImages.length);
@@ -29,13 +36,13 @@ export function HeroGallery({ images }: HeroGalleryProps) {
   }
 
   function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
-    if (galleryImages.length <= 1) return;
+    if (!canSwitch) return;
     const touch = event.touches[0];
     setTouchStart({ x: touch.clientX, y: touch.clientY });
   }
 
   function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
-    if (!touchStart || galleryImages.length <= 1) return;
+    if (!touchStart || !canSwitch) return;
 
     const touch = event.changedTouches[0];
     const deltaX = touch.clientX - touchStart.x;
@@ -79,22 +86,24 @@ export function HeroGallery({ images }: HeroGalleryProps) {
             } ${turning && index === activeIndex ? "hero-gallery-page-turning" : ""}`}
           />
         ))}
-        <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-white/70 shadow-[0_0_30px_rgba(9,93,175,0.28)]" />
+        {canSwitch ? <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-white/70 shadow-[0_0_30px_rgba(9,93,175,0.28)]" /> : null}
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2 sm:mt-4">
-        {galleryImages.map((image, index) => (
-          <button
-            key={`${image}-dot-${index}`}
-            type="button"
-            aria-label={`切换到第 ${index + 1} 张图片`}
-            onClick={() => selectImage(index)}
-            className={`h-2.5 rounded-full transition-all ${
-              index === activeIndex ? "w-7 bg-[#095daf]" : "w-2.5 bg-[#bfd8f3] hover:bg-[#6aa2d8]"
-            }`}
-          />
-        ))}
-      </div>
+      {canSwitch ? (
+        <div className="mt-3 flex items-center justify-center gap-2 sm:mt-4">
+          {galleryImages.map((image, index) => (
+            <button
+              key={`${image}-dot-${index}`}
+              type="button"
+              aria-label={`切换到第 ${index + 1} 张图片`}
+              onClick={() => selectImage(index)}
+              className={`h-2.5 rounded-full transition-all ${
+                index === activeIndex ? "w-7 bg-[#095daf]" : "w-2.5 bg-[#bfd8f3] hover:bg-[#6aa2d8]"
+              }`}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
