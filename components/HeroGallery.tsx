@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Image from "next/image";
-import { MouseEvent, useMemo, useState } from "react";
+import { MouseEvent, TouchEvent, useMemo, useState } from "react";
 
 type HeroGalleryProps = {
   images: readonly string[];
@@ -11,6 +11,7 @@ export function HeroGallery({ images }: HeroGalleryProps) {
   const galleryImages = useMemo(() => images.filter(Boolean).slice(0, 5), [images]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [turning, setTurning] = useState(false);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
 
   function selectImage(index: number) {
     if (index === activeIndex) return;
@@ -27,6 +28,30 @@ export function HeroGallery({ images }: HeroGalleryProps) {
     selectImage(nextIndex);
   }
 
+  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (galleryImages.length <= 1) return;
+    const touch = event.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
+  }
+
+  function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (!touchStart || galleryImages.length <= 1) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    setTouchStart(null);
+
+    if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) {
+      return;
+    }
+
+    const nextIndex = deltaX < 0
+      ? (activeIndex + 1) % galleryImages.length
+      : (activeIndex - 1 + galleryImages.length) % galleryImages.length;
+    selectImage(nextIndex);
+  }
+
   if (!galleryImages.length) {
     return null;
   }
@@ -36,8 +61,11 @@ export function HeroGallery({ images }: HeroGalleryProps) {
       className="hero-gallery rounded-xl border border-[#dcecff] bg-white p-2.5 shadow-[0_28px_90px_rgba(9,93,175,0.16)] sm:p-3"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setTurning(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={() => setTouchStart(null)}
     >
-      <div className="hero-gallery-book relative max-h-[660px] overflow-hidden rounded-lg bg-[#eef7ff]">
+      <div className="hero-gallery-book relative max-h-[660px] touch-pan-y overflow-hidden rounded-lg bg-[#eef7ff]">
         {galleryImages.map((image, index) => (
           <Image
             key={`${image}-${index}`}

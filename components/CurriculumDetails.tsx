@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type CurriculumDetailsProps = {
   levels: readonly string[];
@@ -56,8 +57,13 @@ function fallbackDetail(level: string) {
 
 export function CurriculumDetails({ levels, details = [] }: CurriculumDetailsProps) {
   const [activeLevel, setActiveLevel] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const configuredDetail = activeLevel ? details.find((item) => item.title === activeLevel) : null;
   const detail = activeLevel ? configuredDetail || defaultDetailMap[activeLevel] || fallbackDetail(activeLevel) : null;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!activeLevel) return;
@@ -80,22 +86,33 @@ export function CurriculumDetails({ levels, details = [] }: CurriculumDetailsPro
   return (
     <>
       <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:mt-8">
-        {levels.map((level) => (
-          <button
-            key={level}
-            type="button"
-            onClick={() => setActiveLevel(level)}
-          className="group flex min-h-16 items-center justify-between rounded-lg bg-[#f7fbff] px-5 py-4 text-left text-sm font-black leading-6 text-[#095daf] shadow-sm ring-1 ring-[#dcecff] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#095daf] sm:min-h-14 lg:px-6 lg:py-5"
-          >
-            <span>{level}</span>
-            <span className="ml-4 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-base text-[#f5a400] shadow-sm transition group-hover:bg-[#fff2cc]">
-              +
-            </span>
-          </button>
-        ))}
+        {levels.map((level) => {
+          const selected = activeLevel === level;
+          return (
+            <button
+              key={level}
+              type="button"
+              onClick={() => setActiveLevel(level)}
+              className={`group flex min-h-16 items-center justify-between rounded-lg px-5 py-4 text-left text-sm font-black leading-6 shadow-sm ring-1 transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#095daf] sm:min-h-14 lg:px-6 lg:py-5 ${
+                selected
+                  ? "bg-[#095daf] text-white ring-[#095daf]"
+                  : "bg-[#f7fbff] text-[#095daf] ring-[#dcecff] hover:bg-white"
+              }`}
+            >
+              <span>{level}</span>
+              <span
+                className={`ml-4 grid h-7 w-7 shrink-0 place-items-center rounded-full text-base shadow-sm transition ${
+                  selected ? "bg-white text-[#095daf]" : "bg-white text-[#f5a400] group-hover:bg-[#fff2cc]"
+                }`}
+              >
+                +
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {detail ? (
+      {mounted && detail ? createPortal(
         <div className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] items-center justify-center bg-[#061b3b]/58 px-4 py-6 backdrop-blur-sm sm:px-5">
           <button
             type="button"
@@ -128,7 +145,8 @@ export function CurriculumDetails({ levels, details = [] }: CurriculumDetailsPro
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       ) : null}
     </>
   );

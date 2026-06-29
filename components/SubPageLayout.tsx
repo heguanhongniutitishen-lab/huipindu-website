@@ -29,6 +29,8 @@ type SubPageLayoutProps = {
 };
 
 export function SubPageLayout({ page }: SubPageLayoutProps) {
+  const isContactPage = Boolean(page.contacts);
+
   return (
     <>
       <Header />
@@ -61,24 +63,26 @@ export function SubPageLayout({ page }: SubPageLayoutProps) {
           </div>
         </section>
 
-        <section className="px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
-          <div className="mx-auto grid max-w-[88rem] gap-4 md:grid-cols-3 lg:gap-6">
-            {page.sections.map((section, index) => (
-              <article key={section.title} className="rounded-lg border border-[#dcecff] bg-white p-5 shadow-[0_16px_42px_rgba(9,93,175,0.08)] lg:p-7">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#fff2cc] text-lg font-black text-[#095daf]">
-                  {index + 1}
-                </div>
-                <h2 className="mt-5 text-xl font-black tracking-normal text-ink">{section.title}</h2>
-                <p className="mt-3 text-sm leading-7 text-ink/68">{section.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        {!isContactPage ? (
+          <section className="px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+            <div className="mx-auto grid max-w-[88rem] gap-4 md:grid-cols-3 lg:gap-6">
+              {page.sections.map((section, index) => (
+                <article key={section.title} className="rounded-lg border border-[#dcecff] bg-white p-5 shadow-[0_16px_42px_rgba(9,93,175,0.08)] lg:p-7">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#fff2cc] text-lg font-black text-[#095daf]">
+                    {index + 1}
+                  </div>
+                  <h2 className="mt-5 text-xl font-black tracking-normal text-ink">{section.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-ink/68">{section.description}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {page.contacts ? (
-          <section className="bg-white px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
-            <div className="mx-auto grid max-w-[88rem] gap-9 lg:grid-cols-[1fr_0.9fr] lg:items-start">
-              <div>
+          <section className="bg-white px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
+            <div className="mx-auto grid max-w-[88rem] gap-8 rounded-xl border border-[#dcecff] bg-[#f7fbff] p-4 shadow-[0_20px_60px_rgba(9,93,175,0.08)] sm:p-6 lg:grid-cols-[1fr_0.82fr] lg:items-start lg:p-8">
+              <div className="rounded-lg bg-white p-4 shadow-sm sm:p-6">
                 <div className="max-w-3xl">
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-leaf-700 sm:text-sm">Contact</p>
                   <h2 className="mt-3 text-[2.1rem] font-black leading-tight tracking-normal text-ink sm:text-4xl">提交合作咨询</h2>
@@ -91,7 +95,7 @@ export function SubPageLayout({ page }: SubPageLayoutProps) {
                 </div>
               </div>
 
-              <div>
+              <div className="rounded-lg bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-24">
                 <div className="max-w-3xl">
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-leaf-700 sm:text-sm">Wechat</p>
                   <h2 className="mt-3 text-[2.1rem] font-black leading-tight tracking-normal text-ink sm:text-4xl">扫码咨询慧拼读</h2>
@@ -102,7 +106,7 @@ export function SubPageLayout({ page }: SubPageLayoutProps) {
 
                 <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5">
                   {page.contacts.map((contact) => (
-                    <article key={contact.phone} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-3 text-center shadow-sm sm:p-5">
+                    <article key={contact.phone} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-3 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-5">
                       <Image
                         src={contact.qr}
                         alt={`${contact.name} 联系二维码`}

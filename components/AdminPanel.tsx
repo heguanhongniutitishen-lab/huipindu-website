@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, ReactNode, useMemo, useState } from "react";
 
 type SiteContent = {
   companyInfo: { name: string; brand: string; description: string };
@@ -310,8 +310,66 @@ function HomeImagesEditor({
 }
 
 function HomeCopyEditor({ content, setValue }: { content: SiteContent; setValue: (path: Array<string | number>, value: unknown) => void }) {
+  const home = content.homeCopy;
+
   return (
-    <ContentTreeEditor value={content.homeCopy} path={["homeCopy"]} setValue={setValue} />
+    <div className="space-y-5">
+      <EditorGroup title="首屏内容" desc="官网打开后第一屏看到的标题、按钮和数据卡片。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="顶部角标" value={home.hero.eyebrow} onChange={(value) => setValue(["homeCopy", "hero", "eyebrow"], value)} />
+          <Field label="主标题" value={home.hero.title} onChange={(value) => setValue(["homeCopy", "hero", "title"], value)} />
+          <TextArea label="副标题" value={home.hero.description} onChange={(value) => setValue(["homeCopy", "hero", "description"], value)} />
+          <Field label="主按钮文字" value={home.hero.primaryCta} onChange={(value) => setValue(["homeCopy", "hero", "primaryCta"], value)} />
+          <Field label="副按钮文字" value={home.hero.secondaryCta} onChange={(value) => setValue(["homeCopy", "hero", "secondaryCta"], value)} />
+        </div>
+        <StatListEditor value={home.hero.stats || []} path={["homeCopy", "hero", "stats"]} setValue={setValue} />
+      </EditorGroup>
+
+      <EditorGroup title="慧拼读是什么" desc="首页品牌介绍模块，包括标题、说明和三条要点。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="模块标题" value={home.what.title} onChange={(value) => setValue(["homeCopy", "what", "title"], value)} />
+          <TextArea label="模块说明" value={home.what.description} onChange={(value) => setValue(["homeCopy", "what", "description"], value)} />
+        </div>
+        <StringListEditor label="介绍要点" value={home.what.points || []} path={["homeCopy", "what", "points"]} setValue={setValue} />
+      </EditorGroup>
+
+      <EditorGroup title="课程体系" desc="首页课程体系标题、按钮名称和每个弹窗里的详细介绍。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="模块标题" value={home.curriculum.title} onChange={(value) => setValue(["homeCopy", "curriculum", "title"], value)} />
+          <TextArea label="模块说明" value={home.curriculum.description} onChange={(value) => setValue(["homeCopy", "curriculum", "description"], value)} />
+        </div>
+        <StringListEditor label="课程按钮" value={home.curriculum.levels || []} path={["homeCopy", "curriculum", "levels"]} setValue={setValue} />
+        <CurriculumDetailEditor value={home.curriculum.details || []} path={["homeCopy", "curriculum", "details"]} setValue={setValue} />
+      </EditorGroup>
+
+      <EditorGroup title="核心优势" desc="首页核心优势模块，只编辑卡片内容。">
+        <Field label="模块标题" value={home.advantages.title} onChange={(value) => setValue(["homeCopy", "advantages", "title"], value)} />
+        <StringListEditor label="优势卡片" value={home.advantages.items || []} path={["homeCopy", "advantages", "items"]} setValue={setValue} />
+      </EditorGroup>
+
+      <EditorGroup title="系统演示视频" desc="首页视频模块的标题和副标题。视频文件在“首页图片”分类里上传。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="视频标题" value={home.video?.title || ""} onChange={(value) => setValue(["homeCopy", "video", "title"], value)} />
+          <TextArea label="视频副标题" value={home.video?.description || ""} onChange={(value) => setValue(["homeCopy", "video", "description"], value)} />
+        </div>
+      </EditorGroup>
+
+      <EditorGroup title="适合机构" desc="首页适合机构模块的标题、说明和机构类型。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="模块标题" value={home.institutions.title} onChange={(value) => setValue(["homeCopy", "institutions", "title"], value)} />
+          <TextArea label="模块说明" value={home.institutions.description} onChange={(value) => setValue(["homeCopy", "institutions", "description"], value)} />
+        </div>
+        <StringListEditor label="机构类型" value={home.institutions.items || []} path={["homeCopy", "institutions", "items"]} setValue={setValue} />
+      </EditorGroup>
+
+      <EditorGroup title="底部联系我们" desc="首页底部联系我们模块的标题、说明和按钮。联系人二维码在“子页面内容 / 联系我们”里修改。">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label="模块标题" value={home.contact.title} onChange={(value) => setValue(["homeCopy", "contact", "title"], value)} />
+          <Field label="按钮文字" value={home.contact.cta || ""} onChange={(value) => setValue(["homeCopy", "contact", "cta"], value)} />
+          <TextArea label="模块说明" value={home.contact.description} onChange={(value) => setValue(["homeCopy", "contact", "description"], value)} />
+        </div>
+      </EditorGroup>
+    </div>
   );
 }
 
@@ -325,7 +383,247 @@ function PagesEditor({
   uploadImage: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
 }) {
   return (
-    <ContentTreeEditor value={content.pageCopy} path={["pageCopy"]} setValue={setValue} uploadImage={uploadImage} />
+    <div className="space-y-5">
+      {Object.entries(content.pageCopy).map(([key, page]) => (
+        <EditorGroup key={key} title={pageLabels[key] || key} desc="导航栏对应页面的首屏、内容卡片、标签和联系方式。">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="页面角标" value={page.eyebrow || ""} onChange={(value) => setValue(["pageCopy", key, "eyebrow"], value)} />
+            <Field label="页面标题" value={page.title || ""} onChange={(value) => setValue(["pageCopy", key, "title"], value)} />
+            <TextArea label="页面描述" value={page.description || ""} onChange={(value) => setValue(["pageCopy", key, "description"], value)} />
+            <ImageField
+              label="页面配图"
+              value={page.image || ""}
+              onChange={(value) => setValue(["pageCopy", key, "image"], value)}
+              onUpload={(event) => uploadImage(event, ["pageCopy", key, "image"])}
+            />
+          </div>
+          <StringListEditor label="页面标签" value={page.highlights || []} path={["pageCopy", key, "highlights"]} setValue={setValue} />
+          <PageSectionListEditor value={page.sections || []} path={["pageCopy", key, "sections"]} setValue={setValue} />
+          {key === "contact" ? (
+            <ContactListEditor value={page.contacts || []} path={["pageCopy", key, "contacts"]} setValue={setValue} uploadImage={uploadImage} />
+          ) : null}
+        </EditorGroup>
+      ))}
+    </div>
+  );
+}
+
+function EditorGroup({ title, desc, children }: { title: string; desc: string; children: ReactNode }) {
+  return (
+    <section className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4 shadow-sm">
+      <div className="mb-4 border-b border-[#dcecff] pb-4">
+        <h3 className="text-xl font-black text-ink">{title}</h3>
+        <p className="mt-1 text-sm leading-6 text-ink/60">{desc}</p>
+      </div>
+      <div className="space-y-4">{children}</div>
+    </section>
+  );
+}
+
+function StringListEditor({
+  label,
+  value,
+  path,
+  setValue
+}: {
+  label: string;
+  value: string[];
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-base font-black">{label}</h4>
+        <button type="button" onClick={() => setValue(path, [...value, ""])} className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-black text-[#095daf]">
+          新增
+        </button>
+      </div>
+      <div className="mt-3 grid gap-3 md:grid-cols-2">
+        {value.map((item, index) => (
+          <div key={index} className="flex gap-2">
+            <input
+              value={item}
+              onChange={(event) => {
+                const next = [...value];
+                next[index] = event.target.value;
+                setValue(path, next);
+              }}
+              className="min-w-0 flex-1 rounded-lg border border-[#dcecff] bg-white px-4 py-3 text-sm outline-none focus:border-[#095daf]"
+              placeholder={`${label} ${index + 1}`}
+            />
+            <button
+              type="button"
+              onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))}
+              className="rounded-lg bg-red-50 px-3 text-xs font-black text-red-600"
+            >
+              删除
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StatListEditor({
+  value,
+  path,
+  setValue
+}: {
+  value: Array<{ value: string; label: string }>;
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-base font-black">数据卡片</h4>
+        <button type="button" onClick={() => setValue(path, [...value, { value: "", label: "" }])} className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-black text-[#095daf]">
+          新增
+        </button>
+      </div>
+      <div className="mt-3 grid gap-3 lg:grid-cols-3">
+        {value.map((item, index) => (
+          <div key={index} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-3">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-black">数据 {index + 1}</p>
+              <button type="button" onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))} className="text-xs font-black text-red-600">
+                删除
+              </button>
+            </div>
+            <Field label="数值" value={item.value} onChange={(next) => setValue([...path, index, "value"], next)} />
+            <div className="mt-3">
+              <Field label="说明" value={item.label} onChange={(next) => setValue([...path, index, "label"], next)} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CurriculumDetailEditor({
+  value,
+  path,
+  setValue
+}: {
+  value: Array<{ title: string; summary: string; points: string[] }>;
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-base font-black">课程弹窗详情</h4>
+        <button
+          type="button"
+          onClick={() => setValue(path, [...value, { title: "", summary: "", points: [""] }])}
+          className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-black text-[#095daf]"
+        >
+          新增
+        </button>
+      </div>
+      <div className="mt-3 space-y-3">
+        {value.map((item, index) => (
+          <div key={index} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-black">弹窗 {index + 1}</p>
+              <button type="button" onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))} className="text-xs font-black text-red-600">
+                删除
+              </button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="弹窗标题" value={item.title} onChange={(next) => setValue([...path, index, "title"], next)} />
+              <TextArea label="弹窗说明" value={item.summary} onChange={(next) => setValue([...path, index, "summary"], next)} />
+            </div>
+            <StringListEditor label="详情要点" value={item.points || []} path={[...path, index, "points"]} setValue={setValue} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PageSectionListEditor({
+  value,
+  path,
+  setValue
+}: {
+  value: Array<{ title: string; description: string }>;
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-base font-black">页面内容模块</h4>
+        <button type="button" onClick={() => setValue(path, [...value, { title: "", description: "" }])} className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-black text-[#095daf]">
+          新增
+        </button>
+      </div>
+      <div className="mt-3 space-y-3">
+        {value.map((item, index) => (
+          <div key={index} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-black">模块 {index + 1}</p>
+              <button type="button" onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))} className="text-xs font-black text-red-600">
+                删除
+              </button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="模块标题" value={item.title} onChange={(next) => setValue([...path, index, "title"], next)} />
+              <TextArea label="模块说明" value={item.description} onChange={(next) => setValue([...path, index, "description"], next)} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ContactListEditor({
+  value,
+  path,
+  setValue,
+  uploadImage
+}: {
+  value: Array<{ name: string; phone: string; qr: string }>;
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+  uploadImage: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
+}) {
+  return (
+    <div className="rounded-lg bg-white p-4 shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-base font-black">联系二维码</h4>
+        <button type="button" onClick={() => setValue(path, [...value, { name: "", phone: "", qr: "" }])} className="rounded-full bg-[#eef7ff] px-3 py-2 text-xs font-black text-[#095daf]">
+          新增
+        </button>
+      </div>
+      <div className="mt-3 grid gap-3 md:grid-cols-2">
+        {value.map((item, index) => (
+          <div key={index} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-black">联系人 {index + 1}</p>
+              <button type="button" onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))} className="text-xs font-black text-red-600">
+                删除
+              </button>
+            </div>
+            <div className="grid gap-4">
+              <Field label="联系人" value={item.name} onChange={(next) => setValue([...path, index, "name"], next)} />
+              <Field label="联系电话" value={item.phone} onChange={(next) => setValue([...path, index, "phone"], next)} />
+              <ImageField
+                label="二维码"
+                value={item.qr}
+                onChange={(next) => setValue([...path, index, "qr"], next)}
+                onUpload={(event) => uploadImage(event, [...path, index, "qr"])}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
