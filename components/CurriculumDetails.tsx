@@ -4,9 +4,16 @@ import { useEffect, useState } from "react";
 
 type CurriculumDetailsProps = {
   levels: readonly string[];
+  details?: readonly CurriculumDetail[];
 };
 
-const detailMap: Record<string, { title: string; summary: string; points: string[] }> = {
+type CurriculumDetail = {
+  title: string;
+  summary: string;
+  points: readonly string[];
+};
+
+const defaultDetailMap: Record<string, { title: string; summary: string; points: string[] }> = {
   自然拼读规则: {
     title: "自然拼读规则",
     summary: "从字母音、组合音到常见拼读规则，帮助孩子建立看词能读的基础能力。",
@@ -47,9 +54,10 @@ function fallbackDetail(level: string) {
   };
 }
 
-export function CurriculumDetails({ levels }: CurriculumDetailsProps) {
+export function CurriculumDetails({ levels, details = [] }: CurriculumDetailsProps) {
   const [activeLevel, setActiveLevel] = useState<string | null>(null);
-  const detail = activeLevel ? detailMap[activeLevel] || fallbackDetail(activeLevel) : null;
+  const configuredDetail = activeLevel ? details.find((item) => item.title === activeLevel) : null;
+  const detail = activeLevel ? configuredDetail || defaultDetailMap[activeLevel] || fallbackDetail(activeLevel) : null;
 
   useEffect(() => {
     if (!activeLevel) return;
@@ -88,14 +96,14 @@ export function CurriculumDetails({ levels }: CurriculumDetailsProps) {
       </div>
 
       {detail ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#061b3b]/58 px-4 py-6 backdrop-blur-sm sm:px-5">
+        <div className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] items-center justify-center bg-[#061b3b]/58 px-4 py-6 backdrop-blur-sm sm:px-5">
           <button
             type="button"
             aria-label="关闭课程详情"
             className="absolute inset-0"
             onClick={() => setActiveLevel(null)}
           />
-          <div className="relative max-h-[86vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-5 shadow-[0_24px_80px_rgba(6,27,59,0.28)] sm:p-7">
+          <div className="relative max-h-[82dvh] w-full max-w-2xl -translate-y-[4dvh] overflow-y-auto rounded-xl bg-white p-5 shadow-[0_24px_80px_rgba(6,27,59,0.28)] sm:max-h-[86vh] sm:translate-y-0 sm:p-7">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.18em] text-[#f5a400]">Course Detail</p>

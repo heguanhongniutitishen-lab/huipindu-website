@@ -311,12 +311,7 @@ function HomeImagesEditor({
 
 function HomeCopyEditor({ content, setValue }: { content: SiteContent; setValue: (path: Array<string | number>, value: unknown) => void }) {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Field label="首屏标题" value={content.homeCopy.hero.title} onChange={(value) => setValue(["homeCopy", "hero", "title"], value)} />
-      <TextArea label="首屏副标题" value={content.homeCopy.hero.description} onChange={(value) => setValue(["homeCopy", "hero", "description"], value)} />
-      <TextArea label="适合机构说明" value={content.homeCopy.institutions.description} onChange={(value) => setValue(["homeCopy", "institutions", "description"], value)} />
-      <TextArea label="底部联系我们说明" value={content.homeCopy.contact.description} onChange={(value) => setValue(["homeCopy", "contact", "description"], value)} />
-    </div>
+    <ContentTreeEditor value={content.homeCopy} path={["homeCopy"]} setValue={setValue} />
   );
 }
 
@@ -330,24 +325,139 @@ function PagesEditor({
   uploadImage: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
 }) {
   return (
-    <div className="space-y-5">
-      {Object.entries(content.pageCopy).map(([key, page]) => (
-        <div key={key} className="rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
-          <h3 className="text-lg font-black">{pageLabels[key] || key}</h3>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <Field label="页面标题" value={page.title} onChange={(value) => setValue(["pageCopy", key, "title"], value)} />
-            <TextArea label="页面描述" value={page.description} onChange={(value) => setValue(["pageCopy", key, "description"], value)} />
-            <ImageField
-              label="页面配图"
-              value={page.image}
-              onChange={(value) => setValue(["pageCopy", key, "image"], value)}
-              onUpload={(event) => uploadImage(event, ["pageCopy", key, "image"])}
-            />
-          </div>
-        </div>
-      ))}
-    </div>
+    <ContentTreeEditor value={content.pageCopy} path={["pageCopy"]} setValue={setValue} uploadImage={uploadImage} />
   );
+}
+
+function ContentTreeEditor({
+  value,
+  path,
+  setValue,
+  uploadImage
+}: {
+  value: any;
+  path: Array<string | number>;
+  setValue: (path: Array<string | number>, value: unknown) => void;
+  uploadImage?: (event: ChangeEvent<HTMLInputElement>, path: Array<string | number>) => void;
+}) {
+  if (Array.isArray(value)) {
+    const canAddObject = value.some((item) => item && typeof item === "object" && !Array.isArray(item));
+    return (
+      <div className="space-y-3 rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-base font-black">{labelForPath(path)}</h3>
+          <button
+            type="button"
+            onClick={() => {
+              const template = canAddObject ? structuredClone(value.find((item) => item && typeof item === "object" && !Array.isArray(item)) || {}) : "";
+              setValue(path, [...value, template]);
+            }}
+            className="rounded-full bg-white px-3 py-2 text-xs font-black text-[#095daf] shadow-sm"
+          >
+            新增
+          </button>
+        </div>
+        <div className="space-y-3">
+          {value.map((item, index) => {
+            const itemPath = [...path, index];
+            return (
+              <div key={index} className="rounded-lg bg-white p-4 shadow-sm">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <p className="text-sm font-black text-ink/70">{labelForPath(path)} {index + 1}</p>
+                  <button
+                    type="button"
+                    onClick={() => setValue(path, value.filter((_, itemIndex) => itemIndex !== index))}
+                    className="rounded-full bg-red-50 px-3 py-1.5 text-xs font-black text-red-600"
+                  >
+                    删除
+                  </button>
+                </div>
+                <ContentTreeEditor value={item} path={itemPath} setValue={setValue} uploadImage={uploadImage} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  if (value && typeof value === "object") {
+    return (
+      <div className="space-y-4 rounded-lg border border-[#dcecff] bg-[#f7fbff] p-4">
+        <h3 className="text-lg font-black">{labelForPath(path)}</h3>
+        <div className="grid gap-4 md:grid-cols-2">
+          {Object.entries(value).map(([key, childValue]) => (
+            <ContentTreeEditor key={key} value={childValue} path={[...path, key]} setValue={setValue} uploadImage={uploadImage} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const label = labelForPath(path);
+  const stringValue = value == null ? "" : String(value);
+  const key = String(path[path.length - 1] || "");
+  const isMedia = ["image", "qr"].includes(key) || /\.(png|jpe?g|webp|mp4|webm)$/i.test(stringValue) || stringValue.startsWith("/images/") || stringValue.startsWith("/videos/");
+
+  if (isMedia && uploadImage) {
+    return (
+      <MediaField
+        label={label}
+        value={stringValue}
+        onChange={(next) => setValue(path, next)}
+        onUpload={(event) => uploadImage(event, path)}
+        type={stringValue.endsWith(".mp4") || stringValue.endsWith(".webm") || stringValue.startsWith("/videos/") ? "video" : "image"}
+      />
+    );
+  }
+
+  if (stringValue.length > 36 || ["description", "summary", "message"].includes(key)) {
+    return <TextArea label={label} value={stringValue} onChange={(next) => setValue(path, next)} />;
+  }
+
+  return <Field label={label} value={stringValue} onChange={(next) => setValue(path, next)} />;
+}
+
+function labelForPath(path: Array<string | number>) {
+  const key = String(path[path.length - 1] || "");
+  const parent = String(path[path.length - 2] || "");
+  const labels: Record<string, string> = {
+    homeCopy: "首页全部文案",
+    pageCopy: "子页面全部内容",
+    hero: "首屏",
+    what: "慧拼读是什么",
+    curriculum: "课程体系",
+    advantages: "核心优势",
+    institutions: "适合机构",
+    contact: "联系我们",
+    video: "视频模块",
+    stats: "数据卡片",
+    points: "要点",
+    items: "条目",
+    levels: "课程按钮",
+    details: "课程弹窗详情",
+    sections: "内容模块",
+    highlights: "标签",
+    contacts: "联系人",
+    title: "标题",
+    description: "描述",
+    summary: "说明",
+    value: "数值",
+    label: "标签",
+    desc: "说明",
+    image: "配图",
+    qr: "二维码",
+    name: "名称",
+    phone: "电话",
+    eyebrow: "角标",
+    primaryCta: "主按钮",
+    secondaryCta: "副按钮",
+    cta: "按钮",
+    href: "链接"
+  };
+  if (parent === "pageCopy" && pageLabels[key]) return pageLabels[key];
+  if (/^\d+$/.test(key)) return "第 " + (Number(key) + 1) + " 项";
+  return labels[key] || key;
 }
 
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {

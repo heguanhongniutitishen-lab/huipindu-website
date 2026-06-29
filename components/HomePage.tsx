@@ -1,5 +1,5 @@
 ﻿import Image from "next/image";
-import { homeCopy, siteImages } from "@/content/site";
+import { homeCopy, pageCopy, siteImages } from "@/content/site";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { HeroGallery } from "./HeroGallery";
@@ -17,6 +17,11 @@ const moduleNav = [
 
 export function HomePage() {
   const { hero, what, curriculum, advantages, institutions, contact } = homeCopy;
+  const video = homeCopy.video || {
+    title: "系统演示视频",
+    description: "慧拼读系统涵盖音标学习、单词学习、口语学习、短文阅读、词汇检测、抗遗忘复习。"
+  };
+  const contacts = pageCopy.contact?.contacts || [];
 
   return (
     <main className="home-motion min-h-screen overflow-hidden bg-[#f7fbff]">
@@ -112,7 +117,7 @@ export function HomePage() {
             <p className="text-sm font-black uppercase tracking-[0.18em] text-[#f5a400]">Module 02</p>
             <h2 className="mt-3 text-[2.1rem] font-black leading-tight tracking-normal text-[#061b3b] sm:text-4xl lg:text-5xl">{curriculum.title}</h2>
             <p className="mt-4 text-base leading-8 text-[#475569] lg:mt-6 lg:text-lg lg:leading-9">{curriculum.description}</p>
-            <CurriculumDetails levels={curriculum.levels} />
+            <CurriculumDetails levels={curriculum.levels} details={curriculum.details} />
           </div>
         </div>
       </section>
@@ -135,8 +140,8 @@ export function HomePage() {
         <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-10">
           <SectionHeading
             eyebrow="Module 05"
-            title="系统演示视频"
-            description="慧拼读系统涵盖音标学习、单词学习、口语学习、短文阅读、词汇检测、抗遗忘复习。"
+            title={video.title}
+            description={video.description}
           />
           <div className="mx-auto mt-9 max-w-6xl rounded-xl border border-[#dcecff] bg-white p-2.5 shadow-[0_24px_70px_rgba(9,93,175,0.1)] sm:p-3 lg:mt-12">
             {siteImages.advantagesVideo ? (
@@ -193,28 +198,19 @@ export function HomePage() {
             <p className="mt-5 max-w-3xl text-base leading-8 text-white/76 lg:text-lg lg:leading-9">{contact.description}</p>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="rounded-lg bg-white p-3 text-center text-[#061b3b] shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-4">
-              <Image
-                src="/images/brand/qr-wang.png"
-                alt="王老师微信二维码"
-                width={180}
-                height={180}
-                className="mx-auto h-28 w-28 rounded-md object-contain sm:h-32 sm:w-32"
-              />
-              <div className="mt-3 text-sm font-black">王老师</div>
-              <div className="mt-1 text-xs font-semibold text-[#475569]">17095752608</div>
-            </div>
-            <div className="rounded-lg bg-white p-3 text-center text-[#061b3b] shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-4">
-              <Image
-                src="/images/brand/qr-jiang.png"
-                alt="蒋老师微信二维码"
-                width={180}
-                height={180}
-                className="mx-auto h-28 w-28 rounded-md object-contain sm:h-32 sm:w-32"
-              />
-              <div className="mt-3 text-sm font-black">蒋老师</div>
-              <div className="mt-1 text-xs font-semibold text-[#475569]">15715659761</div>
-            </div>
+            {contacts.map((item: { name: string; phone: string; qr: string }) => (
+              <div key={item.phone} className="rounded-lg bg-white p-3 text-center text-[#061b3b] shadow-[0_24px_70px_rgba(0,0,0,0.22)] sm:p-4">
+                <Image
+                  src={item.qr}
+                  alt={`${item.name}微信二维码`}
+                  width={180}
+                  height={180}
+                  className="mx-auto h-28 w-28 rounded-md object-contain sm:h-32 sm:w-32"
+                />
+                <div className="mt-3 text-sm font-black">{item.name}</div>
+                <div className="mt-1 text-xs font-semibold text-[#475569]">{item.phone}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
