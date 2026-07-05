@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  SALES_ADMIN
+  CONTENT_ADMIN
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  DEMO_BOOKED
+  QUOTED
+  WON
+  INVALID
+}
+
+enum IntentLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum DemoMethod {
+  WECHAT
+  PHONE
+  TENCENT_MEETING
+  OFFLINE
+}
+
+enum DemoBookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+}
+
+enum FollowUpMethod {
+  PHONE
+  WECHAT
+  VIDEO_MEETING
+  OFFLINE
+}
+
+enum FollowUpResult {
+  NO_ANSWER
+  COMMUNICATED
+  INTERESTED
+  CONSIDERING
+  DEMO_BOOKED
+  WON
+  INVALID
+}
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String?     @unique
+  phone        String?     @unique
+  passwordHash String
+  role         AdminRole   @default(VIEWER)
+  disabled     Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  followUps    FollowUp[]
+}
+
+model Lead {
+  id              String       @id @default(cuid())
+  name            String
+  phone           String
+  city            String?
+  organization    String?
+  studentCount    Int?
+  interestedPlan  String?
+  message         String?
+  sourcePage      String?
+  sourceChannel   String?
+  status          LeadStatus   @default(NEW)
+  intentLevel     IntentLevel  @default(MEDIUM)
+  owner           String?
+  remark          String?
+  nextFollowAt    DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  followUps       FollowUp[]
+}
+
+model FollowUp {
+  id             String         @id @default(cuid())
+  leadId         String
+  lead           Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?          @relation(fields: [userId], references: [id])
+  followerName   String
+  method         FollowUpMethod
+  content        String
+  nextFollowAt   DateTime?
+  result         FollowUpResult
+  createdAt      DateTime       @default(now())
+}
+
+model DemoBooking {
+  id             String            @id @default(cuid())
+  name           String
+  phone          String
+  organization   String?
+  city           String?
+  bookingTime    DateTime
+  interest       String?
+  method         DemoMethod
+  status         DemoBookingStatus @default(PENDING)
+  remark         String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model PricingPlan {
+  id              String           @id @default(cuid())
+  name            String
+  price           Int
+  billingCycle    String
+  tag             String?
+  targetAudience  String
+  buttonText      String
+  sortOrder       Int              @default(0)
+  visible         Boolean          @default(true)
+  recommended     Boolean          @default(false)
+  accentColor     String           @default("#165DFF")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  features        PricingFeature[]
+}
+
+model PricingFeature {
+  id        String      @id @default(cuid())
+  planId    String
+  plan      PricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  text      String
+  sortOrder Int         @default(0)
+  enabled   Boolean     @default(true)
+}
+
+model DemoVideo {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  coverUrl    String?
+  videoUrl    String
+  description String?
+  sortOrder   Int      @default(0)
+  visible     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CaseStudy {
+  id              String   @id @default(cuid())
+  organization    String
+  city            String
+  planName        String
+  classMode       String
+  campusImageUrl  String?
+  principalAvatar String?
+  enrollmentCount Int?
+  renewalRate     String?
+  studentGrowth   String?
+  parentFeedback  String?
+  principalQuote  String?
+  detail          String?
+  featured        Boolean  @default(false)
+  visible         Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CmsSection {
+  id          String   @id @default(cuid())
+  moduleKey   String
+  title       String
+  subtitle    String?
+  icon        String?
+  imageUrl    String?
+  payload     Json?
+  visible     Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String?
+  sortOrder Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  group       String   @default("basic")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FormConfig {
+  id          String   @id @default(cuid())
+  fieldKey    String   @unique
+  label       String
+  fieldType   String
+  required    Boolean  @default(false)
+  visible     Boolean  @default(true)
+  options     Json?
+  placeholder String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
