@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -12,7 +12,7 @@ import { loginSchema } from "@/lib/validations/admin";
 
 type LoginValues = z.infer<typeof loginSchema>;
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
@@ -63,9 +63,7 @@ export default function AdminLoginPage() {
               <div className="text-sm text-blue-100">AI英语单词学习系统</div>
             </div>
           </div>
-          <h1 className="mt-16 max-w-xl text-4xl font-black leading-tight">
-            为 ToB 招商官网打造的官网后台
-          </h1>
+          <h1 className="mt-16 max-w-xl text-4xl font-black leading-tight">为 ToB 招商官网打造的官网后台</h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-blue-100">
             集中管理套餐、案例、视频、FAQ 和官网内容。官网表单信息会直接发送到指定邮箱，方便团队及时跟进。
           </p>
@@ -118,14 +116,19 @@ export default function AdminLoginPage() {
           </label>
 
           {error ? <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm font-bold text-red-600">{error}</div> : null}
-          <button
-            disabled={isSubmitting}
-            className="h-12 w-full rounded-lg bg-brand-500 text-sm font-black text-white disabled:opacity-60"
-          >
+          <button disabled={isSubmitting} className="h-12 w-full rounded-lg bg-brand-500 text-sm font-black text-white disabled:opacity-60">
             {isSubmitting ? "登录中..." : "登录后台"}
           </button>
         </form>
       </section>
     </main>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-[#eef5ff]" />}>
+      <AdminLoginForm />
+    </Suspense>
   );
 }
