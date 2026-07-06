@@ -9,27 +9,25 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "慧拼读AI英语单词学习系统 - 培训机构英语课程解决方案",
+  title: "慧拼读单词系统 - 英语培训机构智能单词课程解决方案",
   description:
-    "慧拼读是一套面向培训机构的AI英语单词学习系统，覆盖机构端、交付中心、教练端、学员端、家长端，支持小班课一对多和一对一教学，提供单词训练、抗遗忘复习、每日打卡、学习报告、家长端同步和总部运营支持。",
+    "慧拼读单词系统是一套面向英语培训机构的智能单词学习与教学系统，覆盖机构端、交付中心、学员端、家长端，帮助机构快速开课、提升续费率、降低运营成本。",
   keywords: [
     "英语单词学习系统",
     "培训机构英语系统",
-    "AI英语学习系统",
-    "小班课英语系统",
     "英语机构招生方案",
+    "小班课英语系统",
     "英语单词训练系统",
     "家长端学习报告",
     "培训机构课程系统"
   ],
   openGraph: {
-    title: "慧拼读AI英语单词学习系统",
-    description: "面向培训机构的英语单词学习与课程交付系统。",
+    title: "慧拼读单词系统",
+    description: "面向英语培训机构的智能单词学习与教学系统。",
     type: "website",
     locale: "zh_CN"
   }
 };
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
