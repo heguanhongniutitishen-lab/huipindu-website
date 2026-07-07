@@ -125,13 +125,12 @@ function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#DCEBFF] bg-white/92 shadow-[0_10px_32px_rgba(22,93,255,0.08)] backdrop-blur-2xl">
       <div className="mx-auto flex h-14 w-[min(1200px,calc(100%-28px))] items-center justify-between md:h-16">
-        <button onClick={() => scrollTo("hero")} className="flex min-w-0 items-center gap-2.5">
-          <img src="/images/logo.png" alt="慧拼读单词训练系统" className="h-8 w-auto shrink-0 object-contain md:h-10" />
-          <span className="truncate text-sm font-black tracking-wide text-[#07152D] md:text-base">慧拼读单词训练系统</span>
+        <button onClick={() => scrollTo("hero")} className="flex min-w-0 items-center">
+          <img src="/images/logo.png" alt="慧拼读单词训练系统" className="h-9 w-auto shrink-0 object-contain md:h-12" />
         </button>
-        <nav className="hidden items-center gap-6 text-sm font-semibold text-slate-600 lg:flex">
+        <nav className="hidden items-center gap-7 text-[15px] font-black text-[#28517A] lg:flex xl:text-base">
           {navItems.map(([label, id]) => (
-            <button key={id} onClick={() => scrollTo(id)} className="transition hover:text-[#165DFF]">{label}</button>
+            <button key={id} onClick={() => scrollTo(id)} className="relative py-2 transition hover:text-[#165DFF] after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:origin-center after:scale-x-0 after:rounded-full after:bg-[#165DFF] after:transition hover:after:scale-x-100">{label}</button>
           ))}
         </nav>
         <div className="hidden md:block" />
@@ -143,7 +142,7 @@ function Header() {
         <div className="border-t border-[#DCEBFF] bg-white/98 px-3 py-3 shadow-[0_18px_40px_rgba(22,93,255,0.08)] lg:hidden">
           <div className="grid gap-2">
             {navItems.map(([label, id]) => (
-              <button key={id} onClick={() => { setOpen(false); scrollTo(id); }} className="rounded-lg px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-[#F1F6FF]">{label}</button>
+              <button key={id} onClick={() => { setOpen(false); scrollTo(id); }} className="rounded-lg px-4 py-3 text-left text-base font-black text-[#28517A] hover:bg-[#F1F6FF]">{label}</button>
             ))}
           </div>
         </div>
@@ -156,22 +155,29 @@ function HeroSection() {
   return (
     <section id="hero" className="relative pt-20 lg:min-h-screen lg:pt-24">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(47,123,255,0.16),transparent_30rem),radial-gradient(circle_at_88%_18%,rgba(100,210,255,0.16),transparent_25rem),linear-gradient(180deg,#FFFFFF_0%,#F1F7FF_58%,#F7FAFF_100%)]" />
-      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] items-center gap-7 pb-8 md:gap-10 lg:min-h-[calc(100vh-150px)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
+      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] items-center gap-8 pb-8 md:gap-10 lg:min-h-[calc(100vh-150px)] lg:grid-cols-[0.88fr_1.12fr] lg:gap-14">
         <motion.div variants={fadeUp} initial="hidden" animate="show" className="text-center lg:text-left">
-          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#DCEBFF] bg-white/82 px-3 py-2 text-xs font-bold leading-5 text-[#165DFF] shadow-[0_12px_30px_rgba(22,93,255,0.08)] backdrop-blur sm:text-sm">
+          <div className="mb-5 inline-flex max-w-full items-center gap-2 rounded-full border border-[#CFE2FF] bg-white/86 px-4 py-2.5 text-xs font-black leading-5 text-[#165DFF] shadow-[0_14px_34px_rgba(22,93,255,0.10)] backdrop-blur sm:text-sm">
             <Sparkles className="h-4 w-4 text-[#2F7BFF]" />
             <span className="truncate">面向培训机构的英语单词训练增长系统</span>
           </div>
-          <h1 className="mx-auto max-w-3xl text-[2.25rem] font-black leading-[1.06] tracking-normal text-[#07152D] sm:text-6xl lg:mx-0 lg:text-[4.65rem]">慧拼读单词训练系统</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-2xl font-black leading-tight text-[#165DFF] sm:text-3xl lg:mx-0">让孩子见词能读，听词能写</p>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#385878] sm:text-lg sm:leading-8 lg:mx-0">以单词训练为核心，掌握单词规律，配合语法、阅读、口语训练，帮助孩子真正建立英语能力，帮助机构快速开课、提升续费率。</p>
+          <h1 className="mx-auto max-w-4xl font-serif text-[2.8rem] font-black leading-[0.98] tracking-normal text-[#07152D] sm:text-7xl lg:mx-0 lg:text-[5.6rem]">
+            <span className="block bg-gradient-to-r from-[#063B7A] via-[#165DFF] to-[#00A3FF] bg-clip-text text-transparent">慧拼读</span>
+            <span className="mt-2 block text-[2.05rem] leading-tight text-[#102A43] sm:text-5xl lg:text-[3.7rem]">单词训练系统</span>
+          </h1>
+          <div className="mx-auto mt-5 max-w-2xl rounded-[22px] border border-[#CFE2FF] bg-white/74 px-5 py-4 text-center shadow-[0_18px_48px_rgba(22,93,255,0.10)] backdrop-blur lg:mx-0 lg:text-left">
+            <p className="text-2xl font-black leading-tight text-[#165DFF] sm:text-3xl">让孩子见词能读，听词能写</p>
+            <p className="mt-3 text-base font-medium leading-7 text-[#385878] sm:text-lg sm:leading-8">
+              以<span className="font-black text-[#07152D]">单词训练</span>为核心，掌握单词规律，配合<span className="font-black text-[#165DFF]">语法、阅读、口语训练</span>，帮助孩子真正建立英语能力，帮助机构快速开课、提升续费率。
+            </p>
+          </div>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:justify-start">
             <CtaButton size="lg" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
           </div>
-          <div className="mx-auto mt-7 grid max-w-lg grid-cols-2 gap-3 lg:mx-0">
+          <div className="mx-auto mt-8 grid max-w-lg grid-cols-2 gap-3 lg:mx-0">
             {heroStats.map(([value, label]) => (
-              <div key={label} className="rounded-[18px] border border-[#DCEBFF] bg-white/78 px-5 py-4 text-center shadow-[0_18px_42px_rgba(22,93,255,0.10)] backdrop-blur">
-                <p className="text-3xl font-black text-[#165DFF] md:text-4xl">{value}</p>
+              <div key={label} className="rounded-[22px] border border-[#CFE2FF] bg-white/82 px-5 py-5 text-center shadow-[0_20px_48px_rgba(22,93,255,0.11)] backdrop-blur">
+                <p className="text-4xl font-black tracking-tight text-[#165DFF] md:text-5xl">{value}</p>
                 <p className="mt-2 text-sm font-black text-[#28517A] md:text-base">{label}</p>
               </div>
             ))}
@@ -220,18 +226,18 @@ function ProductSystemSection() {
     <LightSection id="system" eyebrow="四端产品体系" title="四端产品体系，全方位赋能机构教学" subtitle="机构后台、交付中心、学员端、家长端协同运转，让课程交付标准化、数据化、可复制。">
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {products.map((item, index) => (
-          <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/78 md:min-h-[310px]">
+          <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/82 md:min-h-[310px]">
             <div className="mb-4 flex items-center justify-between md:mb-6">
               <span className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-[#E8F2FF] to-white text-[#165DFF] shadow-inner md:h-14 md:w-14">
                 <item.icon className="h-5 w-5 md:h-7 md:w-7" />
               </span>
-              <span className="text-sm font-black text-[#94A3B8]">0{index + 1}</span>
+              <span className="text-sm font-black text-[#8FB7FF]">0{index + 1}</span>
             </div>
-            <h3 className="text-xl font-black text-[#07152D] md:text-2xl">{item.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
+            <h3 className="text-xl font-black tracking-tight text-[#07152D] md:text-2xl">{item.title}</h3>
+            <p className="mt-3 text-sm font-medium leading-6 text-[#526B86]">{item.text}</p>
             <div className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:grid-cols-1">
               {item.points.map((point) => (
-                <span key={point} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-bold text-[#28517A]">{point}</span>
+                <span key={point} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#165DFF]">{point}</span>
               ))}
             </div>
           </MotionCard>
@@ -246,13 +252,13 @@ function FeaturesSection() {
     <LightSection id="features" eyebrow="八大核心功能" title="八大核心功能，覆盖英语学习全场景" subtitle="围绕单词训练、抗遗忘复习、语法、口语、阅读、音标和检测持续闭环。">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {features.map((item, index) => (
-          <MotionCard key={item.title} delay={index * 0.04} className="flex flex-col gap-3 bg-white/82 p-4 sm:flex-row sm:items-start sm:gap-4 sm:p-5">
+          <MotionCard key={item.title} delay={index * 0.04} className="flex flex-col gap-3 bg-white/84 p-4 sm:flex-row sm:items-start sm:gap-4 sm:p-5">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF] sm:h-12 sm:w-12">
               <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
             </span>
             <div>
-              <h3 className="text-base font-black text-[#07152D] sm:text-lg">{item.title}</h3>
-              <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-2 sm:text-sm sm:leading-6">{item.text}</p>
+              <h3 className="text-base font-black tracking-tight text-[#07152D] sm:text-lg">{item.title}</h3>
+              <p className="mt-1 text-xs font-medium leading-5 text-[#526B86] sm:mt-2 sm:text-sm sm:leading-6">{item.text}</p>
             </div>
           </MotionCard>
         ))}
@@ -274,10 +280,10 @@ function TeachingModesSection() {
             <div className="relative h-48 overflow-hidden sm:h-64 lg:h-72">
               <img src={mode.image} alt={mode.title} className="h-full w-full object-cover transition duration-700 hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-white via-white/80 to-transparent" />
-              <h3 className="absolute bottom-5 left-5 text-2xl font-black text-[#07152D] md:bottom-6 md:left-6 md:text-3xl">{mode.title}</h3>
+              <h3 className="absolute bottom-5 left-5 text-2xl font-black tracking-tight text-[#07152D] md:bottom-6 md:left-6 md:text-3xl">{mode.title}</h3>
             </div>
             <div className="p-5 md:p-6">
-              <p className="text-sm leading-7 text-slate-600 md:text-base">{mode.text}</p>
+              <p className="text-sm font-medium leading-7 text-[#526B86] md:text-base">{mode.text}</p>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {mode.points.map((point) => <CheckItem key={point}>{point}</CheckItem>)}
               </div>
@@ -317,10 +323,10 @@ function SupportSection() {
     <LightSection id="support" eyebrow="总部赋能" title="不仅提供系统，更帮助机构赚钱" subtitle="慧拼读为机构提供从系统培训、教研指导、招生方案、活动策划到运营陪跑的完整支持。">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {supportItems.map((item, index) => (
-          <MotionCard key={item} delay={index * 0.04} className="bg-white/82 p-4 sm:p-5">
+          <MotionCard key={item} delay={index * 0.04} className="bg-white/84 p-4 sm:p-5">
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF] sm:h-10 sm:w-10"><CheckCircle2 className="h-5 w-5" /></span>
-              <h3 className="font-black text-[#07152D]">{item}</h3>
+              <h3 className="font-black text-[#165DFF]">{item}</h3>
             </div>
           </MotionCard>
         ))}
@@ -337,7 +343,7 @@ function ProcessSection() {
         {process.map((item, index) => (
           <motion.div key={item} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="relative rounded-lg border border-[#DCEBFF] bg-white/88 p-4 text-center shadow-[0_14px_36px_rgba(12,42,92,0.08)] backdrop-blur md:p-5">
             <span className="mx-auto mb-3 grid h-9 w-9 place-items-center rounded-full bg-[#165DFF] text-sm font-black text-white md:mb-4 md:h-11 md:w-11">{index + 1}</span>
-            <h3 className="text-sm font-black md:text-base">{item}</h3>
+            <h3 className="text-sm font-black text-[#07152D] md:text-base">{item}</h3>
           </motion.div>
         ))}
       </div>
@@ -355,17 +361,17 @@ function CasesSection() {
             <div className="p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-xl font-black text-[#07152D]">{item.name}</h3>
+                  <h3 className="text-xl font-black tracking-tight text-[#07152D]">{item.name}</h3>
                   <p className="mt-1 text-sm font-bold text-[#165DFF]">{item.time}</p>
                 </div>
                 <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-xs font-black text-[#165DFF]">案例</span>
               </div>
               <div className="mt-5 grid gap-2">
                 {item.metrics.map((metric) => (
-                  <div key={metric} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#28517A]">{metric}</div>
+                  <div key={metric} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#165DFF]">{metric}</div>
                 ))}
               </div>
-              <p className="mt-5 text-sm leading-7 text-slate-600">“{item.quote}”</p>
+              <p className="mt-5 text-sm font-medium leading-7 text-[#526B86]">“{item.quote}”</p>
             </div>
           </MotionCard>
         ))}
@@ -438,9 +444,9 @@ function LeadFormSection() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(47,123,255,0.16),transparent_28rem),radial-gradient(circle_at_90%_80%,rgba(100,210,255,0.14),transparent_24rem)]" />
       <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] gap-6 md:w-[min(1200px,calc(100%-32px))] lg:grid-cols-[1fr_0.86fr] lg:gap-8">
         <div>
-          <p className="text-sm font-black text-[#165DFF]">预约产品演示</p>
-          <h2 className="mt-2 text-2xl font-black leading-tight md:mt-3 md:text-5xl">预约产品演示，获取专属合作方案</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:mt-5 md:text-lg md:leading-8">留下联系方式，我们将为你提供系统演示和机构专属落地方案。</p>
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-[#165DFF]">预约产品演示</p>
+          <h2 className="mt-2 text-2xl font-black leading-tight tracking-tight text-[#07152D] md:mt-3 md:text-5xl">预约产品演示，获取专属合作方案</h2>
+          <p className="mt-3 max-w-2xl text-sm font-medium leading-6 text-[#526B86] md:mt-5 md:text-lg md:leading-8">留下联系方式，我们将为你提供<span className="font-black text-[#165DFF]">系统演示</span>和机构专属落地方案。</p>
           <form onSubmit={submit} className="mt-5 grid gap-3 rounded-lg border border-[#DCEBFF] bg-white/88 p-4 shadow-[0_18px_52px_rgba(12,42,92,0.10)] backdrop-blur sm:grid-cols-2 md:mt-8 md:gap-4 md:p-5">
             <TextInput label="机构名称" value={form.org} onChange={(value) => setForm({ ...form, org: value })} />
             <TextInput label="联系人" value={form.name} onChange={(value) => setForm({ ...form, name: value })} />
@@ -482,7 +488,6 @@ function Footer() {
         <div>
           <div className="flex items-center gap-3 text-[#07152D]">
             <img src="/images/logo.png" alt="慧拼读单词训练系统" className="h-9 w-auto object-contain md:h-12" />
-            <span className="text-base font-black md:text-lg">慧拼读单词训练系统</span>
           </div>
           <p className="mt-3 max-w-md text-sm leading-6 md:mt-4 md:leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
           <p className="mt-5 text-xs md:mt-6">Copyright © 2026 慧拼读单词训练系统. All rights reserved.</p>
@@ -529,16 +534,16 @@ function LightSection({ id, eyebrow, title, subtitle, children }: { id?: string;
 function SectionTitle({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle?: string }) {
   return (
     <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="mx-auto mb-7 max-w-3xl text-center md:mb-12">
-      <p className="text-xs font-black text-[#165DFF] md:text-sm">{eyebrow}</p>
-      <h2 className="mt-2 text-2xl font-black leading-tight text-[#07152D] md:mt-3 md:text-5xl">{title}</h2>
-      {subtitle ? <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:mt-5 md:text-base md:leading-7">{subtitle}</p> : null}
+      <p className="text-xs font-black uppercase tracking-[0.18em] text-[#165DFF] md:text-sm">{eyebrow}</p>
+      <h2 className="mt-2 text-2xl font-black leading-tight tracking-tight text-[#07152D] md:mt-3 md:text-5xl">{title}</h2>
+      {subtitle ? <p className="mx-auto mt-3 max-w-2xl text-sm font-medium leading-6 text-[#526B86] md:mt-5 md:text-base md:leading-7">{subtitle}</p> : null}
     </motion.div>
   );
 }
 
 function MotionCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay }} whileHover={{ y: -6, boxShadow: "0 24px 60px rgba(22,93,255,0.16)" }} className={`rounded-lg border border-white/70 p-4 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur md:p-6 ${className}`}>
+    <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay }} whileHover={{ y: -6, boxShadow: "0 24px 60px rgba(22,93,255,0.16)" }} className={`rounded-[18px] border border-white/70 p-4 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur md:p-6 ${className}`}>
       {children}
     </motion.div>
   );
