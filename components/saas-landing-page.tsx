@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -11,6 +11,7 @@ import {
   Building2,
   CheckCircle2,
   ChevronDown,
+  ClipboardCheck,
   GraduationCap,
   Headphones,
   LineChart,
@@ -25,17 +26,7 @@ import {
   X
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts";
 
-type PlanKey = "half" | "year" | "forever";
 type LeadForm = {
   org: string;
   name: string;
@@ -43,33 +34,27 @@ type LeadForm = {
   wechat: string;
   city: string;
   students: string;
-  plan: string;
   message: string;
 };
 
 const navItems = [
   ["首页", "hero"],
-  ["产品体系", "system"],
-  ["教学模式", "modes"],
-  ["学习功能", "features"],
-  ["系统演示", "video"],
-  ["收益测算", "roi"],
-  ["套餐价格", "pricing"],
-  ["总部扶持", "support"],
-  ["合作案例", "cases"],
-  ["联系我们", "lead"]
+  ["产品", "system"],
+  ["功能", "features"],
+  ["演示", "video"],
+  ["赋能", "support"],
+  ["案例", "cases"],
+  ["咨询", "lead"]
 ];
 
-const sellingPoints = ["见词能读", "听词能写", "学习闭环", "机构增收"];
 const heroStats = [
   ["200+", "合作机构"],
-  ["5000+", "在读学生"],
-  ["98%", "机构续费率"]
+  ["5000+", "在用学员"]
 ];
-const sceneCards = ["艺术培训机构", "英语培训机构", "托管机构", "社区培训机构", "幼小衔接机构", "素质教育机构"];
+const sceneCards = ["艺术培训机构", "英语培训机构", "托管机构", "社区培训机构"];
 const products: Array<{ title: string; text: string; icon: LucideIcon; points: string[] }> = [
   { title: "机构端", text: "面向校长和校区管理者", icon: Building2, points: ["课程管理", "学员管理", "数据统计", "运营管理"] },
-  { title: "交付中心 / 教练端", text: "面向老师和教学教练", icon: Presentation, points: ["上课流程", "任务布置", "学习检测", "报告生成"] },
+  { title: "交付中心 / 教练端", text: "面向老师和教学教练", icon: Presentation, points: ["学员小组", "课件设置", "学习检测", "报告生成"] },
   { title: "学员端", text: "面向学员日常学习训练", icon: GraduationCap, points: ["单词训练", "抗遗忘复习", "每日打卡", "词汇检测"] },
   { title: "家长端", text: "面向家长效果感知与续费", icon: MonitorSmartphone, points: ["学习报告", "学习进度", "打卡情况", "效果反馈"] }
 ];
@@ -77,6 +62,7 @@ const products: Array<{ title: string; text: string; icon: LucideIcon; points: s
 const features: Array<{ title: string; text: string; icon: LucideIcon }> = [
   { title: "单词训练", text: "按词库、课程和任务完成高频训练。", icon: BookOpenCheck },
   { title: "抗遗忘复习", text: "结合学习记录自动安排复习节奏。", icon: Repeat2 },
+  { title: "每日打卡", text: "帮助学员建立持续学习习惯。", icon: ClipboardCheck },
   { title: "短语训练", text: "从单词拓展到常用短语应用。", icon: BookText },
   { title: "语法学习", text: "配合单词课程补齐基础语法。", icon: Brain },
   { title: "口语练习", text: "支持发音跟读和口语强化训练。", icon: Mic2 },
@@ -86,18 +72,11 @@ const features: Array<{ title: string; text: string; icon: LucideIcon }> = [
 ];
 
 const supportItems = ["系统功能培训", "上课流程培训", "教研指导方案", "机构招生方案", "配套营销活动方案", "营销素材支持", "系统迭代免费升级", "售后问题处理", "运营陪跑指导"];
-const onsiteItems = ["上门教研升级", "上门招生策划", "上门活动策划", "校区运营指导", "团队执行落地"];
 const process = ["咨询沟通", "产品演示", "确认方案", "系统培训", "上线开课", "运营陪跑"];
 const cases = [
   { name: "星启点英语成长中心", time: "合作 6 个月", image: "/images/classroom-training-screen.png", metrics: ["招生增长 42%", "续费率 93%", "单词班营收 +18.6w"], quote: "慧拼读把单词课做成标准产品，新老师也能快速交付，家长看到报告后续费沟通顺畅很多。" },
   { name: "蓝鲸托管学习中心", time: "合作 4 个月", image: "/images/consulting-realistic.png", metrics: ["新增 3 个班", "满班率 86%", "回本 1.2 个班"], quote: "原来托管只是作业辅导，现在有了可售卖的英语训练项目，校区利润结构更健康。" },
   { name: "未来星素质教育", time: "合作 1 年", image: "/images/one-on-one-realistic.png", metrics: ["续费率 98%", "转介绍 +31%", "年课包转化提升"], quote: "系统把学员端、家长端和老师交付串起来，校长能看数据，老师能按流程上课。" }
-];
-
-const plans = [
-  { key: "half" as PlanKey, name: "启动版", price: 5800, display: "5800 元", period: "/ 半年", tag: "快速开课", note: "适合单校区低成本验证项目", features: ["机构自由定价", "系统功能培训", "上课流程培训", "教研指导方案", "机构招生方案", "提供营销素材", "系统迭代免费升级", "售后问题处理"] },
-  { key: "year" as PlanKey, name: "增长版", price: 8800, display: "8800 元", period: "/ 年", tag: "推荐套餐", note: "适合希望系统化交付和提升续费的机构", features: ["机构自由定价", "系统功能培训", "上课流程培训", "教研指导方案", "机构招生方案", "配套营销活动方案", "提供营销素材", "系统迭代免费升级", "售后问题处理"], featured: true },
-  { key: "forever" as PlanKey, name: "旗舰版", price: 49800, display: "49800 元", period: "/ 永久使用", tag: "永久授权", note: "适合新店、多校区和需要上门落地支持的机构", features: ["机构自由定价", "系统功能培训", "上课流程培训", "上门教研升级", "上门策划招生", "上门策划活动", "提供营销素材", "系统迭代免费升级", "机构活动策划", "售后专属客服", "新店 / 增加门店选址", "运营陪跑指导"] }
 ];
 
 const faqs = [
@@ -121,24 +100,16 @@ function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function yuan(value: number) {
-  return Math.round(value).toLocaleString("zh-CN");
-}
-
 export function SaasLandingPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#F7FAFF] text-[#07152D]">
       <Header />
       <HeroSection />
-      <WhatIsSection />
       <ProductSystemSection />
       <FeaturesSection />
       <TeachingModesSection />
       <VideoDemoSection />
-      <ROICalculatorSection />
-      <PricingSection />
       <SupportSection />
-      <OnsiteSupportSection />
       <ProcessSection />
       <CasesSection />
       <FAQSection />
@@ -163,10 +134,7 @@ function Header() {
             <button key={id} onClick={() => scrollTo(id)} className="transition hover:text-[#165DFF]">{label}</button>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 md:flex">
-          <CtaButton variant="ghost" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
-          <CtaButton onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
-        </div>
+        <div className="hidden md:block" />
         <button onClick={() => setOpen(!open)} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[#DCEBFF] bg-[#F4F8FF] text-[#07152D] md:h-10 md:w-10 lg:hidden">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -177,7 +145,6 @@ function Header() {
             {navItems.map(([label, id]) => (
               <button key={id} onClick={() => { setOpen(false); scrollTo(id); }} className="rounded-lg px-4 py-2.5 text-left text-sm font-bold text-slate-700 hover:bg-[#F1F6FF]">{label}</button>
             ))}
-            <button onClick={() => { setOpen(false); scrollTo("lead"); }} className="rounded-lg bg-[#165DFF] px-4 py-3 text-sm font-black text-white shadow-[0_14px_30px_rgba(22,93,255,0.22)]">立即预约演示</button>
           </div>
         </div>
       ) : null}
@@ -199,19 +166,13 @@ function HeroSection() {
           <p className="mx-auto mt-4 max-w-2xl text-2xl font-black leading-tight text-[#165DFF] sm:text-3xl lg:mx-0">让孩子见词能读，听词能写</p>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#385878] sm:text-lg sm:leading-8 lg:mx-0">以单词训练为核心，掌握单词规律，配合语法、阅读、口语训练，帮助孩子真正建立英语能力，帮助机构快速开课、提升续费率。</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:justify-start">
-            <CtaButton size="lg" onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
-            <CtaButton size="lg" variant="glass" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
+            <CtaButton size="lg" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-            {sellingPoints.map((item) => (
-              <div key={item} className="rounded-lg border border-[#DCEBFF] bg-white/82 px-3 py-2.5 text-center text-sm font-black text-[#165DFF] shadow-[0_12px_30px_rgba(22,93,255,0.08)] backdrop-blur">{item}</div>
-            ))}
-          </div>
-          <div className="mt-6 grid grid-cols-3 gap-2.5">
+          <div className="mx-auto mt-7 grid max-w-lg grid-cols-2 gap-3 lg:mx-0">
             {heroStats.map(([value, label]) => (
-              <div key={label} className="rounded-lg border border-[#DCEBFF] bg-white/72 px-3 py-3 text-center shadow-[0_12px_30px_rgba(22,93,255,0.08)]">
-                <p className="text-xl font-black text-[#165DFF] md:text-2xl">{value}</p>
-                <p className="mt-1 text-xs font-bold text-slate-500 md:text-sm">{label}</p>
+              <div key={label} className="rounded-[18px] border border-[#DCEBFF] bg-white/78 px-5 py-4 text-center shadow-[0_18px_42px_rgba(22,93,255,0.10)] backdrop-blur">
+                <p className="text-3xl font-black text-[#165DFF] md:text-4xl">{value}</p>
+                <p className="mt-2 text-sm font-black text-[#28517A] md:text-base">{label}</p>
               </div>
             ))}
           </div>
@@ -220,9 +181,9 @@ function HeroSection() {
           <DeviceShowcase />
         </div>
       </div>
-      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] grid-cols-2 gap-2.5 pb-12 sm:grid-cols-3 md:grid-cols-6 md:pb-16">
+      <div className="relative mx-auto grid w-[min(900px,calc(100%-28px))] grid-cols-2 gap-3 pb-12 md:grid-cols-4 md:pb-16">
         {sceneCards.map((item) => (
-          <div key={item} className="rounded-lg border border-[#DCEBFF] bg-white/70 px-3 py-3 text-center text-xs font-black text-[#28517A] shadow-[0_10px_24px_rgba(22,93,255,0.07)] backdrop-blur md:text-sm">
+          <div key={item} className="rounded-full border border-[#CFE2FF] bg-white/78 px-4 py-3 text-center text-xs font-black text-[#28517A] shadow-[0_12px_28px_rgba(22,93,255,0.08)] backdrop-blur md:text-sm">
             {item}
           </div>
         ))}
@@ -251,38 +212,6 @@ function DeviceShowcase() {
         </div>
       </div>
     </div>
-  );
-}
-
-function WhatIsSection() {
-  return (
-    <DarkSection id="about" eyebrow="什么是慧拼读？" title="慧拼读单词训练系统" subtitle="以英语单词训练为核心，帮助学生掌握单词规律，真正做到见词能读、听词能写。">
-      <div className="grid items-center gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-        <MotionCard className="bg-white/88">
-          <div className="rounded-lg border border-[#DCEBFF] bg-[#F7FAFF] p-2 shadow-inner">
-            <img src="/images/training-system-ui.png" alt="慧拼读系统后台真实界面" className="aspect-[16/9] w-full rounded-md object-cover" />
-          </div>
-        </MotionCard>
-        <div className="grid gap-4">
-          {[
-            ["见词能读", "通过拆分拼写、自然拼读和音标训练，建立单词读音规律。"],
-            ["听词能写", "配合听写、复习和检测，让学生把输入转化为真实掌握。"],
-            ["四端闭环", "机构后台、交付中心、学员端、家长端形成完整教学闭环。"],
-            ["机构增长", "标准化课程、可视化报告和运营数据，帮助校区更好招生与续费。"]
-          ].map(([title, text]) => (
-            <MotionCard key={title} className="bg-white/88">
-              <div className="flex gap-4">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF]"><CheckCircle2 className="h-5 w-5" /></span>
-                <div>
-                  <h3 className="text-lg font-black text-[#07152D]">{title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">{text}</p>
-                </div>
-              </div>
-            </MotionCard>
-          ))}
-        </div>
-      </div>
-    </DarkSection>
   );
 }
 
@@ -327,9 +256,6 @@ function FeaturesSection() {
             </div>
           </MotionCard>
         ))}
-      </div>
-      <div className="mt-10 text-center">
-        <CtaButton onClick={() => scrollTo("lead")}>获取产品方案</CtaButton>
       </div>
     </LightSection>
   );
@@ -378,9 +304,6 @@ function VideoDemoSection() {
             </div>
           </div>
         </div>
-        <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-3 md:gap-4">
-          {["四端协同", "课堂教学流程", "学习报告同步家长端"].map((item) => <GlassPill key={item}>{item}</GlassPill>)}
-        </div>
         <div className="mt-9 text-center">
           <CtaButton onClick={() => scrollTo("lead")}>预约系统演示</CtaButton>
         </div>
@@ -401,137 +324,6 @@ function SupportSection() {
             </div>
           </MotionCard>
         ))}
-      </div>
-    </LightSection>
-  );
-}
-
-function ROICalculatorSection() {
-  const [current, setCurrent] = useState(80);
-  const [signup, setSignup] = useState(30);
-  const [fee, setFee] = useState(1280);
-  const [weeks, setWeeks] = useState(12);
-  const [teacherCost, setTeacherCost] = useState(4200);
-  const [plan, setPlan] = useState<PlanKey>("year");
-  const selectedPlan = plans.find((item) => item.key === plan) || plans[1];
-  const result = useMemo(() => {
-    const revenue = signup * fee;
-    const grossProfit = Math.max(0, revenue - teacherCost - selectedPlan.price);
-    const classProfit = Math.max(0, signup * fee - teacherCost);
-    const payback = classProfit > 0 ? Math.max(0.2, selectedPlan.price / classProfit) : 0;
-    const roi = selectedPlan.price > 0 ? grossProfit / selectedPlan.price : 0;
-    const base = Math.max(1, revenue / Math.max(1, weeks));
-    const chart = Array.from({ length: 6 }, (_, index) => ({ name: `${index + 1}期`, value: Math.round(base * (index + 1) * 0.72 + current * 28) }));
-    return { revenue, grossProfit, classProfit, payback, roi, chart };
-  }, [current, signup, fee, weeks, teacherCost, selectedPlan.price]);
-
-  return (
-    <LightSection id="roi" eyebrow="ROI 收益测算" title="测一测：开通慧拼读后，机构多久可以回本？" subtitle="输入你的校区数据，系统自动测算预计收入、利润空间和回本周期。">
-      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:gap-6">
-        <MotionCard className="bg-white/86">
-          <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
-            <NumberInput label="当前学员数量" value={current} onChange={setCurrent} />
-            <NumberInput label="预计报名人数" value={signup} onChange={setSignup} />
-            <NumberInput label="单个学员收费" value={fee} onChange={setFee} prefix="￥" />
-            <NumberInput label="课程周期（周）" value={weeks} onChange={setWeeks} />
-            <NumberInput label="老师课时成本" value={teacherCost} onChange={setTeacherCost} prefix="￥" />
-            <label className="text-sm font-bold text-[#28517A]">选择套餐
-              <select value={plan} onChange={(event) => setPlan(event.target.value as PlanKey)} className="mt-2 h-12 w-full rounded-lg border border-[#D9E6F7] bg-white px-3 text-[#07152D] outline-none focus:border-[#165DFF]">
-                <option value="half">5800 半年</option>
-                <option value="year">8800 一年</option>
-                <option value="forever">49800 永久授权</option>
-              </select>
-            </label>
-          </div>
-          <p className="mt-5 rounded-lg bg-[#F1F6FF] p-3 text-xs leading-6 text-slate-500 md:p-4">以上测算仅为示例，具体收益会根据机构定价、招生能力和当地市场情况变化。</p>
-          <div className="mt-6">
-            <CtaButton onClick={() => scrollTo("lead")}>获取我的专属盈利方案</CtaButton>
-          </div>
-        </MotionCard>
-        <MotionCard className="bg-[#165DFF] text-white">
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <Metric label="预计总收入" value={`￥${yuan(result.revenue)}`} />
-            <Metric label="预计毛利润" value={`￥${yuan(result.grossProfit)}`} highlight />
-            <Metric label="单个班级收益" value={`￥${yuan(result.classProfit)}`} />
-            <Metric label="回本周期" value={`${result.payback.toFixed(1)} 个班`} highlight />
-            <Metric label="推荐套餐" value={selectedPlan.display} />
-            <Metric label="预计 ROI 倍数" value={`${Math.max(0, result.roi).toFixed(1)}x`} highlight />
-          </div>
-          <div className="mt-5 grid gap-4 md:mt-6 lg:grid-cols-[170px_1fr] lg:gap-5">
-            <div className="relative mx-auto grid h-32 w-32 place-items-center rounded-full bg-[conic-gradient(#FFFFFF_0_74%,rgba(255,255,255,0.18)_74%_100%)] md:h-40 md:w-40">
-              <div className="grid h-24 w-24 place-items-center rounded-full bg-[#165DFF] text-center md:h-28 md:w-28">
-                <span className="text-2xl font-black text-white md:text-3xl">{Math.min(99, Math.round(Math.max(0, result.roi) * 35))}%</span>
-                <span className="-mt-7 text-xs text-[#CFE2FF]">收益进度</span>
-              </div>
-            </div>
-            <div className="h-36 md:h-44">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={result.chart}>
-                  <defs>
-                    <linearGradient id="roiGradient" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.62} />
-                      <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.05} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-                  <XAxis dataKey="name" stroke="#DCEBFF" fontSize={12} />
-                  <YAxis hide />
-                  <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #DCEBFF", borderRadius: 8, color: "#07152D" }} />
-                  <Area type="monotone" dataKey="value" stroke="#FFFFFF" fill="url(#roiGradient)" strokeWidth={3} />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </MotionCard>
-      </div>
-    </LightSection>
-  );
-}
-
-function PricingSection() {
-  return (
-    <DarkSection id="pricing" eyebrow="套餐价格" title="三档套餐，灵活选择，价值保障" subtitle="机构可结合校区阶段、预算和落地需求选择合作方式。">
-      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
-        {plans.map((plan) => (
-          <motion.article key={plan.key} whileHover={{ y: -10, scale: 1.01 }} className={`relative rounded-lg border p-5 shadow-[0_18px_52px_rgba(12,42,92,0.10)] backdrop-blur md:p-6 ${plan.featured ? "border-[#165DFF] bg-white ring-2 ring-[#165DFF]/16" : "border-[#DCEBFF] bg-white/88"}`}>
-            {plan.featured ? <span className="absolute -top-4 left-6 rounded-full bg-[#165DFF] px-4 py-2 text-xs font-black text-white">推荐套餐</span> : null}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-black text-[#07152D] md:text-2xl">{plan.name}</h3>
-                <p className="mt-2 text-sm text-slate-600">{plan.note}</p>
-              </div>
-              <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-xs font-black text-[#165DFF]">{plan.tag}</span>
-            </div>
-            <p className="mt-6 text-3xl font-black text-[#165DFF] md:mt-7 md:text-4xl">{plan.display}<span className="text-base font-bold text-slate-500"> {plan.period}</span></p>
-            <ul className="mt-6 grid gap-2.5 md:mt-7 md:space-y-3">
-              {plan.features.map((item) => <CheckItem key={item}>{item}</CheckItem>)}
-            </ul>
-            <button onClick={() => scrollTo("lead")} className={`mt-8 w-full rounded-lg px-5 py-3 text-sm font-black transition ${plan.featured ? "bg-[#165DFF] text-white hover:bg-[#0F4FE6]" : "bg-[#EAF3FF] text-[#165DFF] hover:bg-[#DDEBFF]"}`}>立即咨询</button>
-          </motion.article>
-        ))}
-      </div>
-    </DarkSection>
-  );
-}
-
-function OnsiteSupportSection() {
-  return (
-    <LightSection id="onsite" eyebrow="总部上门落地" title="总部上门落地，执行到位效果更好" subtitle="49800 套餐的上门权益由总部具备多年校区运营经验的老师团队上门指导，协助机构完成招生、教研、活动和运营落地执行。">
-      <div className="grid items-center gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-7">
-        <MotionCard className="bg-white/86">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {onsiteItems.map((item) => (
-              <div key={item} className="rounded-lg bg-[#F1F6FF] p-3 sm:p-4">
-                <CheckCircle2 className="mb-2 h-5 w-5 text-[#165DFF] sm:mb-3 sm:h-6 sm:w-6" />
-                <h3 className="text-sm font-black text-[#07152D] sm:text-base">{item}</h3>
-              </div>
-            ))}
-          </div>
-        </MotionCard>
-        <div className="relative">
-          <div className="absolute -inset-6 rounded-full bg-[#2F7BFF]/15 blur-3xl" />
-          <img src="/images/consulting-realistic.png" alt="总部顾问团队与运营数据看板" className="relative rounded-lg shadow-[0_22px_60px_rgba(12,42,92,0.2)] md:rounded-[18px] md:shadow-[0_34px_90px_rgba(12,42,92,0.24)]" />
-        </div>
       </div>
     </LightSection>
   );
@@ -578,9 +370,6 @@ function CasesSection() {
           </MotionCard>
         ))}
       </div>
-      <div className="mt-8 text-center">
-        <CtaButton onClick={() => scrollTo("lead")}>获取产品方案</CtaButton>
-      </div>
     </LightSection>
   );
 }
@@ -605,7 +394,7 @@ function FAQSection() {
 }
 
 function LeadFormSection() {
-  const [form, setForm] = useState<LeadForm>({ org: "", name: "", phone: "", wechat: "", city: "", students: "", plan: "8800 元 / 年", message: "" });
+  const [form, setForm] = useState<LeadForm>({ org: "", name: "", phone: "", wechat: "", city: "", students: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -633,7 +422,6 @@ function LeadFormSection() {
           wechat: form.wechat,
           city: form.city,
           studentCount: Number(form.students) || undefined,
-          interestedPlan: form.plan,
           message: form.message,
           sourcePage: "慧拼读高转化官网",
           sourceChannel: "底部预约演示表单"
@@ -660,14 +448,6 @@ function LeadFormSection() {
             <TextInput label="微信号" value={form.wechat} onChange={(value) => setForm({ ...form, wechat: value })} />
             <TextInput label="所在城市" value={form.city} onChange={(value) => setForm({ ...form, city: value })} />
             <TextInput label="当前学员数量" value={form.students} onChange={(value) => setForm({ ...form, students: value })} />
-            <label className="text-sm font-bold text-[#28517A]">感兴趣套餐
-              <select value={form.plan} onChange={(event) => setForm({ ...form, plan: event.target.value })} className="mt-2 h-11 w-full rounded-lg border border-[#D9E6F7] bg-white px-3 text-[#07152D] outline-none focus:border-[#165DFF] md:h-12">
-                <option>5800 元 / 半年</option>
-                <option>8800 元 / 年</option>
-                <option>49800 元 / 永久使用</option>
-                <option>49800 上门落地方案</option>
-              </select>
-            </label>
             <label className="text-sm font-bold text-[#28517A] sm:col-span-2">备注
               <textarea value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="mt-2 min-h-24 w-full rounded-lg border border-[#D9E6F7] bg-white px-3 py-3 text-[#07152D] outline-none focus:border-[#165DFF] md:min-h-28" placeholder="可填写校区情况、想了解的套餐或演示时间" />
             </label>
@@ -707,7 +487,7 @@ function Footer() {
           <p className="mt-3 max-w-md text-sm leading-6 md:mt-4 md:leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
           <p className="mt-5 text-xs md:mt-6">Copyright © 2026 慧拼读单词训练系统. All rights reserved.</p>
         </div>
-        <FooterGroup title="产品功能" items={["机构端", "教练端", "学员端", "家长端", "ROI 测算"]} />
+        <FooterGroup title="产品功能" items={["机构端", "教练端", "学员端", "家长端", "系统演示"]} />
         <FooterGroup title="解决方案" items={["小班课一对多", "一对一教学", "招生转化", "教研交付", "运营陪跑"]} />
         <div>
           <h3 className="font-black text-[#07152D]">联系方式</h3>
@@ -787,30 +567,6 @@ function CheckItem({ children }: { children: React.ReactNode }) {
   );
 }
 
-function GlassPill({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-lg border border-[#DCEBFF] bg-white/88 px-3 py-3 text-center text-sm font-black text-[#165DFF] shadow-[0_12px_30px_rgba(22,93,255,0.08)] backdrop-blur md:px-5 md:py-4 md:text-base">{children}</div>;
-}
-
-function NumberInput({ label, value, onChange, prefix }: { label: string; value: number; onChange: (value: number) => void; prefix?: string }) {
-  return (
-    <label className="text-sm font-bold text-[#28517A]">{label}
-      <div className="mt-2 flex h-11 items-center rounded-lg border border-[#D9E6F7] bg-white px-3 focus-within:border-[#165DFF] md:h-12">
-        {prefix ? <span className="mr-1 text-slate-400">{prefix}</span> : null}
-        <input inputMode="numeric" value={value === 0 ? "" : String(value)} onChange={(event) => onChange(Number(event.target.value.replace(/\D/g, "")) || 0)} className="w-full bg-transparent text-[#07152D] outline-none" />
-      </div>
-    </label>
-  );
-}
-
-function Metric({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <motion.div key={value} initial={{ opacity: 0.5, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="rounded-lg border border-[#DCEBFF] bg-white/10 p-3 md:p-4">
-      <p className="text-xs text-[#A9D8FF]">{label}</p>
-      <p className={`mt-1 text-lg font-black md:mt-2 md:text-2xl ${highlight ? "text-[#64D2FF]" : "text-white"}`}>{value}</p>
-    </motion.div>
-  );
-}
-
 function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <label className="text-sm font-bold text-[#28517A]">{label}
@@ -833,8 +589,8 @@ function FooterGroup({ title, items }: { title: string; items: string[] }) {
 function MobileCta() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-[#DCEBFF] bg-white/94 px-3 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-2 shadow-[0_-14px_36px_rgba(22,93,255,0.10)] backdrop-blur lg:hidden">
-      <button onClick={() => scrollTo("lead")} className="h-11 rounded-lg bg-[#165DFF] text-sm font-black text-white">预约演示</button>
-      <button onClick={() => scrollTo("roi")} className="h-11 rounded-lg border border-[#BFD9FF] text-sm font-black text-[#165DFF]">收益测算</button>
+      <button onClick={() => scrollTo("video")} className="h-11 rounded-lg bg-[#165DFF] text-sm font-black text-white">系统演示</button>
+      <button onClick={() => scrollTo("lead")} className="h-11 rounded-lg border border-[#BFD9FF] text-sm font-black text-[#165DFF]">咨询</button>
     </div>
   );
 }
