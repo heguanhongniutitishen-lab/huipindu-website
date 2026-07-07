@@ -144,11 +144,11 @@ export function SaasLandingPage() {
 function Header() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#061225]/72 backdrop-blur-2xl">
-      <div className="mx-auto flex h-16 w-[min(1200px,calc(100%-32px))] items-center justify-between">
-        <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
-          <img src="/images/logo.png" alt="慧拼读单词系统" className="h-10 w-auto object-contain" />
-          <span className="text-base font-black tracking-wide">慧拼读单词系统</span>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#061225]/95 shadow-[0_10px_32px_rgba(6,18,37,0.28)] backdrop-blur-2xl md:bg-[#061225]/86">
+      <div className="mx-auto flex h-14 w-[min(1200px,calc(100%-28px))] items-center justify-between md:h-16">
+        <button onClick={() => scrollTo("hero")} className="flex min-w-0 items-center gap-2.5">
+          <img src="/images/logo.png" alt="慧拼读单词系统" className="h-8 w-auto shrink-0 object-contain md:h-10" />
+          <span className="truncate text-sm font-black tracking-wide md:text-base">慧拼读单词系统</span>
         </button>
         <nav className="hidden items-center gap-6 text-sm font-semibold text-slate-300 lg:flex">
           {navItems.map(([label, id]) => (
@@ -159,15 +159,15 @@ function Header() {
           <CtaButton variant="ghost" onClick={() => scrollTo("pricing")}>查看产品方案</CtaButton>
           <CtaButton onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
         </div>
-        <button onClick={() => setOpen(!open)} className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 lg:hidden">
+        <button onClick={() => setOpen(!open)} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 md:h-10 md:w-10 lg:hidden">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
       {open ? (
-        <div className="border-t border-white/10 bg-[#061225]/96 px-4 py-4 lg:hidden">
+        <div className="border-t border-white/10 bg-[#061225]/96 px-3 py-3 lg:hidden">
           <div className="grid gap-2">
             {navItems.map(([label, id]) => (
-              <button key={id} onClick={() => { setOpen(false); scrollTo(id); }} className="rounded-lg px-4 py-3 text-left text-sm font-bold text-slate-200 hover:bg-white/8">{label}</button>
+              <button key={id} onClick={() => { setOpen(false); scrollTo(id); }} className="rounded-lg px-4 py-2.5 text-left text-sm font-bold text-slate-200 hover:bg-white/8">{label}</button>
             ))}
             <button onClick={() => { setOpen(false); scrollTo("lead"); }} className="rounded-lg bg-[#FF8A00] px-4 py-3 text-sm font-black text-white">立即预约演示</button>
           </div>
@@ -181,28 +181,28 @@ function HeroSection() {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 700], [0, 120]);
   return (
-    <section id="hero" className="relative min-h-screen pt-24">
+    <section id="hero" className="relative pt-20 lg:min-h-screen lg:pt-24">
       <ParticleField />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_16%,rgba(47,123,255,0.36),transparent_30rem),radial-gradient(circle_at_88%_18%,rgba(100,210,255,0.22),transparent_25rem),linear-gradient(180deg,#061225_0%,#081A36_55%,#F7FAFF_100%)]" />
-      <div className="relative mx-auto grid min-h-[calc(100vh-96px)] w-[min(1200px,calc(100%-32px))] items-center gap-12 pb-20 lg:grid-cols-[0.9fr_1.1fr]">
-        <motion.div variants={fadeUp} initial="hidden" animate="show">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm font-bold text-[#A9D8FF] backdrop-blur">
+      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] items-center gap-7 pb-12 md:gap-10 md:pb-16 lg:min-h-[calc(100vh-96px)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:pb-20">
+        <motion.div variants={fadeUp} initial="hidden" animate="show" className="text-center lg:text-left">
+          <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-2 text-xs font-bold leading-5 text-[#A9D8FF] backdrop-blur sm:text-sm">
             <Sparkles className="h-4 w-4 text-[#FFB020]" />
-            面向英语培训机构的智能单词学习与教学系统
+            <span className="truncate">面向英语培训机构的智能单词学习与教学系统</span>
           </div>
-          <h1 className="max-w-3xl text-[2.8rem] font-black leading-[1.04] tracking-[-0.01em] sm:text-6xl lg:text-[4.65rem]">让英语培训机构快速拥有自己的智能单词课程</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">一套覆盖机构端、交付中心（教练端）、学员端、家长端的英语单词学习系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <h1 className="mx-auto max-w-3xl text-[2.15rem] font-black leading-[1.08] tracking-normal sm:text-6xl lg:mx-0 lg:text-[4.65rem]">让英语培训机构快速拥有自己的智能单词课程</h1>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8 lg:mx-0">一套覆盖机构端、交付中心（教练端）、学员端、家长端的英语单词学习系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:justify-start">
             <CtaButton size="lg" onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
             <CtaButton size="lg" variant="glass" onClick={() => scrollTo("pricing")}>查看产品方案</CtaButton>
           </div>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {sellingPoints.map((item) => (
-              <div key={item} className="rounded-lg border border-white/12 bg-white/8 px-4 py-3 text-center text-sm font-black text-white backdrop-blur">{item}</div>
+              <div key={item} className="rounded-lg border border-white/12 bg-white/8 px-3 py-2.5 text-center text-sm font-black text-white backdrop-blur">{item}</div>
             ))}
           </div>
         </motion.div>
-        <motion.div style={{ y }} className="relative">
+        <motion.div style={{ y }} className="relative -mb-8 sm:mb-0">
           <DeviceShowcase />
         </motion.div>
       </div>
@@ -212,9 +212,9 @@ function HeroSection() {
 
 function DeviceShowcase() {
   return (
-    <div className="relative mx-auto max-w-[650px]">
-      <div className="absolute -inset-10 rounded-full bg-[#2F7BFF]/25 blur-3xl" />
-      <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="relative rounded-[22px] border border-white/14 bg-[#0A1832]/88 p-3 shadow-[0_40px_120px_rgba(0,0,0,0.45)] backdrop-blur">
+    <div className="relative mx-auto max-w-[650px] origin-top scale-[0.9] sm:scale-100">
+      <div className="absolute -inset-5 rounded-full bg-[#2F7BFF]/25 blur-3xl sm:-inset-10" />
+      <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="relative rounded-[18px] border border-white/14 bg-[#0A1832]/88 p-2 shadow-[0_28px_80px_rgba(0,0,0,0.36)] backdrop-blur sm:rounded-[22px] sm:p-3 sm:shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
         <div className="mb-2 flex items-center gap-2 px-2">
           <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
@@ -225,7 +225,7 @@ function DeviceShowcase() {
       <FloatCard className="-left-4 top-10" title="学习进度" value="86%" icon={Gauge} />
       <FloatCard className="-right-2 top-24" title="续费线索" value="+42%" icon={TrendingUp} />
       <FloatCard className="bottom-4 left-8" title="四端协同" value="在线" icon={MonitorSmartphone} />
-      <motion.div animate={{ y: [0, 14, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }} className="absolute -bottom-10 right-4 w-28 rounded-[24px] border border-white/16 bg-[#07152D] p-2 shadow-2xl sm:w-36">
+      <motion.div animate={{ y: [0, 14, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }} className="absolute -bottom-7 right-3 w-24 rounded-[20px] border border-white/16 bg-[#07152D] p-1.5 shadow-2xl sm:-bottom-10 sm:right-4 sm:w-36 sm:rounded-[24px] sm:p-2">
         <div className="mx-auto mb-2 h-1 w-9 rounded-full bg-white/30" />
         <img src="/images/student-report-mobile.png" alt="学员端与家长报告" className="rounded-[18px]" />
       </motion.div>
@@ -250,9 +250,9 @@ function FloatCard({ className, title, value, icon: Icon }: { className: string;
 function PainPointsSection() {
   return (
     <DarkSection id="pain" eyebrow="机构增长痛点" title="为什么机构需要慧拼读单词系统？" subtitle="把传统机构难以标准化、难以感知、难以续费的问题，转化为可交付、可视化、可运营的课程体系。">
-      <div className="grid items-center gap-5 lg:grid-cols-[1fr_120px_1fr]">
+      <div className="grid items-center gap-4 lg:grid-cols-[1fr_120px_1fr] lg:gap-5">
         <CompareCard title="传统机构痛点" items={pains} tone="danger" />
-        <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="mx-auto grid h-24 w-24 place-items-center rounded-full border border-white/15 bg-white/10 text-2xl font-black text-[#FFB020] shadow-[0_0_60px_rgba(255,138,0,0.35)]">
+        <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="mx-auto grid h-12 w-24 place-items-center rounded-full border border-white/15 bg-white/10 text-lg font-black text-[#FFB020] shadow-[0_0_40px_rgba(255,138,0,0.26)] lg:h-24 lg:w-24 lg:text-2xl lg:shadow-[0_0_60px_rgba(255,138,0,0.35)]">
           VS
         </motion.div>
         <CompareCard title="使用慧拼读后" items={gains} tone="success" />
@@ -266,16 +266,16 @@ function ProductSystemSection() {
     <LightSection id="system" eyebrow="四端产品体系" title="四端产品体系，全方位赋能机构教学" subtitle="校长、老师、学员、家长各有清晰工作台，课程交付不再依赖单点经验。">
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {products.map((item, index) => (
-          <MotionCard key={item.title} delay={index * 0.08} className="group min-h-[310px] bg-white/78">
-            <div className="mb-6 flex items-center justify-between">
-              <span className="grid h-14 w-14 place-items-center rounded-lg bg-gradient-to-br from-[#E8F2FF] to-white text-[#165DFF] shadow-inner">
-                <item.icon className="h-7 w-7" />
+          <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/78 md:min-h-[310px]">
+            <div className="mb-4 flex items-center justify-between md:mb-6">
+              <span className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-[#E8F2FF] to-white text-[#165DFF] shadow-inner md:h-14 md:w-14">
+                <item.icon className="h-5 w-5 md:h-7 md:w-7" />
               </span>
               <span className="text-sm font-black text-[#94A3B8]">0{index + 1}</span>
             </div>
-            <h3 className="text-2xl font-black text-[#07152D]">{item.title}</h3>
+            <h3 className="text-xl font-black text-[#07152D] md:text-2xl">{item.title}</h3>
             <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
-            <div className="mt-6 grid gap-2">
+            <div className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:grid-cols-1">
               {item.points.map((point) => (
                 <span key={point} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-bold text-[#28517A]">{point}</span>
               ))}
@@ -290,15 +290,15 @@ function ProductSystemSection() {
 function FeaturesSection() {
   return (
     <LightSection id="features" eyebrow="九大学习功能" title="九大学习功能，覆盖英语学习全场景" subtitle="围绕单词学习的训练、复习、检测、打卡、报告持续闭环。">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {features.map((item, index) => (
-          <MotionCard key={item.title} delay={index * 0.04} className="flex items-start gap-4 bg-white/82 p-5">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF]">
-              <item.icon className="h-6 w-6" />
+          <MotionCard key={item.title} delay={index * 0.04} className="flex flex-col gap-3 bg-white/82 p-4 sm:flex-row sm:items-start sm:gap-4 sm:p-5">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF] sm:h-12 sm:w-12">
+              <item.icon className="h-5 w-5 sm:h-6 sm:w-6" />
             </span>
             <div>
-              <h3 className="text-lg font-black text-[#07152D]">{item.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{item.text}</p>
+              <h3 className="text-base font-black text-[#07152D] sm:text-lg">{item.title}</h3>
+              <p className="mt-1 text-xs leading-5 text-slate-600 sm:mt-2 sm:text-sm sm:leading-6">{item.text}</p>
             </div>
           </MotionCard>
         ))}
@@ -320,13 +320,13 @@ function TeachingModesSection() {
       <div className="grid gap-6 lg:grid-cols-2">
         {modes.map((mode) => (
           <motion.article key={mode.title} whileHover={{ y: -8 }} className="overflow-hidden rounded-lg border border-white/12 bg-white/8 shadow-2xl backdrop-blur">
-            <div className="relative h-72 overflow-hidden">
+            <div className="relative h-48 overflow-hidden sm:h-64 lg:h-72">
               <img src={mode.image} alt={mode.title} className="h-full w-full object-cover transition duration-700 hover:scale-105" />
               <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#061225] to-transparent" />
-              <h3 className="absolute bottom-6 left-6 text-3xl font-black">{mode.title}</h3>
+              <h3 className="absolute bottom-5 left-5 text-2xl font-black md:bottom-6 md:left-6 md:text-3xl">{mode.title}</h3>
             </div>
-            <div className="p-6">
-              <p className="leading-7 text-slate-300">{mode.text}</p>
+            <div className="p-5 md:p-6">
+              <p className="text-sm leading-7 text-slate-300 md:text-base">{mode.text}</p>
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {mode.points.map((point) => <CheckItem key={point}>{point}</CheckItem>)}
               </div>
@@ -342,18 +342,18 @@ function VideoDemoSection() {
   return (
     <DarkSection id="video" eyebrow="产品演示视频" title="3分钟看懂慧拼读单词系统如何上课" subtitle="从机构管理、教练上课、学员训练到家长报告，一条完整学习闭环清晰展示。">
       <div className="mx-auto max-w-5xl">
-        <div className="relative rounded-[18px] border border-[#3D8BFF]/30 bg-[#091B3A] p-3 shadow-[0_0_120px_rgba(47,123,255,0.25)]">
+        <div className="relative rounded-lg border border-[#3D8BFF]/30 bg-[#091B3A] p-2 shadow-[0_0_70px_rgba(47,123,255,0.22)] md:rounded-[18px] md:p-3 md:shadow-[0_0_120px_rgba(47,123,255,0.25)]">
           <div className="absolute -inset-4 rounded-[26px] bg-[#2F7BFF]/18 blur-2xl" />
           <div className="relative overflow-hidden rounded-xl bg-black">
             <img src="/images/system-dashboard.png" alt="系统演示视频封面" className="aspect-video w-full object-cover opacity-74" />
             <div className="absolute inset-0 grid place-items-center">
-              <button className="group grid h-20 w-20 place-items-center rounded-full bg-white text-[#165DFF] shadow-[0_0_0_18px_rgba(47,123,255,0.20)] transition hover:scale-105">
-                <Play className="ml-1 h-9 w-9 fill-current" />
+              <button className="group grid h-14 w-14 place-items-center rounded-full bg-white text-[#165DFF] shadow-[0_0_0_12px_rgba(47,123,255,0.18)] transition hover:scale-105 md:h-20 md:w-20 md:shadow-[0_0_0_18px_rgba(47,123,255,0.20)]">
+                <Play className="ml-1 h-7 w-7 fill-current md:h-9 md:w-9" />
               </button>
             </div>
           </div>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+        <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-3 md:gap-4">
           {["四端协同", "课堂教学流程", "学习报告同步家长端"].map((item) => <GlassPill key={item}>{item}</GlassPill>)}
         </div>
         <div className="mt-9 text-center">
@@ -369,9 +369,9 @@ function SupportSection() {
     <LightSection id="support" eyebrow="总部赋能" title="不只是系统，更是全方位运营支持" subtitle="慧拼读不只是提供软件系统，还为机构提供从开课、招生、教研、运营到售后的完整支持。">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {supportItems.map((item, index) => (
-          <MotionCard key={item} delay={index * 0.04} className="bg-white/82 p-5">
+          <MotionCard key={item} delay={index * 0.04} className="bg-white/82 p-4 sm:p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF]"><CheckCircle2 className="h-5 w-5" /></span>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF] sm:h-10 sm:w-10"><CheckCircle2 className="h-5 w-5" /></span>
               <h3 className="font-black text-[#07152D]">{item}</h3>
             </div>
           </MotionCard>
@@ -402,9 +402,9 @@ function ROICalculatorSection() {
 
   return (
     <LightSection id="roi" eyebrow="ROI 收益测算" title="测一测：开通慧拼读后，机构多久可以回本？" subtitle="输入你的校区数据，系统自动测算预计收入、利润空间和回本周期。">
-      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:gap-6">
         <MotionCard className="bg-white/86">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
             <NumberInput label="当前学员数量" value={current} onChange={setCurrent} />
             <NumberInput label="预计报名人数" value={signup} onChange={setSignup} />
             <NumberInput label="单个学员收费" value={fee} onChange={setFee} prefix="￥" />
@@ -418,13 +418,13 @@ function ROICalculatorSection() {
               </select>
             </label>
           </div>
-          <p className="mt-5 rounded-lg bg-[#F1F6FF] p-4 text-xs leading-6 text-slate-500">以上测算仅为示例，具体收益会根据机构定价、招生能力和当地市场情况变化。</p>
+          <p className="mt-5 rounded-lg bg-[#F1F6FF] p-3 text-xs leading-6 text-slate-500 md:p-4">以上测算仅为示例，具体收益会根据机构定价、招生能力和当地市场情况变化。</p>
           <div className="mt-6">
             <CtaButton onClick={() => scrollTo("lead")}>获取我的专属盈利方案</CtaButton>
           </div>
         </MotionCard>
         <MotionCard className="bg-[#07152D] text-white">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
             <Metric label="预计总收入" value={`￥${yuan(result.revenue)}`} />
             <Metric label="预计毛利润" value={`￥${yuan(result.grossProfit)}`} highlight />
             <Metric label="单个班级收益" value={`￥${yuan(result.classProfit)}`} />
@@ -432,14 +432,14 @@ function ROICalculatorSection() {
             <Metric label="推荐套餐" value={selectedPlan.display} />
             <Metric label="预计 ROI 倍数" value={`${Math.max(0, result.roi).toFixed(1)}x`} highlight />
           </div>
-          <div className="mt-6 grid gap-5 lg:grid-cols-[170px_1fr]">
-            <div className="relative mx-auto grid h-40 w-40 place-items-center rounded-full bg-[conic-gradient(#2F7BFF_0_74%,rgba(255,255,255,0.12)_74%_100%)]">
-              <div className="grid h-28 w-28 place-items-center rounded-full bg-[#07152D] text-center">
-                <span className="text-3xl font-black text-[#FFB020]">{Math.min(99, Math.round(Math.max(0, result.roi) * 35))}%</span>
+          <div className="mt-5 grid gap-4 md:mt-6 lg:grid-cols-[170px_1fr] lg:gap-5">
+            <div className="relative mx-auto grid h-32 w-32 place-items-center rounded-full bg-[conic-gradient(#2F7BFF_0_74%,rgba(255,255,255,0.12)_74%_100%)] md:h-40 md:w-40">
+              <div className="grid h-24 w-24 place-items-center rounded-full bg-[#07152D] text-center md:h-28 md:w-28">
+                <span className="text-2xl font-black text-[#FFB020] md:text-3xl">{Math.min(99, Math.round(Math.max(0, result.roi) * 35))}%</span>
                 <span className="-mt-7 text-xs text-slate-400">收益进度</span>
               </div>
             </div>
-            <div className="h-44">
+            <div className="h-36 md:h-44">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={result.chart}>
                   <defs>
@@ -466,19 +466,19 @@ function ROICalculatorSection() {
 function PricingSection() {
   return (
     <DarkSection id="pricing" eyebrow="套餐价格" title="三档套餐，灵活选择，价值保障" subtitle="机构可结合校区阶段、预算和落地需求选择合作方式。">
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3 lg:gap-6">
         {plans.map((plan) => (
-          <motion.article key={plan.key} whileHover={{ y: -10, scale: 1.01 }} className={`relative rounded-lg border p-6 shadow-2xl backdrop-blur ${plan.featured ? "border-[#64D2FF] bg-[#123A76] ring-2 ring-[#64D2FF]/30" : "border-white/12 bg-white/8"}`}>
+          <motion.article key={plan.key} whileHover={{ y: -10, scale: 1.01 }} className={`relative rounded-lg border p-5 shadow-2xl backdrop-blur md:p-6 ${plan.featured ? "border-[#64D2FF] bg-[#123A76] ring-2 ring-[#64D2FF]/30" : "border-white/12 bg-white/8"}`}>
             {plan.featured ? <span className="absolute -top-4 left-6 rounded-full bg-[#FF8A00] px-4 py-2 text-xs font-black text-white">推荐套餐</span> : null}
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-2xl font-black">{plan.name}</h3>
+                <h3 className="text-xl font-black md:text-2xl">{plan.name}</h3>
                 <p className="mt-2 text-sm text-slate-300">{plan.note}</p>
               </div>
               <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-black text-[#A9D8FF]">{plan.tag}</span>
             </div>
-            <p className="mt-7 text-4xl font-black text-white">{plan.display}<span className="text-base font-bold text-slate-300"> {plan.period}</span></p>
-            <ul className="mt-7 space-y-3">
+            <p className="mt-6 text-3xl font-black text-white md:mt-7 md:text-4xl">{plan.display}<span className="text-base font-bold text-slate-300"> {plan.period}</span></p>
+            <ul className="mt-6 grid gap-2.5 md:mt-7 md:space-y-3">
               {plan.features.map((item) => <CheckItem key={item}>{item}</CheckItem>)}
             </ul>
             <button onClick={() => scrollTo("lead")} className={`mt-8 w-full rounded-lg px-5 py-3 text-sm font-black transition ${plan.featured ? "bg-[#FF8A00] text-white hover:bg-[#F07B00]" : "bg-white text-[#165DFF] hover:bg-[#EAF3FF]"}`}>立即咨询</button>
@@ -492,20 +492,20 @@ function PricingSection() {
 function OnsiteSupportSection() {
   return (
     <LightSection id="onsite" eyebrow="总部上门落地" title="总部上门落地，执行到位效果更好" subtitle="49800 套餐的上门权益由总部具备多年校区运营经验的老师团队上门指导，协助机构完成招生、教研、活动和运营落地执行。">
-      <div className="grid items-center gap-7 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid items-center gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-7">
         <MotionCard className="bg-white/86">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {onsiteItems.map((item) => (
-              <div key={item} className="rounded-lg bg-[#F1F6FF] p-4">
-                <CheckCircle2 className="mb-3 h-6 w-6 text-[#165DFF]" />
-                <h3 className="font-black text-[#07152D]">{item}</h3>
+              <div key={item} className="rounded-lg bg-[#F1F6FF] p-3 sm:p-4">
+                <CheckCircle2 className="mb-2 h-5 w-5 text-[#165DFF] sm:mb-3 sm:h-6 sm:w-6" />
+                <h3 className="text-sm font-black text-[#07152D] sm:text-base">{item}</h3>
               </div>
             ))}
           </div>
         </MotionCard>
         <div className="relative">
           <div className="absolute -inset-6 rounded-full bg-[#2F7BFF]/15 blur-3xl" />
-          <img src="/images/consulting-realistic.png" alt="总部顾问团队与运营数据看板" className="relative rounded-[18px] shadow-[0_34px_90px_rgba(12,42,92,0.24)]" />
+          <img src="/images/consulting-realistic.png" alt="总部顾问团队与运营数据看板" className="relative rounded-lg shadow-[0_22px_60px_rgba(12,42,92,0.2)] md:rounded-[18px] md:shadow-[0_34px_90px_rgba(12,42,92,0.24)]" />
         </div>
       </div>
     </LightSection>
@@ -515,12 +515,12 @@ function OnsiteSupportSection() {
 function ProcessSection() {
   return (
     <DarkSection id="process" eyebrow="合作流程" title="合作流程清晰，最快快速上线开课" subtitle="从咨询到上线开课，每一步都有清晰交付和支持。">
-      <div className="relative grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <div className="relative grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-6">
         <div className="absolute left-8 right-8 top-10 hidden h-0.5 bg-gradient-to-r from-[#2F7BFF] via-[#64D2FF] to-[#FF8A00] lg:block" />
         {process.map((item, index) => (
-          <motion.div key={item} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="relative rounded-lg border border-white/12 bg-white/8 p-5 text-center backdrop-blur">
-            <span className="mx-auto mb-4 grid h-11 w-11 place-items-center rounded-full bg-[#165DFF] text-sm font-black">{index + 1}</span>
-            <h3 className="font-black">{item}</h3>
+          <motion.div key={item} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="relative rounded-lg border border-white/12 bg-white/8 p-4 text-center backdrop-blur md:p-5">
+            <span className="mx-auto mb-3 grid h-9 w-9 place-items-center rounded-full bg-[#165DFF] text-sm font-black md:mb-4 md:h-11 md:w-11">{index + 1}</span>
+            <h3 className="text-sm font-black md:text-base">{item}</h3>
           </motion.div>
         ))}
       </div>
@@ -589,14 +589,14 @@ function LeadFormSection() {
   }
 
   return (
-    <section id="lead" className="relative bg-[#061225] py-20">
+    <section id="lead" className="relative bg-[#061225] py-12 pb-24 md:py-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(47,123,255,0.28),transparent_28rem),radial-gradient(circle_at_90%_80%,rgba(255,138,0,0.16),transparent_24rem)]" />
-      <div className="relative mx-auto grid w-[min(1200px,calc(100%-32px))] gap-8 lg:grid-cols-[1fr_0.86fr]">
+      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] gap-6 md:w-[min(1200px,calc(100%-32px))] lg:grid-cols-[1fr_0.86fr] lg:gap-8">
         <div>
           <p className="text-sm font-black text-[#64D2FF]">预约产品演示</p>
-          <h2 className="mt-3 text-4xl font-black leading-tight md:text-5xl">预约产品演示，获取专属合作方案</h2>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">留下联系方式，我们将为你提供系统演示和机构专属落地方案。</p>
-          <form onSubmit={submit} className="mt-8 grid gap-4 rounded-lg border border-white/12 bg-white/8 p-5 backdrop-blur sm:grid-cols-2">
+          <h2 className="mt-2 text-2xl font-black leading-tight md:mt-3 md:text-5xl">预约产品演示，获取专属合作方案</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 md:mt-5 md:text-lg md:leading-8">留下联系方式，我们将为你提供系统演示和机构专属落地方案。</p>
+          <form onSubmit={submit} className="mt-5 grid gap-3 rounded-lg border border-white/12 bg-white/8 p-4 backdrop-blur sm:grid-cols-2 md:mt-8 md:gap-4 md:p-5">
             <TextInput label="机构名称" value={form.org} onChange={(value) => setForm({ ...form, org: value })} />
             <TextInput label="联系人" value={form.name} onChange={(value) => setForm({ ...form, name: value })} />
             <TextInput label="手机号" value={form.phone} onChange={(value) => setForm({ ...form, phone: value })} />
@@ -604,7 +604,7 @@ function LeadFormSection() {
             <TextInput label="所在城市" value={form.city} onChange={(value) => setForm({ ...form, city: value })} />
             <TextInput label="当前学员数量" value={form.students} onChange={(value) => setForm({ ...form, students: value })} />
             <label className="text-sm font-bold text-slate-200">感兴趣套餐
-              <select value={form.plan} onChange={(event) => setForm({ ...form, plan: event.target.value })} className="mt-2 h-12 w-full rounded-lg border border-white/12 bg-white px-3 text-[#07152D] outline-none focus:border-[#64D2FF]">
+              <select value={form.plan} onChange={(event) => setForm({ ...form, plan: event.target.value })} className="mt-2 h-11 w-full rounded-lg border border-white/12 bg-white px-3 text-[#07152D] outline-none focus:border-[#64D2FF] md:h-12">
                 <option>5800 元 / 半年</option>
                 <option>8800 元 / 年</option>
                 <option>49800 元 / 永久使用</option>
@@ -612,23 +612,23 @@ function LeadFormSection() {
               </select>
             </label>
             <label className="text-sm font-bold text-slate-200 sm:col-span-2">备注
-              <textarea value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="mt-2 min-h-28 w-full rounded-lg border border-white/12 bg-white px-3 py-3 text-[#07152D] outline-none focus:border-[#64D2FF]" placeholder="可填写校区情况、想了解的套餐或演示时间" />
+              <textarea value={form.message} onChange={(event) => setForm({ ...form, message: event.target.value })} className="mt-2 min-h-24 w-full rounded-lg border border-white/12 bg-white px-3 py-3 text-[#07152D] outline-none focus:border-[#64D2FF] md:min-h-28" placeholder="可填写校区情况、想了解的套餐或演示时间" />
             </label>
             {error ? <p className="rounded-lg bg-red-500/12 p-3 text-sm font-bold text-red-200 sm:col-span-2">{error}</p> : null}
             {status === "success" ? <p className="rounded-lg bg-emerald-500/12 p-3 text-sm font-bold text-emerald-200 sm:col-span-2">提交成功，我们将尽快与您联系。</p> : null}
             {status === "error" ? <p className="rounded-lg bg-red-500/12 p-3 text-sm font-bold text-red-200 sm:col-span-2">提交失败，请稍后再试或直接联系顾问。</p> : null}
-            <button disabled={status === "loading"} className="rounded-lg bg-[#FF8A00] px-5 py-3 font-black text-white shadow-[0_18px_40px_rgba(255,138,0,0.25)] disabled:opacity-70 sm:col-span-2">{status === "loading" ? "提交中..." : "立即预约演示"}</button>
+            <button disabled={status === "loading"} className="h-11 rounded-lg bg-[#FF8A00] px-5 text-sm font-black text-white shadow-[0_18px_40px_rgba(255,138,0,0.25)] disabled:opacity-70 sm:col-span-2 md:h-auto md:py-3 md:text-base">{status === "loading" ? "提交中..." : "立即预约演示"}</button>
           </form>
         </div>
         <div className="relative self-center">
-          <div className="absolute -inset-6 rounded-full bg-[#2F7BFF]/20 blur-3xl" />
-          <img src="/images/consulting-realistic.png" alt="3D 咨询顾问人物与系统界面" className="relative rounded-[18px] shadow-[0_34px_90px_rgba(0,0,0,0.35)]" />
-          <div className="relative -mt-12 ml-auto max-w-sm rounded-lg border border-white/14 bg-white/12 p-5 backdrop-blur-xl">
+          <div className="absolute -inset-3 rounded-full bg-[#2F7BFF]/20 blur-3xl md:-inset-6" />
+          <img src="/images/consulting-realistic.png" alt="3D 咨询顾问人物与系统界面" className="relative max-h-[260px] w-full rounded-[14px] object-cover shadow-[0_24px_70px_rgba(0,0,0,0.32)] md:max-h-none md:rounded-[18px] md:shadow-[0_34px_90px_rgba(0,0,0,0.35)]" />
+          <div className="relative -mt-10 ml-auto max-w-sm rounded-lg border border-white/14 bg-white/12 p-4 backdrop-blur-xl md:-mt-12 md:p-5">
             <div className="flex items-center gap-3">
-              <MessageCircle className="h-7 w-7 text-[#64D2FF]" />
+              <MessageCircle className="h-6 w-6 shrink-0 text-[#64D2FF] md:h-7 md:w-7" />
               <div>
-                <p className="font-black">顾问将在 24 小时内联系</p>
-                <p className="mt-1 text-sm text-slate-300">系统演示、报价方案、落地路径一次讲清楚</p>
+                <p className="text-sm font-black md:text-base">顾问将在 24 小时内联系</p>
+                <p className="mt-1 text-xs leading-5 text-slate-300 md:text-sm">系统演示、报价方案、落地路径一次讲清楚</p>
               </div>
             </div>
           </div>
@@ -640,24 +640,24 @@ function LeadFormSection() {
 
 function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#040B17] py-12 text-slate-400">
-      <div className="mx-auto grid w-[min(1200px,calc(100%-32px))] gap-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="border-t border-white/10 bg-[#040B17] py-10 pb-24 text-slate-400 md:py-12">
+      <div className="mx-auto grid w-[min(1200px,calc(100%-28px))] gap-7 md:w-[min(1200px,calc(100%-32px))] md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3 text-white">
-            <img src="/images/logo.png" alt="慧拼读单词系统" className="h-12 w-auto object-contain" />
-            <span className="text-lg font-black">慧拼读单词系统</span>
+            <img src="/images/logo.png" alt="慧拼读单词系统" className="h-9 w-auto object-contain md:h-12" />
+            <span className="text-base font-black md:text-lg">慧拼读单词系统</span>
           </div>
-          <p className="mt-4 max-w-md text-sm leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
-          <p className="mt-6 text-xs">Copyright © 2026 慧拼读单词系统. All rights reserved.</p>
+          <p className="mt-3 max-w-md text-sm leading-6 md:mt-4 md:leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
+          <p className="mt-5 text-xs md:mt-6">Copyright © 2026 慧拼读单词系统. All rights reserved.</p>
         </div>
         <FooterGroup title="产品功能" items={["机构端", "教练端", "学员端", "家长端", "ROI 测算"]} />
         <FooterGroup title="解决方案" items={["小班课一对多", "一对一教学", "招生转化", "教研交付", "运营陪跑"]} />
         <div>
           <h3 className="font-black text-white">联系方式</h3>
-          <div className="mt-4 space-y-3 text-sm">
+          <div className="mt-3 space-y-2 text-sm md:mt-4 md:space-y-3">
             <p>电话 / 微信：请在后台配置</p>
             <p>合作咨询：预约产品演示</p>
-            <div className="grid h-24 w-24 place-items-center rounded-lg border border-white/12 bg-white/8 text-xs">二维码位置</div>
+            <div className="grid h-20 w-20 place-items-center rounded-lg border border-white/12 bg-white/8 text-xs md:h-24 md:w-24">二维码位置</div>
           </div>
         </div>
       </div>
@@ -667,9 +667,9 @@ function Footer() {
 
 function DarkSection({ id, eyebrow, title, subtitle, children }: { id?: string; eyebrow: string; title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="relative bg-[#061225] py-20 md:py-24">
+    <section id={id} className="relative bg-[#061225] py-12 md:py-24">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(47,123,255,0.16),transparent_24rem)]" />
-      <div className="relative mx-auto w-[min(1200px,calc(100%-32px))]">
+      <div className="relative mx-auto w-[min(1200px,calc(100%-28px))] md:w-[min(1200px,calc(100%-32px))]">
         <SectionTitle eyebrow={eyebrow} title={title} subtitle={subtitle} light />
         {children}
       </div>
@@ -679,9 +679,9 @@ function DarkSection({ id, eyebrow, title, subtitle, children }: { id?: string; 
 
 function LightSection({ id, eyebrow, title, subtitle, children }: { id?: string; eyebrow: string; title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="relative bg-[#F7FAFF] py-20 text-[#07152D] md:py-24">
+    <section id={id} className="relative bg-[#F7FAFF] py-12 text-[#07152D] md:py-24">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(47,123,255,0.14),transparent_26rem),linear-gradient(180deg,rgba(255,255,255,0.8),rgba(247,250,255,0))]" />
-      <div className="relative mx-auto w-[min(1200px,calc(100%-32px))]">
+      <div className="relative mx-auto w-[min(1200px,calc(100%-28px))] md:w-[min(1200px,calc(100%-32px))]">
         <SectionTitle eyebrow={eyebrow} title={title} subtitle={subtitle} />
         {children}
       </div>
@@ -691,17 +691,17 @@ function LightSection({ id, eyebrow, title, subtitle, children }: { id?: string;
 
 function SectionTitle({ eyebrow, title, subtitle, light = false }: { eyebrow: string; title: string; subtitle?: string; light?: boolean }) {
   return (
-    <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="mx-auto mb-12 max-w-3xl text-center">
-      <p className={`text-sm font-black ${light ? "text-[#64D2FF]" : "text-[#165DFF]"}`}>{eyebrow}</p>
-      <h2 className={`mt-3 text-3xl font-black leading-tight md:text-5xl ${light ? "text-white" : "text-[#07152D]"}`}>{title}</h2>
-      {subtitle ? <p className={`mx-auto mt-5 max-w-2xl text-base leading-7 ${light ? "text-slate-300" : "text-slate-600"}`}>{subtitle}</p> : null}
+    <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="mx-auto mb-7 max-w-3xl text-center md:mb-12">
+      <p className={`text-xs font-black md:text-sm ${light ? "text-[#64D2FF]" : "text-[#165DFF]"}`}>{eyebrow}</p>
+      <h2 className={`mt-2 text-2xl font-black leading-tight md:mt-3 md:text-5xl ${light ? "text-white" : "text-[#07152D]"}`}>{title}</h2>
+      {subtitle ? <p className={`mx-auto mt-3 max-w-2xl text-sm leading-6 md:mt-5 md:text-base md:leading-7 ${light ? "text-slate-300" : "text-slate-600"}`}>{subtitle}</p> : null}
     </motion.div>
   );
 }
 
 function MotionCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay }} whileHover={{ y: -6, boxShadow: "0 24px 60px rgba(22,93,255,0.16)" }} className={`rounded-lg border border-white/70 p-6 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur ${className}`}>
+    <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay }} whileHover={{ y: -6, boxShadow: "0 24px 60px rgba(22,93,255,0.16)" }} className={`rounded-lg border border-white/70 p-4 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur md:p-6 ${className}`}>
       {children}
     </motion.div>
   );
@@ -709,13 +709,13 @@ function MotionCard({ children, className = "", delay = 0 }: { children: React.R
 
 function CompareCard({ title, items, tone }: { title: string; items: string[]; tone: "danger" | "success" }) {
   return (
-    <motion.div initial={{ opacity: 0, x: tone === "danger" ? -30 : 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-lg border border-white/12 bg-white/8 p-6 backdrop-blur">
-      <h3 className="text-2xl font-black">{title}</h3>
-      <div className="mt-6 grid gap-3">
+    <motion.div initial={{ opacity: 0, x: tone === "danger" ? -30 : 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-lg border border-white/12 bg-white/8 p-4 backdrop-blur md:p-6">
+      <h3 className="text-xl font-black md:text-2xl">{title}</h3>
+      <div className="mt-4 grid gap-2 md:mt-6 md:gap-3">
         {items.map((item) => (
-          <div key={item} className="flex items-center gap-3 rounded-lg bg-white/8 px-4 py-3">
+          <div key={item} className="flex items-center gap-3 rounded-lg bg-white/8 px-3 py-2.5 md:px-4 md:py-3">
             <span className={`h-2.5 w-2.5 rounded-full ${tone === "danger" ? "bg-[#FF6B6B]" : "bg-[#32D583]"}`} />
-            <span className="text-sm font-bold text-slate-200">{item}</span>
+            <span className="text-sm font-bold leading-5 text-slate-200">{item}</span>
           </div>
         ))}
       </div>
@@ -730,7 +730,7 @@ function CtaButton({ children, onClick, variant = "primary", size = "md" }: { ch
     glass: "border border-white/18 bg-white/10 text-white backdrop-blur hover:bg-white/16"
   };
   return (
-    <button onClick={onClick} className={`inline-flex items-center justify-center gap-2 rounded-lg font-black transition ${size === "lg" ? "min-h-13 px-6 py-4 text-base" : "min-h-11 px-5 py-3 text-sm"} ${styles[variant]}`}>
+    <button onClick={onClick} className={`inline-flex w-full items-center justify-center gap-2 rounded-lg font-black transition sm:w-auto ${size === "lg" ? "min-h-11 px-5 py-3 text-sm md:min-h-13 md:px-6 md:py-4 md:text-base" : "min-h-10 px-4 py-2.5 text-sm md:min-h-11 md:px-5 md:py-3"} ${styles[variant]}`}>
       {children}
       <ArrowRight className="h-4 w-4" />
     </button>
@@ -739,7 +739,7 @@ function CtaButton({ children, onClick, variant = "primary", size = "md" }: { ch
 
 function CheckItem({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-2 text-sm font-semibold text-slate-200">
+    <div className="flex gap-2 text-sm font-semibold leading-5 text-slate-200">
       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#64D2FF]" />
       <span>{children}</span>
     </div>
@@ -747,13 +747,13 @@ function CheckItem({ children }: { children: React.ReactNode }) {
 }
 
 function GlassPill({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-lg border border-white/12 bg-white/8 px-5 py-4 text-center font-black text-slate-100 backdrop-blur">{children}</div>;
+  return <div className="rounded-lg border border-white/12 bg-white/8 px-3 py-3 text-center text-sm font-black text-slate-100 backdrop-blur md:px-5 md:py-4 md:text-base">{children}</div>;
 }
 
 function NumberInput({ label, value, onChange, prefix }: { label: string; value: number; onChange: (value: number) => void; prefix?: string }) {
   return (
     <label className="text-sm font-bold text-[#28517A]">{label}
-      <div className="mt-2 flex h-12 items-center rounded-lg border border-[#D9E6F7] bg-white px-3 focus-within:border-[#165DFF]">
+      <div className="mt-2 flex h-11 items-center rounded-lg border border-[#D9E6F7] bg-white px-3 focus-within:border-[#165DFF] md:h-12">
         {prefix ? <span className="mr-1 text-slate-400">{prefix}</span> : null}
         <input inputMode="numeric" value={value === 0 ? "" : String(value)} onChange={(event) => onChange(Number(event.target.value.replace(/\D/g, "")) || 0)} className="w-full bg-transparent text-[#07152D] outline-none" />
       </div>
@@ -763,9 +763,9 @@ function NumberInput({ label, value, onChange, prefix }: { label: string; value:
 
 function Metric({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <motion.div key={value} initial={{ opacity: 0.5, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="rounded-lg border border-white/10 bg-white/8 p-4">
+    <motion.div key={value} initial={{ opacity: 0.5, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="rounded-lg border border-white/10 bg-white/8 p-3 md:p-4">
       <p className="text-xs text-slate-400">{label}</p>
-      <p className={`mt-2 text-2xl font-black ${highlight ? "text-[#FFB020]" : "text-white"}`}>{value}</p>
+      <p className={`mt-1 text-lg font-black md:mt-2 md:text-2xl ${highlight ? "text-[#FFB020]" : "text-white"}`}>{value}</p>
     </motion.div>
   );
 }
@@ -773,7 +773,7 @@ function Metric({ label, value, highlight = false }: { label: string; value: str
 function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <label className="text-sm font-bold text-slate-200">{label}
-      <input value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 h-12 w-full rounded-lg border border-white/12 bg-white px-3 text-[#07152D] outline-none focus:border-[#64D2FF]" />
+      <input value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 h-11 w-full rounded-lg border border-white/12 bg-white px-3 text-[#07152D] outline-none focus:border-[#64D2FF] md:h-12" />
     </label>
   );
 }
@@ -782,7 +782,7 @@ function FooterGroup({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
       <h3 className="font-black text-white">{title}</h3>
-      <div className="mt-4 grid gap-3 text-sm">
+      <div className="mt-3 grid grid-cols-2 gap-2 text-sm md:mt-4 md:block md:space-y-3">
         {items.map((item) => <button key={item} onClick={() => scrollTo("lead")} className="text-left transition hover:text-white">{item}</button>)}
       </div>
     </div>
@@ -807,9 +807,9 @@ function ParticleField() {
 
 function MobileCta() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-white/10 bg-[#061225]/92 p-3 backdrop-blur lg:hidden">
-      <button onClick={() => scrollTo("lead")} className="rounded-lg bg-[#FF8A00] py-3 text-sm font-black text-white">预约演示</button>
-      <button onClick={() => scrollTo("roi")} className="rounded-lg border border-[#64D2FF] py-3 text-sm font-black text-[#A9D8FF]">收益测算</button>
+    <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-white/10 bg-[#061225]/94 px-3 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-2 backdrop-blur lg:hidden">
+      <button onClick={() => scrollTo("lead")} className="h-11 rounded-lg bg-[#FF8A00] text-sm font-black text-white">预约演示</button>
+      <button onClick={() => scrollTo("roi")} className="h-11 rounded-lg border border-[#64D2FF] text-sm font-black text-[#A9D8FF]">收益测算</button>
     </div>
   );
 }
