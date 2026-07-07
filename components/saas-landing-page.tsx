@@ -200,22 +200,44 @@ function HeroSection() {
 
 function DeviceShowcase() {
   return (
-    <div className="relative mx-auto max-w-[720px] pb-8">
-      <div className="absolute inset-x-10 bottom-0 h-16 rounded-[50%] bg-[#165DFF]/14 blur-2xl" />
-      <div className="relative">
-        <div className="relative mx-auto w-[92%] rounded-[22px] border border-[#B9C5D6] bg-gradient-to-b from-[#F8FAFC] to-[#CBD5E1] p-2 shadow-[0_28px_70px_rgba(15,57,120,0.22)] md:rounded-[30px] md:p-3">
-          <div className="overflow-hidden rounded-[14px] border border-[#0F172A]/12 bg-[#0B1220] md:rounded-[20px]">
-            <img src="/images/training-system-ui.png" alt="慧拼读训练系统真实界面" className="aspect-[16/10] w-full object-cover" />
+    <div className="relative mx-auto max-w-[780px] pb-16 pt-4">
+      <div className="absolute inset-x-0 bottom-8 h-24 rounded-[50%] bg-[#165DFF]/12 blur-2xl" />
+      <div className="absolute left-[8%] top-[10%] hidden h-16 w-16 rotate-[-10deg] place-items-center rounded-2xl bg-gradient-to-br from-[#63B3FF] to-[#165DFF] text-2xl font-black text-white shadow-[0_18px_38px_rgba(22,93,255,0.22)] md:grid">Aa</div>
+      <div className="absolute left-[2%] bottom-[26%] hidden h-9 w-9 rotate-[-12deg] place-items-center rounded-lg bg-gradient-to-br from-[#7EC8FF] to-[#2F7BFF] text-xs font-black text-white shadow-lg md:grid">K</div>
+      <div className="absolute right-[6%] top-[12%] hidden text-5xl font-black text-[#165DFF]/20 md:block">&amp;</div>
+      <div className="absolute right-[2%] bottom-[8%] hidden w-24 md:block">
+        <div className="h-5 rounded-md bg-[#7EC8FF] shadow-[0_8px_18px_rgba(22,93,255,0.12)]" />
+        <div className="mt-1 h-5 rounded-md bg-[#B7D8FF]" />
+        <div className="mt-1 h-5 rounded-md bg-[#165DFF] text-center text-[10px] font-black leading-5 text-white">ENGLISH</div>
+      </div>
+      <div className="relative min-h-[330px] sm:min-h-[390px] md:min-h-[440px]">
+        <div className="absolute left-1/2 top-4 z-20 w-[78%] -translate-x-1/2">
+          <div className="rounded-[24px] border border-[#111827]/12 bg-gradient-to-b from-[#111827] to-[#030712] p-2.5 shadow-[0_30px_80px_rgba(15,57,120,0.28)] md:rounded-[30px] md:p-3">
+            <div className="overflow-hidden rounded-[16px] border border-white/10 bg-[#EEF6FF] md:rounded-[20px]">
+              <img src="/images/training-system-ui.png" alt="慧拼读训练系统真实界面" className="aspect-[2.05/1] w-full object-contain" />
+            </div>
+          </div>
+          <div className="mx-auto h-3 w-[90%] rounded-b-2xl bg-gradient-to-r from-[#8B98A8] via-white to-[#8B98A8] shadow-[0_16px_28px_rgba(15,23,42,0.18)]" />
+          <div className="mx-auto h-3 w-[48%] rounded-b-full bg-[#B9C5D6]" />
+        </div>
+
+        <div className="absolute bottom-8 left-[2%] z-30 w-[23%] -rotate-[7deg] rounded-[24px] border border-[#111827]/12 bg-gradient-to-b from-[#111827] to-[#030712] p-1.5 shadow-[0_24px_54px_rgba(15,57,120,0.24)] sm:left-[4%] sm:w-[21%] md:bottom-12 md:p-2">
+          <div className="mx-auto mb-1.5 h-1 w-8 rounded-full bg-white/25" />
+          <div className="overflow-hidden rounded-[17px] bg-white">
+            <img src="/images/student-mobile-stats.png" alt="学员学习数据手机界面" className="aspect-[9/16] w-full object-cover" />
           </div>
         </div>
-        <div className="mx-auto h-2 w-[78%] rounded-b-[18px] bg-gradient-to-r from-[#94A3B8] via-white to-[#94A3B8] shadow-[0_12px_24px_rgba(15,23,42,0.16)] md:h-3" />
-        <div className="mx-auto h-2 w-[46%] rounded-b-full bg-[#CBD5E1] md:h-3" />
-        <div className="absolute -bottom-2 right-1 w-[31%] rounded-[22px] border border-[#B9C5D6] bg-gradient-to-b from-[#F8FAFC] to-[#D9E2EF] p-1.5 shadow-[0_24px_54px_rgba(15,57,120,0.24)] sm:right-2 sm:w-[29%] md:-bottom-1 md:p-2">
-          <div className="mx-auto mb-1.5 h-1 w-8 rounded-full bg-[#CBD5E1]" />
-          <div className="overflow-hidden rounded-[14px] border border-[#0F172A]/10 bg-white">
-            <img src="/images/student-mobile-stats.png" alt="学员学习数据手机界面" className="aspect-[3/4] w-full object-cover" />
+
+        <div className="absolute bottom-6 right-[1%] z-30 w-[33%] rotate-[4deg] rounded-[24px] border border-[#111827]/12 bg-gradient-to-b from-[#111827] to-[#030712] p-1.5 shadow-[0_24px_58px_rgba(15,57,120,0.24)] sm:right-[3%] sm:w-[31%] md:bottom-10 md:p-2">
+          <div className="overflow-hidden rounded-[18px] bg-[#EEF6FF]">
+            <img src="/images/training-system-ui.png" alt="平板端系统界面" className="aspect-[4/3] w-full object-contain" />
           </div>
         </div>
+
+        <button onClick={() => scrollTo("video")} className="absolute bottom-1 left-1/2 z-40 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#2F7BFF] px-5 py-3 text-sm font-black text-white shadow-[0_16px_34px_rgba(22,93,255,0.25)]">
+          <Play className="h-4 w-4 fill-current" />
+          查看系统演示
+        </button>
       </div>
     </div>
   );
