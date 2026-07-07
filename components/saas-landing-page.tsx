@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   BarChart3,
@@ -11,8 +11,6 @@ import {
   Building2,
   CheckCircle2,
   ChevronDown,
-  ClipboardCheck,
-  Gauge,
   GraduationCap,
   Headphones,
   LineChart,
@@ -24,7 +22,6 @@ import {
   Presentation,
   Repeat2,
   Sparkles,
-  TrendingUp,
   X
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -51,19 +48,25 @@ type LeadForm = {
 };
 
 const navItems = [
+  ["首页", "hero"],
   ["产品体系", "system"],
+  ["教学模式", "modes"],
   ["学习功能", "features"],
-  ["演示视频", "video"],
+  ["系统演示", "video"],
   ["收益测算", "roi"],
   ["套餐价格", "pricing"],
-  ["合作流程", "process"],
-  ["FAQ", "faq"]
+  ["总部扶持", "support"],
+  ["合作案例", "cases"],
+  ["联系我们", "lead"]
 ];
 
-const sellingPoints = ["四端协同", "系统教学", "学习闭环", "持续升级"];
-const pains = ["招生难，获客成本高", "续费难，家长感知弱", "教学不标准，老师压力大", "学习效果难追踪", "运营管理效率低"];
-const gains = ["快速开课，轻松转化", "学习效果可视化", "系统教学，老师更高效", "家长实时了解学习进度", "数据驱动续费和运营"];
-
+const sellingPoints = ["见词能读", "听词能写", "学习闭环", "机构增收"];
+const heroStats = [
+  ["200+", "合作机构"],
+  ["5000+", "在读学生"],
+  ["98%", "机构续费率"]
+];
+const sceneCards = ["艺术培训机构", "英语培训机构", "托管机构", "社区培训机构", "幼小衔接机构", "素质教育机构"];
 const products: Array<{ title: string; text: string; icon: LucideIcon; points: string[] }> = [
   { title: "机构端", text: "面向校长和校区管理者", icon: Building2, points: ["课程管理", "学员管理", "数据统计", "运营管理"] },
   { title: "交付中心 / 教练端", text: "面向老师和教学教练", icon: Presentation, points: ["上课流程", "任务布置", "学习检测", "报告生成"] },
@@ -74,7 +77,6 @@ const products: Array<{ title: string; text: string; icon: LucideIcon; points: s
 const features: Array<{ title: string; text: string; icon: LucideIcon }> = [
   { title: "单词训练", text: "按词库、课程和任务完成高频训练。", icon: BookOpenCheck },
   { title: "抗遗忘复习", text: "结合学习记录自动安排复习节奏。", icon: Repeat2 },
-  { title: "每日打卡", text: "帮助校区建立持续学习习惯。", icon: ClipboardCheck },
   { title: "短语训练", text: "从单词拓展到常用短语应用。", icon: BookText },
   { title: "语法学习", text: "配合单词课程补齐基础语法。", icon: Brain },
   { title: "口语练习", text: "支持发音跟读和口语强化训练。", icon: Mic2 },
@@ -86,6 +88,11 @@ const features: Array<{ title: string; text: string; icon: LucideIcon }> = [
 const supportItems = ["系统功能培训", "上课流程培训", "教研指导方案", "机构招生方案", "配套营销活动方案", "营销素材支持", "系统迭代免费升级", "售后问题处理", "运营陪跑指导"];
 const onsiteItems = ["上门教研升级", "上门招生策划", "上门活动策划", "校区运营指导", "团队执行落地"];
 const process = ["咨询沟通", "产品演示", "确认方案", "系统培训", "上线开课", "运营陪跑"];
+const cases = [
+  { name: "星启点英语成长中心", time: "合作 6 个月", image: "/images/classroom-training-screen.png", metrics: ["招生增长 42%", "续费率 93%", "单词班营收 +18.6w"], quote: "慧拼读把单词课做成标准产品，新老师也能快速交付，家长看到报告后续费沟通顺畅很多。" },
+  { name: "蓝鲸托管学习中心", time: "合作 4 个月", image: "/images/consulting-realistic.png", metrics: ["新增 3 个班", "满班率 86%", "回本 1.2 个班"], quote: "原来托管只是作业辅导，现在有了可售卖的英语训练项目，校区利润结构更健康。" },
+  { name: "未来星素质教育", time: "合作 1 年", image: "/images/one-on-one-realistic.png", metrics: ["续费率 98%", "转介绍 +31%", "年课包转化提升"], quote: "系统把学员端、家长端和老师交付串起来，校长能看数据，老师能按流程上课。" }
+];
 
 const plans = [
   { key: "half" as PlanKey, name: "启动版", price: 5800, display: "5800 元", period: "/ 半年", tag: "快速开课", note: "适合单校区低成本验证项目", features: ["机构自由定价", "系统功能培训", "上课流程培训", "教研指导方案", "机构招生方案", "提供营销素材", "系统迭代免费升级", "售后问题处理"] },
@@ -123,16 +130,17 @@ export function SaasLandingPage() {
     <main className="min-h-screen overflow-hidden bg-[#F7FAFF] text-[#07152D]">
       <Header />
       <HeroSection />
-      <PainPointsSection />
+      <WhatIsSection />
       <ProductSystemSection />
       <FeaturesSection />
       <TeachingModesSection />
       <VideoDemoSection />
-      <SupportSection />
       <ROICalculatorSection />
       <PricingSection />
+      <SupportSection />
       <OnsiteSupportSection />
       <ProcessSection />
+      <CasesSection />
       <FAQSection />
       <LeadFormSection />
       <Footer />
@@ -147,8 +155,8 @@ function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[#DCEBFF] bg-white/92 shadow-[0_10px_32px_rgba(22,93,255,0.08)] backdrop-blur-2xl">
       <div className="mx-auto flex h-14 w-[min(1200px,calc(100%-28px))] items-center justify-between md:h-16">
         <button onClick={() => scrollTo("hero")} className="flex min-w-0 items-center gap-2.5">
-          <img src="/images/logo.png" alt="慧拼读单词系统" className="h-8 w-auto shrink-0 object-contain md:h-10" />
-          <span className="truncate text-sm font-black tracking-wide text-[#07152D] md:text-base">慧拼读单词系统</span>
+          <img src="/images/logo.png" alt="慧拼读单词训练系统" className="h-8 w-auto shrink-0 object-contain md:h-10" />
+          <span className="truncate text-sm font-black tracking-wide text-[#07152D] md:text-base">慧拼读单词训练系统</span>
         </button>
         <nav className="hidden items-center gap-6 text-sm font-semibold text-slate-600 lg:flex">
           {navItems.map(([label, id]) => (
@@ -156,7 +164,7 @@ function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-3 md:flex">
-          <CtaButton variant="ghost" onClick={() => scrollTo("pricing")}>查看产品方案</CtaButton>
+          <CtaButton variant="ghost" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
           <CtaButton onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
         </div>
         <button onClick={() => setOpen(!open)} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[#DCEBFF] bg-[#F4F8FF] text-[#07152D] md:h-10 md:w-10 lg:hidden">
@@ -178,33 +186,46 @@ function Header() {
 }
 
 function HeroSection() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 700], [0, 120]);
   return (
     <section id="hero" className="relative pt-20 lg:min-h-screen lg:pt-24">
-      <ParticleField />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(47,123,255,0.16),transparent_30rem),radial-gradient(circle_at_88%_18%,rgba(100,210,255,0.16),transparent_25rem),linear-gradient(180deg,#FFFFFF_0%,#F1F7FF_58%,#F7FAFF_100%)]" />
-      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] items-center gap-7 pb-12 md:gap-10 md:pb-16 lg:min-h-[calc(100vh-96px)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:pb-20">
+      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] items-center gap-7 pb-8 md:gap-10 lg:min-h-[calc(100vh-150px)] lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
         <motion.div variants={fadeUp} initial="hidden" animate="show" className="text-center lg:text-left">
           <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-[#DCEBFF] bg-white/82 px-3 py-2 text-xs font-bold leading-5 text-[#165DFF] shadow-[0_12px_30px_rgba(22,93,255,0.08)] backdrop-blur sm:text-sm">
             <Sparkles className="h-4 w-4 text-[#2F7BFF]" />
-            <span className="truncate">面向英语培训机构的智能单词学习与教学系统</span>
+            <span className="truncate">面向培训机构的英语单词训练增长系统</span>
           </div>
-          <h1 className="mx-auto max-w-3xl text-[2.15rem] font-black leading-[1.08] tracking-normal text-[#07152D] sm:text-6xl lg:mx-0 lg:text-[4.65rem]">让英语培训机构快速拥有自己的智能单词课程</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#385878] sm:text-lg sm:leading-8 lg:mx-0">一套覆盖机构端、交付中心（教练端）、学员端、家长端的英语单词学习系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
+          <h1 className="mx-auto max-w-3xl text-[2.25rem] font-black leading-[1.06] tracking-normal text-[#07152D] sm:text-6xl lg:mx-0 lg:text-[4.65rem]">慧拼读单词训练系统</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-2xl font-black leading-tight text-[#165DFF] sm:text-3xl lg:mx-0">让孩子见词能读，听词能写</p>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#385878] sm:text-lg sm:leading-8 lg:mx-0">以单词训练为核心，掌握单词规律，配合语法、阅读、口语训练，帮助孩子真正建立英语能力，帮助机构快速开课、提升续费率。</p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:justify-start">
             <CtaButton size="lg" onClick={() => scrollTo("lead")}>立即预约演示</CtaButton>
-            <CtaButton size="lg" variant="glass" onClick={() => scrollTo("pricing")}>查看产品方案</CtaButton>
+            <CtaButton size="lg" variant="glass" onClick={() => scrollTo("video")}>查看系统演示</CtaButton>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {sellingPoints.map((item) => (
               <div key={item} className="rounded-lg border border-[#DCEBFF] bg-white/82 px-3 py-2.5 text-center text-sm font-black text-[#165DFF] shadow-[0_12px_30px_rgba(22,93,255,0.08)] backdrop-blur">{item}</div>
             ))}
           </div>
+          <div className="mt-6 grid grid-cols-3 gap-2.5">
+            {heroStats.map(([value, label]) => (
+              <div key={label} className="rounded-lg border border-[#DCEBFF] bg-white/72 px-3 py-3 text-center shadow-[0_12px_30px_rgba(22,93,255,0.08)]">
+                <p className="text-xl font-black text-[#165DFF] md:text-2xl">{value}</p>
+                <p className="mt-1 text-xs font-bold text-slate-500 md:text-sm">{label}</p>
+              </div>
+            ))}
+          </div>
         </motion.div>
-        <motion.div style={{ y }} className="relative -mb-8 sm:mb-0">
+        <div className="relative -mb-8 sm:mb-0">
           <DeviceShowcase />
-        </motion.div>
+        </div>
+      </div>
+      <div className="relative mx-auto grid w-[min(1200px,calc(100%-28px))] grid-cols-2 gap-2.5 pb-12 sm:grid-cols-3 md:grid-cols-6 md:pb-16">
+        {sceneCards.map((item) => (
+          <div key={item} className="rounded-lg border border-[#DCEBFF] bg-white/70 px-3 py-3 text-center text-xs font-black text-[#28517A] shadow-[0_10px_24px_rgba(22,93,255,0.07)] backdrop-blur md:text-sm">
+            {item}
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -212,50 +233,54 @@ function HeroSection() {
 
 function DeviceShowcase() {
   return (
-    <div className="relative mx-auto max-w-[650px] origin-top scale-[0.9] sm:scale-100">
-      <div className="absolute -inset-5 rounded-full bg-[#2F7BFF]/25 blur-3xl sm:-inset-10" />
-      <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="relative rounded-[18px] border border-white/14 bg-[#0A1832]/88 p-2 shadow-[0_28px_80px_rgba(0,0,0,0.36)] backdrop-blur sm:rounded-[22px] sm:p-3 sm:shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
-        <div className="mb-2 flex items-center gap-2 px-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+    <div className="relative mx-auto max-w-[720px] pb-8">
+      <div className="absolute inset-x-10 bottom-0 h-16 rounded-[50%] bg-[#165DFF]/14 blur-2xl" />
+      <div className="relative">
+        <div className="relative mx-auto w-[92%] rounded-[22px] border border-[#B9C5D6] bg-gradient-to-b from-[#F8FAFC] to-[#CBD5E1] p-2 shadow-[0_28px_70px_rgba(15,57,120,0.22)] md:rounded-[30px] md:p-3">
+          <div className="overflow-hidden rounded-[14px] border border-[#0F172A]/12 bg-[#0B1220] md:rounded-[20px]">
+            <img src="/images/training-system-ui.png" alt="慧拼读训练系统真实界面" className="aspect-[16/10] w-full object-cover" />
+          </div>
         </div>
-        <img src="/images/homepage-system-interface.png" alt="慧拼读学练一体系统界面" className="aspect-[16/10] w-full rounded-xl object-cover" />
-      </motion.div>
-      <FloatCard className="-left-4 top-10" title="学习进度" value="86%" icon={Gauge} />
-      <FloatCard className="-right-2 top-24" title="续费线索" value="+42%" icon={TrendingUp} />
-      <FloatCard className="bottom-4 left-8" title="四端协同" value="在线" icon={MonitorSmartphone} />
-      <motion.div animate={{ y: [0, 14, 0] }} transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }} className="absolute -bottom-7 right-3 w-24 rounded-[20px] border border-[#CFE2FF] bg-white p-1.5 shadow-[0_18px_50px_rgba(22,93,255,0.18)] sm:-bottom-10 sm:right-4 sm:w-36 sm:rounded-[24px] sm:p-2">
-        <div className="mx-auto mb-2 h-1 w-9 rounded-full bg-[#CFE2FF]" />
-        <img src="/images/student-report-mobile.png" alt="学员端与家长报告" className="rounded-[18px]" />
-      </motion.div>
+        <div className="mx-auto h-2 w-[78%] rounded-b-[18px] bg-gradient-to-r from-[#94A3B8] via-white to-[#94A3B8] shadow-[0_12px_24px_rgba(15,23,42,0.16)] md:h-3" />
+        <div className="mx-auto h-2 w-[46%] rounded-b-full bg-[#CBD5E1] md:h-3" />
+        <div className="absolute -bottom-2 right-1 w-[31%] rounded-[22px] border border-[#B9C5D6] bg-gradient-to-b from-[#F8FAFC] to-[#D9E2EF] p-1.5 shadow-[0_24px_54px_rgba(15,57,120,0.24)] sm:right-2 sm:w-[29%] md:-bottom-1 md:p-2">
+          <div className="mx-auto mb-1.5 h-1 w-8 rounded-full bg-[#CBD5E1]" />
+          <div className="overflow-hidden rounded-[14px] border border-[#0F172A]/10 bg-white">
+            <img src="/images/student-mobile-stats.png" alt="学员学习数据手机界面" className="aspect-[3/4] w-full object-cover" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function FloatCard({ className, title, value, icon: Icon }: { className: string; title: string; value: string; icon: LucideIcon }) {
+function WhatIsSection() {
   return (
-    <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }} className={`absolute hidden rounded-lg border border-[#CFE2FF] bg-white/92 p-4 text-[#07152D] shadow-[0_18px_45px_rgba(22,93,255,0.14)] backdrop-blur-xl sm:block ${className}`}>
-      <div className="flex items-center gap-3">
-        <span className="grid h-9 w-9 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF]"><Icon className="h-5 w-5" /></span>
-        <div>
-          <p className="text-xs text-slate-500">{title}</p>
-          <p className="text-xl font-black text-[#165DFF]">{value}</p>
+    <DarkSection id="about" eyebrow="什么是慧拼读？" title="慧拼读单词训练系统" subtitle="以英语单词训练为核心，帮助学生掌握单词规律，真正做到见词能读、听词能写。">
+      <div className="grid items-center gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+        <MotionCard className="bg-white/88">
+          <div className="rounded-lg border border-[#DCEBFF] bg-[#F7FAFF] p-2 shadow-inner">
+            <img src="/images/training-system-ui.png" alt="慧拼读系统后台真实界面" className="aspect-[16/9] w-full rounded-md object-cover" />
+          </div>
+        </MotionCard>
+        <div className="grid gap-4">
+          {[
+            ["见词能读", "通过拆分拼写、自然拼读和音标训练，建立单词读音规律。"],
+            ["听词能写", "配合听写、复习和检测，让学生把输入转化为真实掌握。"],
+            ["四端闭环", "机构后台、交付中心、学员端、家长端形成完整教学闭环。"],
+            ["机构增长", "标准化课程、可视化报告和运营数据，帮助校区更好招生与续费。"]
+          ].map(([title, text]) => (
+            <MotionCard key={title} className="bg-white/88">
+              <div className="flex gap-4">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#EAF3FF] text-[#165DFF]"><CheckCircle2 className="h-5 w-5" /></span>
+                <div>
+                  <h3 className="text-lg font-black text-[#07152D]">{title}</h3>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">{text}</p>
+                </div>
+              </div>
+            </MotionCard>
+          ))}
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function PainPointsSection() {
-  return (
-    <DarkSection id="pain" eyebrow="机构增长痛点" title="为什么机构需要慧拼读单词系统？" subtitle="把传统机构难以标准化、难以感知、难以续费的问题，转化为可交付、可视化、可运营的课程体系。">
-      <div className="grid items-center gap-4 lg:grid-cols-[1fr_120px_1fr] lg:gap-5">
-        <CompareCard title="传统机构痛点" items={pains} tone="danger" />
-        <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="mx-auto grid h-12 w-24 place-items-center rounded-full border border-[#BFD9FF] bg-white text-lg font-black text-[#165DFF] shadow-[0_14px_38px_rgba(22,93,255,0.14)] lg:h-24 lg:w-24 lg:text-2xl">
-          VS
-        </motion.div>
-        <CompareCard title="使用慧拼读后" items={gains} tone="success" />
       </div>
     </DarkSection>
   );
@@ -263,7 +288,7 @@ function PainPointsSection() {
 
 function ProductSystemSection() {
   return (
-    <LightSection id="system" eyebrow="四端产品体系" title="四端产品体系，全方位赋能机构教学" subtitle="校长、老师、学员、家长各有清晰工作台，课程交付不再依赖单点经验。">
+    <LightSection id="system" eyebrow="四端产品体系" title="四端产品体系，全方位赋能机构教学" subtitle="机构后台、交付中心、学员端、家长端协同运转，让课程交付标准化、数据化、可复制。">
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {products.map((item, index) => (
           <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/78 md:min-h-[310px]">
@@ -289,7 +314,7 @@ function ProductSystemSection() {
 
 function FeaturesSection() {
   return (
-    <LightSection id="features" eyebrow="九大学习功能" title="九大学习功能，覆盖英语学习全场景" subtitle="围绕单词学习的训练、复习、检测、打卡、报告持续闭环。">
+    <LightSection id="features" eyebrow="八大核心功能" title="八大核心功能，覆盖英语学习全场景" subtitle="围绕单词训练、抗遗忘复习、语法、口语、阅读、音标和检测持续闭环。">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3">
         {features.map((item, index) => (
           <MotionCard key={item.title} delay={index * 0.04} className="flex flex-col gap-3 bg-white/82 p-4 sm:flex-row sm:items-start sm:gap-4 sm:p-5">
@@ -340,7 +365,7 @@ function TeachingModesSection() {
 
 function VideoDemoSection() {
   return (
-    <DarkSection id="video" eyebrow="产品演示视频" title="3分钟看懂慧拼读单词系统如何上课" subtitle="从机构管理、教练上课、学员训练到家长报告，一条完整学习闭环清晰展示。">
+    <DarkSection id="video" eyebrow="系统演示" title="3分钟看懂慧拼读如何上课" subtitle="从机构管理、教练上课、学员训练到家长报告，一条完整学习闭环清晰展示。">
       <div className="mx-auto max-w-5xl">
         <div className="relative rounded-lg border border-[#CFE2FF] bg-white p-2 shadow-[0_22px_70px_rgba(47,123,255,0.16)] md:rounded-[18px] md:p-3">
           <div className="absolute -inset-4 rounded-[26px] bg-[#2F7BFF]/18 blur-2xl" />
@@ -366,7 +391,7 @@ function VideoDemoSection() {
 
 function SupportSection() {
   return (
-    <LightSection id="support" eyebrow="总部赋能" title="不只是系统，更是全方位运营支持" subtitle="慧拼读不只是提供软件系统，还为机构提供从开课、招生、教研、运营到售后的完整支持。">
+    <LightSection id="support" eyebrow="总部赋能" title="不仅提供系统，更帮助机构赚钱" subtitle="慧拼读为机构提供从系统培训、教研指导、招生方案、活动策划到运营陪跑的完整支持。">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {supportItems.map((item, index) => (
           <MotionCard key={item} delay={index * 0.04} className="bg-white/82 p-4 sm:p-5">
@@ -528,6 +553,38 @@ function ProcessSection() {
   );
 }
 
+function CasesSection() {
+  return (
+    <LightSection id="cases" eyebrow="合作案例" title="真实机构增长案例" subtitle="用标准化课程、可视化学习报告和总部运营支持，帮助机构把单词训练做成可持续项目。">
+      <div className="grid gap-5 lg:grid-cols-3">
+        {cases.map((item, index) => (
+          <MotionCard key={item.name} delay={index * 0.08} className="overflow-hidden bg-white/88 p-0">
+            <img src={item.image} alt={item.name} className="h-44 w-full object-cover" />
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-xl font-black text-[#07152D]">{item.name}</h3>
+                  <p className="mt-1 text-sm font-bold text-[#165DFF]">{item.time}</p>
+                </div>
+                <span className="rounded-full bg-[#EAF3FF] px-3 py-1 text-xs font-black text-[#165DFF]">案例</span>
+              </div>
+              <div className="mt-5 grid gap-2">
+                {item.metrics.map((metric) => (
+                  <div key={metric} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#28517A]">{metric}</div>
+                ))}
+              </div>
+              <p className="mt-5 text-sm leading-7 text-slate-600">“{item.quote}”</p>
+            </div>
+          </MotionCard>
+        ))}
+      </div>
+      <div className="mt-8 text-center">
+        <CtaButton onClick={() => scrollTo("lead")}>获取产品方案</CtaButton>
+      </div>
+    </LightSection>
+  );
+}
+
 function FAQSection() {
   const [open, setOpen] = useState(0);
   return (
@@ -644,11 +701,11 @@ function Footer() {
       <div className="mx-auto grid w-[min(1200px,calc(100%-28px))] gap-7 md:w-[min(1200px,calc(100%-32px))] md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3 text-[#07152D]">
-            <img src="/images/logo.png" alt="慧拼读单词系统" className="h-9 w-auto object-contain md:h-12" />
-            <span className="text-base font-black md:text-lg">慧拼读单词系统</span>
+            <img src="/images/logo.png" alt="慧拼读单词训练系统" className="h-9 w-auto object-contain md:h-12" />
+            <span className="text-base font-black md:text-lg">慧拼读单词训练系统</span>
           </div>
           <p className="mt-3 max-w-md text-sm leading-6 md:mt-4 md:leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
-          <p className="mt-5 text-xs md:mt-6">Copyright © 2026 慧拼读单词系统. All rights reserved.</p>
+          <p className="mt-5 text-xs md:mt-6">Copyright © 2026 慧拼读单词训练系统. All rights reserved.</p>
         </div>
         <FooterGroup title="产品功能" items={["机构端", "教练端", "学员端", "家长端", "ROI 测算"]} />
         <FooterGroup title="解决方案" items={["小班课一对多", "一对一教学", "招生转化", "教研交付", "运营陪跑"]} />
@@ -703,22 +760,6 @@ function MotionCard({ children, className = "", delay = 0 }: { children: React.R
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay }} whileHover={{ y: -6, boxShadow: "0 24px 60px rgba(22,93,255,0.16)" }} className={`rounded-lg border border-white/70 p-4 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur md:p-6 ${className}`}>
       {children}
-    </motion.div>
-  );
-}
-
-function CompareCard({ title, items, tone }: { title: string; items: string[]; tone: "danger" | "success" }) {
-  return (
-    <motion.div initial={{ opacity: 0, x: tone === "danger" ? -30 : 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-lg border border-[#DCEBFF] bg-white/88 p-4 shadow-[0_16px_45px_rgba(12,42,92,0.08)] backdrop-blur md:p-6">
-      <h3 className="text-xl font-black md:text-2xl">{title}</h3>
-      <div className="mt-4 grid gap-2 md:mt-6 md:gap-3">
-        {items.map((item) => (
-          <div key={item} className="flex items-center gap-3 rounded-lg bg-[#F1F6FF] px-3 py-2.5 md:px-4 md:py-3">
-            <span className={`h-2.5 w-2.5 rounded-full ${tone === "danger" ? "bg-[#FF6B6B]" : "bg-[#32D583]"}`} />
-            <span className="text-sm font-bold leading-5 text-[#28517A]">{item}</span>
-          </div>
-        ))}
-      </div>
     </motion.div>
   );
 }
@@ -785,22 +826,6 @@ function FooterGroup({ title, items }: { title: string; items: string[] }) {
       <div className="mt-3 grid grid-cols-2 gap-2 text-sm md:mt-4 md:block md:space-y-3">
         {items.map((item) => <button key={item} onClick={() => scrollTo("lead")} className="text-left transition hover:text-[#165DFF]">{item}</button>)}
       </div>
-    </div>
-  );
-}
-
-function ParticleField() {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
-      {Array.from({ length: 28 }).map((_, index) => (
-        <motion.span
-          key={index}
-          className="absolute h-1 w-1 rounded-full bg-[#2F7BFF]/40"
-          style={{ left: `${(index * 37) % 100}%`, top: `${(index * 53) % 100}%` }}
-          animate={{ opacity: [0.15, 0.9, 0.15], y: [0, -22, 0] }}
-          transition={{ duration: 3 + (index % 5), repeat: Infinity, delay: index * 0.13 }}
-        />
-      ))}
     </div>
   );
 }
