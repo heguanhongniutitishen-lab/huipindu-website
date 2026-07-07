@@ -220,7 +220,7 @@ function DeviceShowcase() {
           <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
         </div>
-        <img src="/images/system-dashboard.png" alt="慧拼读系统数据看板" className="aspect-[16/10] w-full rounded-xl object-cover" />
+        <img src="/images/homepage-system-interface.png" alt="慧拼读学练一体系统界面" className="aspect-[16/10] w-full rounded-xl object-cover" />
       </motion.div>
       <FloatCard className="-left-4 top-10" title="学习进度" value="86%" icon={Gauge} />
       <FloatCard className="-right-2 top-24" title="续费线索" value="+42%" icon={TrendingUp} />
