@@ -147,7 +147,7 @@ function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#061225]/72 backdrop-blur-2xl">
       <div className="mx-auto flex h-16 w-[min(1200px,calc(100%-32px))] items-center justify-between">
         <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-[#2F7BFF] to-[#64D2FF] font-black">慧</span>
+          <img src="/images/logo.png" alt="慧拼读单词系统" className="h-10 w-auto object-contain" />
           <span className="text-base font-black tracking-wide">慧拼读单词系统</span>
         </button>
         <nav className="hidden items-center gap-6 text-sm font-semibold text-slate-300 lg:flex">
@@ -644,7 +644,7 @@ function Footer() {
       <div className="mx-auto grid w-[min(1200px,calc(100%-32px))] gap-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3 text-white">
-            <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#165DFF] font-black">慧</span>
+            <img src="/images/logo.png" alt="慧拼读单词系统" className="h-12 w-auto object-contain" />
             <span className="text-lg font-black">慧拼读单词系统</span>
           </div>
           <p className="mt-4 max-w-md text-sm leading-7">面向英语培训机构的智能单词学习与教学系统，帮助机构快速开课、提升续费率、降低运营成本。</p>
