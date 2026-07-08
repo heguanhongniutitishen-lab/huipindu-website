@@ -60,21 +60,10 @@ function AdminLoginForm() {
               className="h-14 w-14 rounded-full bg-white object-contain p-1"
             />
             <div>
-              <div className="text-xl font-black">慧拼读</div>
-              <div className="text-sm text-blue-100">AI英语单词学习系统</div>
+              <div className="text-xl font-black">单词学习系统</div>
             </div>
           </div>
-          <h1 className="mt-16 max-w-xl text-4xl font-black leading-tight">为 ToB 招商官网打造的官网后台</h1>
-          <p className="mt-5 max-w-lg text-base leading-7 text-blue-100">
-            集中管理套餐、案例、视频、FAQ 和官网内容。官网表单信息会直接发送到指定邮箱，方便团队及时跟进。
-          </p>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {["内容可更新", "表单发邮箱", "数据可复盘"].map((item) => (
-            <div key={item} className="rounded-lg bg-white/12 p-4 text-sm font-bold backdrop-blur">
-              {item}
-            </div>
-          ))}
+          <h1 className="mt-16 max-w-xl text-4xl font-black leading-tight">官网后台</h1>
         </div>
       </section>
 
@@ -84,10 +73,7 @@ function AdminLoginForm() {
             <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <h2 className="mt-4 text-2xl font-black text-slate-950">管理员登录</h2>
-            <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-slate-600">
-              请输入管理员账号和密码。账号信息不在登录页面展示。
-            </div>
+            <h2 className="mt-4 text-2xl font-black text-slate-950">官网后台</h2>
           </div>
 
           <label className="mb-4 block">
