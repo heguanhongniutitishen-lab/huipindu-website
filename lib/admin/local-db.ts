@@ -163,8 +163,6 @@ export type LocalAnalytics = {
 };
 
 export async function readLocalAnalytics(): Promise<LocalAnalytics> {
-  await mkdir(dbDir, { recursive: true });
-
   try {
     return JSON.parse(await readFile(analyticsPath, "utf8")) as LocalAnalytics;
   } catch {
@@ -182,6 +180,7 @@ export async function trackLocalAnalytics(type: "visit" | "video") {
     analytics.videoViews.push(now);
   }
 
+  await mkdir(dbDir, { recursive: true });
   await writeFile(analyticsPath, JSON.stringify(analytics, null, 2), "utf8");
   return analytics;
 }

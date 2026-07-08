@@ -23,12 +23,20 @@ export default function WebsiteEditorPage() {
 
   useEffect(() => {
     fetch("/api/site-config", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((result: { data: SiteConfig }) => {
-        setConfig(result.data);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("site config request failed");
+        }
+        return response.json();
+      })
+      .then((result: { data?: SiteConfig }) => {
+        setConfig(isValidSiteConfig(result.data) ? result.data : defaultSiteConfig);
         setStatus("配置已加载，修改后点击右上角保存。");
       })
-      .catch(() => setStatus("读取失败，当前显示默认配置。"));
+      .catch(() => {
+        setConfig(defaultSiteConfig);
+        setStatus("读取失败，当前显示默认配置。");
+      });
   }, []);
 
   async function save() {
@@ -110,6 +118,27 @@ export default function WebsiteEditorPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function isValidSiteConfig(value: unknown): value is SiteConfig {
+  if (!value || typeof value !== "object") return false;
+  const config = value as Partial<SiteConfig>;
+  return Boolean(
+    config.seo &&
+    config.brand &&
+    config.hero &&
+    config.productSystem &&
+    config.features &&
+    config.teachingModes &&
+    config.video &&
+    config.support &&
+    config.process &&
+    config.cases &&
+    config.faq &&
+    config.leadForm &&
+    Array.isArray(config.nav) &&
+    Array.isArray(config.contacts)
   );
 }
 

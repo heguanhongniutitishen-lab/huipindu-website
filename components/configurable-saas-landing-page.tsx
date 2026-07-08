@@ -56,20 +56,29 @@ export function ConfigurableSaasLandingPage() {
 
   useEffect(() => {
     fetch("/api/site-config", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((result: { data: SiteConfig }) => setConfig(result.data))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("site config request failed");
+        }
+        return response.json();
+      })
+      .then((result: { data?: SiteConfig }) => setConfig(isValidSiteConfig(result.data) ? result.data : defaultSiteConfig))
       .catch(() => setConfig(defaultSiteConfig));
   }, []);
 
   useEffect(() => {
-    const key = "huipindu-visit-tracked";
-    if (sessionStorage.getItem(key)) return;
-    sessionStorage.setItem(key, "1");
-    void fetch("/api/analytics", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "visit" })
-    });
+    try {
+      const key = "huipindu-visit-tracked";
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+      void fetch("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "visit" })
+      });
+    } catch {
+      // Analytics must never block page rendering.
+    }
   }, []);
 
   return (
@@ -88,6 +97,27 @@ export function ConfigurableSaasLandingPage() {
       <Footer config={config} />
       <MobileCta config={config} />
     </main>
+  );
+}
+
+function isValidSiteConfig(value: unknown): value is SiteConfig {
+  if (!value || typeof value !== "object") return false;
+  const config = value as Partial<SiteConfig>;
+  return Boolean(
+    config.seo &&
+    config.brand &&
+    config.hero &&
+    config.productSystem &&
+    config.features &&
+    config.teachingModes &&
+    config.video &&
+    config.support &&
+    config.process &&
+    config.cases &&
+    config.faq &&
+    config.leadForm &&
+    Array.isArray(config.nav) &&
+    Array.isArray(config.contacts)
   );
 }
 

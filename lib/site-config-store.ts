@@ -6,13 +6,10 @@ const dbDir = path.join(process.cwd(), ".data");
 const configPath = path.join(dbDir, "site-config.json");
 
 export async function readSiteConfig(): Promise<SiteConfig> {
-  await mkdir(dbDir, { recursive: true });
-
   try {
     const raw = await readFile(configPath, "utf8");
     return mergeConfig(defaultSiteConfig, JSON.parse(raw) as Partial<SiteConfig>);
   } catch {
-    await writeSiteConfig(defaultSiteConfig);
     return defaultSiteConfig;
   }
 }
