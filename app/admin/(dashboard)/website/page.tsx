@@ -196,10 +196,51 @@ function SectionsPanel({ config, setConfig }: EditorProps) {
 }
 
 function MediaPanel({ config, setConfig }: EditorProps) {
+  const [uploadStatus, setUploadStatus] = useState("");
+
+  async function uploadVideo(file?: File) {
+    if (!file) return;
+    setUploadStatus("正在上传视频...");
+    const form = new FormData();
+    form.append("file", file);
+
+    try {
+      const response = await fetch("/api/local-upload", {
+        method: "POST",
+        body: form
+      });
+      const result = (await response.json()) as { data?: { url: string }; message?: string };
+
+      if (!response.ok || !result.data?.url) {
+        throw new Error(result.message ?? "upload failed");
+      }
+
+      setConfig({ ...config, video: { ...config.video, url: result.data.url } });
+      setUploadStatus(`上传成功：${result.data.url}`);
+    } catch {
+      setUploadStatus("上传失败。线上环境建议使用对象存储或视频外链。");
+    }
+  }
+
   return (
     <PanelGrid>
       <TextInput label="首屏模型图路径" value={config.hero.image} onChange={(image) => setConfig({ ...config, hero: { ...config.hero, image } })} wide />
       <TextInput label="演示视频地址 MP4 / 外链" value={config.video.url} onChange={(url) => setConfig({ ...config, video: { ...config.video, url } })} wide />
+      <div className="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <label className="block text-sm font-bold text-slate-700">
+          本地上传演示视频
+          <input
+            type="file"
+            accept="video/mp4,video/*"
+            onChange={(event) => void uploadVideo(event.target.files?.[0])}
+            className="mt-2 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-sm file:font-black file:text-white"
+          />
+        </label>
+        <p className="mt-2 text-xs leading-5 text-slate-500">
+          本地上传会保存到项目的 public/uploads，并自动填入视频地址。生产环境建议使用视频外链或对象存储。
+        </p>
+        {uploadStatus ? <p className="mt-2 text-sm font-bold text-blue-600">{uploadStatus}</p> : null}
+      </div>
       <TextInput label="视频封面图" value={config.video.cover} onChange={(cover) => setConfig({ ...config, video: { ...config.video, cover } })} wide />
       <SectionHeaderEditor value={config.video} onChange={(video) => setConfig({ ...config, video })} />
       <JsonEditor label="教学模式配图在这里批量改" value={config.teachingModes.items} onChange={(items) => setConfig({ ...config, teachingModes: { ...config.teachingModes, items } })} />

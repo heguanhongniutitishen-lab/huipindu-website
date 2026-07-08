@@ -12,5 +12,10 @@ build/
 *.log
 tsconfig.tsbuildinfo
 
+# Local media uploads are stored outside git. Use object storage for production.
+public/uploads/
+public/videos/*.mp4
+local-media/
+
 .DS_Store
 Thumbs.db
