@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { ManagementTable, StatusBadge, type Column } from "@/components/admin/interactive-management-table";
+import { StatusBadge, type Column } from "@/components/admin/interactive-management-table";
 import { PageScaffold } from "@/components/admin/page-scaffold";
 import { pricingPlans } from "@/lib/admin/mock-data";
 
@@ -27,10 +27,17 @@ export default function PricingPage() {
       .then((result: { data: PlanRow[] }) => setRows(result.data))
       .catch(() => setRows(pricingPlans));
   }, []);
+  void rows;
+  void columns;
 
   return (
-    <PageScaffold title="套餐管理" description="维护标准版、进阶版、旗舰版套餐，支持调整权益、排序、推荐标识和前台展示状态。">
-      <ManagementTable rows={rows} columns={columns} searchPlaceholder="搜索套餐、权益、适合对象" filters={["显示状态", "推荐套餐"]} addLabel="新增套餐" persistHref="/api/pricing-plans" />
+    <PageScaffold title="套餐管理" description="该模块已按当前官网需求移除。">
+      <section className="rounded-lg border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <h2 className="text-xl font-black text-slate-950">套餐管理模块已删除</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-500">
+          当前后台不再维护套餐内容。如需修改官网前台内容，请进入“官网编辑”模块统一管理。
+        </p>
+      </section>
     </PageScaffold>
   );
 }

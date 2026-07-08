@@ -1,52 +1,48 @@
 import { NextResponse } from "next/server";
-import {
-  listEmailOutbox,
-  listLocalCases,
-  listLocalCmsSections,
-  listLocalDemoVideos,
-  listLocalFaqs,
-  listLocalPricingPlans
-} from "@/lib/admin/local-db";
+import { listEmailOutbox, readLocalAnalytics } from "@/lib/admin/local-db";
 
 export async function GET() {
-  const [outbox, pricingPlans, cases, cmsSections, faqs, demoVideos] = await Promise.all([
+  const [outbox, analytics] = await Promise.all([
     listEmailOutbox(),
-    listLocalPricingPlans(),
-    listLocalCases(),
-    listLocalCmsSections(),
-    listLocalFaqs(),
-    listLocalDemoVideos()
+    readLocalAnalytics()
   ]);
   const today = new Date().toISOString().slice(0, 10);
-  const todayEmails = outbox.filter((item) => item.createdAt?.startsWith(today));
-  const demoEmails = outbox.filter((item) => {
-    const payload = item.payload as { intent?: string };
-    return payload.intent === "demo";
-  });
-  const materialEmails = outbox.filter((item) => {
-    const payload = item.payload as { intent?: string };
-    return payload.intent === "materials";
-  });
+  const todayConsults = outbox.filter((item) => item.createdAt?.startsWith(today));
+  const todayVisitors = analytics.visitors.filter((item) => item.startsWith(today));
+  const todayVideoViews = analytics.videoViews.filter((item) => item.startsWith(today));
+  const trend = buildTrend(outbox.map((item) => item.createdAt), analytics.visitors, analytics.videoViews);
 
   return NextResponse.json({
     data: {
       metrics: [
-        { label: "今日邮件线索", value: String(todayEmails.length), delta: "实时" },
-        { label: "累计邮件线索", value: String(outbox.length), delta: "本地/SMTP" },
-        { label: "预约演示邮件", value: String(demoEmails.length), delta: "官网表单" },
-        { label: "领取资料邮件", value: String(materialEmails.length), delta: "官网表单" },
-        { label: "已配置套餐", value: String(pricingPlans.length), delta: "前台同步" },
-        { label: "演示视频", value: String(demoVideos.length), delta: "前台同步" },
-        { label: "成功案例", value: String(cases.length), delta: "前台同步" },
-        { label: "FAQ数量", value: String(faqs.length), delta: "前台同步" }
+        { label: "今日登录访客", value: String(todayVisitors.length), delta: "今日" },
+        { label: "今日咨询数量", value: String(todayConsults.length), delta: "今日" },
+        { label: "今日查看视频数量", value: String(todayVideoViews.length), delta: "今日" },
+        { label: "累计访客", value: String(analytics.visitors.length), delta: "累计" },
+        { label: "累计咨询数量", value: String(outbox.length), delta: "累计" },
+        { label: "累计查看视频数量", value: String(analytics.videoViews.length), delta: "累计" }
       ],
-      contentHealth: {
-        pricingPlans: pricingPlans.length,
-        cases: cases.length,
-        cmsSections: cmsSections.length,
-        faqs: faqs.length,
-        demoVideos: demoVideos.length
-      }
+      trend,
+      sphere: [
+        { name: "访客", value: analytics.visitors.length },
+        { name: "咨询", value: outbox.length },
+        { name: "视频", value: analytics.videoViews.length }
+      ]
     }
   });
+}
+
+function buildTrend(consults: string[], visitors: string[], videoViews: string[]) {
+  const days = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - index));
+    return date.toISOString().slice(0, 10);
+  });
+
+  return days.map((day) => ({
+    day: day.slice(5),
+    访客: visitors.filter((item) => item.startsWith(day)).length,
+    咨询: consults.filter((item) => item?.startsWith(day)).length,
+    视频: videoViews.filter((item) => item.startsWith(day)).length
+  }));
 }

@@ -1,5 +1,5 @@
-import { SaasLandingPage } from "@/components/saas-landing-page";
+import { ConfigurableSaasLandingPage } from "@/components/configurable-saas-landing-page";
 
 export default function Home() {
-  return <SaasLandingPage />;
+  return <ConfigurableSaasLandingPage />;
 }

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { loginSchema } from "@/lib/validations/admin";
@@ -16,6 +16,7 @@ function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -84,7 +85,11 @@ function AdminLoginForm() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <h2 className="mt-4 text-2xl font-black text-slate-950">管理员登录</h2>
-            <p className="mt-2 text-sm text-slate-500">默认演示账号：admin@huipindu.com / admin123</p>
+          <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-slate-700">
+            <p><span className="font-black text-slate-950">登录账号：</span>admin@huipindu.com</p>
+            <p><span className="font-black text-slate-950">备用账号：</span>13800000000</p>
+            <p><span className="font-black text-slate-950">登录密码：</span>admin123</p>
+          </div>
           </div>
 
           <label className="mb-4 block">
@@ -100,8 +105,15 @@ function AdminLoginForm() {
             <span className="mb-2 block text-sm font-bold text-slate-700">密码</span>
             <div className="flex h-12 items-center gap-2 rounded-lg border border-slate-200 px-3">
               <LockKeyhole className="h-4 w-4 text-slate-400" />
-              <input {...register("password")} type="password" className="w-full outline-none" placeholder="请输入密码" />
-              <Eye className="h-4 w-4 text-slate-400" />
+              <input {...register("password")} type={showPassword ? "text" : "password"} className="w-full outline-none" placeholder="请输入密码" />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="grid h-8 w-8 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                aria-label={showPassword ? "隐藏密码" : "查看密码"}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
             {errors.password ? <span className="mt-1 block text-xs text-red-600">{errors.password.message}</span> : null}
           </label>

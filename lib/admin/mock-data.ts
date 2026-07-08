@@ -1,21 +1,21 @@
 import {
   FileQuestion,
   FileText,
+  Globe2,
   LayoutDashboard,
   MessageSquareMore,
   PlaySquare,
   Settings,
   ShieldCheck,
-  Tags,
   Trophy,
   Users
 } from "lucide-react";
 
 export const navItems = [
   { href: "/admin", label: "数据总览", icon: LayoutDashboard },
-  { href: "/admin/pricing", label: "套餐管理", icon: Tags },
   { href: "/admin/demo-videos", label: "演示视频", icon: PlaySquare },
   { href: "/admin/cases", label: "成功案例", icon: Trophy },
+  { href: "/admin/website", label: "官网编辑", icon: Globe2 },
   { href: "/admin/cms", label: "官网内容", icon: FileText },
   { href: "/admin/faqs", label: "FAQ管理", icon: FileQuestion },
   { href: "/admin/form-settings", label: "表单配置", icon: MessageSquareMore },

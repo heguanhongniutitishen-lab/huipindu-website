@@ -14,6 +14,7 @@ import {
 const dbDir = path.join(process.cwd(), ".data");
 const dbPath = path.join(dbDir, "local-db.json");
 const outboxPath = path.join(dbDir, "email-outbox.json");
+const analyticsPath = path.join(dbDir, "analytics.json");
 
 export type LocalPricingPlan = (typeof pricingPlans)[number];
 export type LocalCase = (typeof cases)[number];
@@ -154,4 +155,33 @@ export async function listEmailOutbox() {
   } catch {
     return [];
   }
+}
+
+export type LocalAnalytics = {
+  visitors: string[];
+  videoViews: string[];
+};
+
+export async function readLocalAnalytics(): Promise<LocalAnalytics> {
+  await mkdir(dbDir, { recursive: true });
+
+  try {
+    return JSON.parse(await readFile(analyticsPath, "utf8")) as LocalAnalytics;
+  } catch {
+    return { visitors: [], videoViews: [] };
+  }
+}
+
+export async function trackLocalAnalytics(type: "visit" | "video") {
+  const analytics = await readLocalAnalytics();
+  const now = new Date().toISOString();
+
+  if (type === "visit") {
+    analytics.visitors.push(now);
+  } else {
+    analytics.videoViews.push(now);
+  }
+
+  await writeFile(analyticsPath, JSON.stringify(analytics, null, 2), "utf8");
+  return analytics;
 }
