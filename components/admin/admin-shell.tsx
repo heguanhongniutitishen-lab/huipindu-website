@@ -63,7 +63,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </button>
             <div className="hidden text-right sm:block">
               <div className="text-sm font-bold text-slate-950">超级管理员</div>
-              <div className="text-xs text-slate-500">admin@huipindu.com</div>
+              <div className="text-xs text-slate-500">账号已隐藏</div>
             </div>
             <button
               onClick={() => signOut({ callbackUrl: "/admin/login" })}

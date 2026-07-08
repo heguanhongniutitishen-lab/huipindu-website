@@ -208,15 +208,15 @@ function ProductSystemSection({ config }: { config: SiteConfig }) {
         {config.productSystem.items.map((item, index) => {
           const Icon = iconMap[item.icon] ?? Building2;
           return (
-            <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/82 md:min-h-[310px]">
-              <div className="mb-4 flex items-center justify-between md:mb-6">
+            <MotionCard key={item.title} delay={index * 0.08} className="group bg-white/82 p-5 md:min-h-[330px] md:p-6">
+              <div className="mb-5 flex items-center justify-between md:mb-7">
                 <span className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-[#E8F2FF] to-white text-[#165DFF] shadow-inner md:h-14 md:w-14"><Icon className="h-5 w-5 md:h-7 md:w-7" /></span>
                 <span className="text-sm font-black text-[#8FB7FF]">0{index + 1}</span>
               </div>
-              <h3 className="text-xl font-black tracking-tight text-[#07152D] md:text-2xl">{item.title}</h3>
-              <p className="mt-3 text-sm font-medium leading-6 text-[#526B86]">{item.text}</p>
-              <div className="mt-5 grid grid-cols-2 gap-2 md:mt-6 md:grid-cols-1">
-                {item.points.map((point) => <span key={point} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#165DFF]">{point}</span>)}
+              <h3 className="break-words text-xl font-black leading-tight tracking-tight text-[#07152D] md:text-[1.55rem]">{item.title}</h3>
+              <p className="mt-3 min-h-12 text-sm font-medium leading-6 text-[#526B86]">{item.text}</p>
+              <div className="mt-5 grid grid-cols-2 gap-2.5 md:mt-6 md:grid-cols-1">
+                {item.points.map((point) => <span key={point} className="rounded-lg bg-[#F1F6FF] px-3.5 py-2.5 text-sm font-black leading-5 text-[#165DFF]">{point}</span>)}
               </div>
             </MotionCard>
           );

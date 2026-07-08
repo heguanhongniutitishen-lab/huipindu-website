@@ -409,7 +409,7 @@ export const followUps = [
 ];
 
 export const adminUsers = [
-  { id: "U-001", name: "超级管理员", email: "admin@huipindu.com", phone: "13800000000", role: "超级管理员", disabled: "启用" },
+  { id: "U-001", name: "超级管理员", email: "已隐藏", phone: "已隐藏", role: "超级管理员", disabled: "启用" },
   { id: "U-002", name: "刘敏", email: "sales01@huipindu.com", phone: "139****2201", role: "销售管理员", disabled: "启用" },
   { id: "U-003", name: "内容运营", email: "content@huipindu.com", phone: "137****0912", role: "内容管理员", disabled: "启用" }
 ];

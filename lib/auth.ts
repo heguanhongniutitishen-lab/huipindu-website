@@ -3,8 +3,11 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { loginSchema } from "@/lib/validations/admin";
 
-const demoPasswordHash = bcrypt.hashSync("admin123", 10);
 const authSecret = process.env.NEXTAUTH_SECRET ?? "huipindu-local-dev-secret";
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPhone = process.env.ADMIN_PHONE;
+const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+const adminPassword = process.env.ADMIN_PASSWORD;
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,
@@ -29,18 +32,20 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const isDemoAccount =
-          parsed.data.account === "admin@huipindu.com" || parsed.data.account === "13800000000";
-        const passwordMatched = await bcrypt.compare(parsed.data.password, demoPasswordHash);
+        const allowedAccounts = [adminEmail, adminPhone].filter(Boolean);
+        const isAllowedAccount = allowedAccounts.includes(parsed.data.account);
+        const passwordMatched = adminPasswordHash
+          ? await bcrypt.compare(parsed.data.password, adminPasswordHash)
+          : Boolean(adminPassword && parsed.data.password === adminPassword);
 
-        if (!isDemoAccount || !passwordMatched) {
+        if (!isAllowedAccount || !passwordMatched) {
           return null;
         }
 
         return {
-          id: "demo-admin",
+          id: "admin",
           name: "超级管理员",
-          email: "admin@huipindu.com",
+          email: adminEmail ?? "admin",
           role: "SUPER_ADMIN"
         };
       }

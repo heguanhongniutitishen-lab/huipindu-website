@@ -24,8 +24,8 @@ function AdminLoginForm() {
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      account: "admin@huipindu.com",
-      password: "admin123",
+      account: "",
+      password: "",
       captcha: ""
     }
   });
@@ -85,11 +85,9 @@ function AdminLoginForm() {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <h2 className="mt-4 text-2xl font-black text-slate-950">管理员登录</h2>
-          <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-slate-700">
-            <p><span className="font-black text-slate-950">登录账号：</span>admin@huipindu.com</p>
-            <p><span className="font-black text-slate-950">备用账号：</span>13800000000</p>
-            <p><span className="font-black text-slate-950">登录密码：</span>admin123</p>
-          </div>
+            <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50 p-3 text-sm leading-6 text-slate-600">
+              请输入管理员账号和密码。账号信息不在登录页面展示。
+            </div>
           </div>
 
           <label className="mb-4 block">
