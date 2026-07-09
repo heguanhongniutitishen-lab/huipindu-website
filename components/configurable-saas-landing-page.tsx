@@ -263,16 +263,35 @@ function TeachingModesSection({ config }: { config: SiteConfig }) {
   );
 }
 
+function getVideoEmbedUrl(url: string) {
+  if (!url) return "";
+  if (url.includes("youtube.com/watch")) return url.replace("watch?v=", "embed/");
+  if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1]?.split("?")[0] || ""}`;
+  if (url.includes("bilibili.com/video/")) {
+    const id = url.match(/video\/([^/?#]+)/)?.[1];
+    return id ? `https://player.bilibili.com/player.html?bvid=${id}&autoplay=0` : url;
+  }
+  return url;
+}
+
+function isDirectVideoUrl(url: string) {
+  return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url) || url.startsWith("/uploads/");
+}
+
 function VideoDemoSection({ config }: { config: SiteConfig }) {
+  const videoUrl = config.video.url?.trim() || "";
+  const directVideo = isDirectVideoUrl(videoUrl);
+
   return (
     <LightSection id="video" data={config.video}>
       <div className="mx-auto max-w-5xl">
         <div className="relative overflow-hidden rounded-[24px] border border-[#CFE2FF] bg-[#07152D] p-2 shadow-[0_28px_80px_rgba(22,93,255,0.22)] md:rounded-[32px] md:p-3">
-          {config.video.url ? (
+          {videoUrl && directVideo ? (
             <video
-              src={config.video.url}
+              src={videoUrl}
               poster={config.video.cover}
               controls
+              playsInline
               onPlay={() => {
                 void fetch("/api/analytics", {
                   method: "POST",
@@ -282,8 +301,26 @@ function VideoDemoSection({ config }: { config: SiteConfig }) {
               }}
               className="aspect-video w-full rounded-[18px] bg-black object-cover md:rounded-[24px]"
             />
+          ) : videoUrl ? (
+            <iframe
+              src={getVideoEmbedUrl(videoUrl)}
+              title={config.video.title}
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              className="aspect-video w-full rounded-[18px] border-0 bg-black md:rounded-[24px]"
+            />
           ) : (
-            <div className="relative aspect-video overflow-hidden rounded-[18px] md:rounded-[24px]"><img src={config.video.cover} alt={config.video.title} className="h-full w-full object-cover opacity-80" /><button className="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-[#165DFF] shadow-[0_0_0_12px_rgba(47,123,255,0.18)] md:h-20 md:w-20"><Play className="ml-1 h-7 w-7 fill-current md:h-9 md:w-9" /></button></div>
+            <div className="relative aspect-video overflow-hidden rounded-[18px] md:rounded-[24px]">
+              <img src={config.video.cover} alt={config.video.title} className="h-full w-full object-cover opacity-80" />
+              <div className="absolute inset-0 grid place-items-center">
+                <div className="text-center">
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-white text-[#165DFF] shadow-[0_0_0_12px_rgba(47,123,255,0.18)] md:h-20 md:w-20">
+                    <Play className="ml-1 h-7 w-7 fill-current md:h-9 md:w-9" />
+                  </div>
+                  <p className="mt-5 rounded-full bg-white/92 px-4 py-2 text-sm font-black text-[#28517A]">后台还没有填写视频地址</p>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

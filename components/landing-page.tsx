@@ -111,11 +111,92 @@ function Features() {
   const content = useSiteContent(); const section = cmsSection(content, "home.functions");
   return <Section eyebrow="学习功能" title={section?.title || "核心功能覆盖单词学习全流程"} subtitle={section?.subtitle || "学、练、测、复习、报告形成闭环，让学习效果更容易被看见。"}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{featureCards.map(({ title, text, icon: Icon }) => <Card key={title} className="p-5"><Icon className="mb-4 h-7 w-7 text-[#165DFF]" /><h3 className="font-black">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{text}</p></Card>)}</div></Section>;
 }
+function getEmbedUrl(url: string) {
+  if (!url) return "";
+  if (url.includes("youtube.com/watch")) return url.replace("watch?v=", "embed/");
+  if (url.includes("youtu.be/")) return `https://www.youtube.com/embed/${url.split("youtu.be/")[1]?.split("?")[0] || ""}`;
+  if (url.includes("bilibili.com/video/")) {
+    const id = url.match(/video\/([^/?#]+)/)?.[1];
+    return id ? `https://player.bilibili.com/player.html?bvid=${id}&autoplay=1` : url;
+  }
+  return url;
+}
+
+function isDirectVideo(url: string) {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url) || url.startsWith("/uploads/");
+}
+
 function Demo() {
-  const content = useSiteContent(); const section = cmsSection(content, "home.demo"); const [videos, setVideos] = useState<DemoVideo[]>(fallbackVideos); const [activeId, setActiveId] = useState(fallbackVideos[0].id);
-  useEffect(() => { fetch("/api/demo-videos").then((r) => r.json()).then((r: { data: DemoVideo[] }) => { const next = (r.data?.length ? r.data : fallbackVideos).filter((v) => isVisible(v.visible)).sort((a, b) => Number(a.sortOrder) - Number(b.sortOrder)); setVideos(next.length ? next : fallbackVideos); setActiveId((current) => next.some((v) => v.id === current) ? current : next[0]?.id || fallbackVideos[0].id); }).catch(() => setVideos(fallbackVideos)); }, []);
+  const content = useSiteContent();
+  const section = cmsSection(content, "home.demo");
+  const [videos, setVideos] = useState<DemoVideo[]>(fallbackVideos);
+  const [activeId, setActiveId] = useState(fallbackVideos[0].id);
+  const [playingId, setPlayingId] = useState("");
+
+  useEffect(() => {
+    fetch("/api/demo-videos")
+      .then((r) => r.json())
+      .then((r: { data: DemoVideo[] }) => {
+        const next = (r.data?.length ? r.data : fallbackVideos)
+          .filter((v) => isVisible(v.visible))
+          .sort((a, b) => Number(a.sortOrder) - Number(b.sortOrder));
+        setVideos(next.length ? next : fallbackVideos);
+        setActiveId((current) => (next.some((v) => v.id === current) ? current : next[0]?.id || fallbackVideos[0].id));
+      })
+      .catch(() => setVideos(fallbackVideos));
+  }, []);
+
   const active = videos.find((v) => v.id === activeId) || videos[0];
-  return <Section id="demo" eyebrow="产品演示" title={section?.title || "产品演示，一眼看懂系统如何交付"} subtitle={section?.subtitle || "后台替换或隐藏视频后，前台产品演示模块同步更新。"}><div className="grid gap-5 lg:grid-cols-[280px_1fr]"><div className="grid gap-2">{videos.map((video) => <button key={video.id} onClick={() => setActiveId(video.id)} className={`rounded-lg px-4 py-3 text-left text-sm font-bold transition ${active.id === video.id ? "bg-[#165DFF] text-white" : "bg-white text-slate-600 hover:bg-blue-50"}`}>{video.title || video.category}</button>)}</div><Card className="p-0"><div className="relative overflow-hidden rounded-lg bg-slate-950"><img src={active.coverUrl || "/images/classroom-training-screen.png"} alt={active.title} className="h-[360px] w-full object-cover opacity-90" /><button type="button" className="absolute inset-0 m-auto grid h-16 w-16 place-items-center rounded-full bg-white text-[#165DFF] shadow-xl"><Play className="ml-1 h-7 w-7 fill-current" /></button></div><div className="p-5"><h3 className="text-xl font-black">{active.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{active.description}</p></div></Card></div></Section>;
+  const videoUrl = active.videoUrl?.trim() || "";
+  const isPlaying = playingId === active.id && Boolean(videoUrl);
+
+  return (
+    <Section id="demo" eyebrow="产品演示" title={section?.title || "产品演示，一眼看懂系统如何交付"} subtitle={section?.subtitle || "后台替换或隐藏视频后，前台产品演示模块同步更新。"}>
+      <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
+        <div className="grid gap-2">
+          {videos.map((video) => (
+            <button
+              key={video.id}
+              onClick={() => {
+                setActiveId(video.id);
+                setPlayingId("");
+              }}
+              className={`rounded-lg px-4 py-3 text-left text-sm font-bold transition ${active.id === video.id ? "bg-[#165DFF] text-white" : "bg-white text-slate-600 hover:bg-blue-50"}`}
+            >
+              {video.title || video.category}
+            </button>
+          ))}
+        </div>
+        <Card className="p-0">
+          <div className="relative overflow-hidden rounded-lg bg-slate-950">
+            {isPlaying && isDirectVideo(videoUrl) ? (
+              <video key={videoUrl} src={videoUrl} controls autoPlay playsInline poster={active.coverUrl || "/images/classroom-training-screen.png"} className="h-[360px] w-full bg-black object-contain" />
+            ) : isPlaying ? (
+              <iframe src={getEmbedUrl(videoUrl)} title={active.title} allow="autoplay; fullscreen; picture-in-picture" allowFullScreen className="h-[360px] w-full border-0 bg-black" />
+            ) : (
+              <>
+                <img src={active.coverUrl || "/images/classroom-training-screen.png"} alt={active.title} className="h-[360px] w-full object-cover opacity-90" />
+                <button
+                  type="button"
+                  onClick={() => videoUrl && setPlayingId(active.id)}
+                  className="absolute inset-0 m-auto grid h-16 w-16 place-items-center rounded-full bg-white text-[#165DFF] shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
+                  disabled={!videoUrl}
+                  aria-label={videoUrl ? "播放视频" : "暂无视频地址"}
+                >
+                  <Play className="ml-1 h-7 w-7 fill-current" />
+                </button>
+              </>
+            )}
+          </div>
+          <div className="p-5">
+            <h3 className="text-xl font-black">{active.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{active.description}</p>
+            {!videoUrl ? <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm font-bold text-amber-700">后台还没有填写视频地址，请上传 MP4 或粘贴可播放视频链接。</p> : null}
+          </div>
+        </Card>
+      </div>
+    </Section>
+  );
 }
 function Pricing() {
   const content = useSiteContent(); const section = cmsSection(content, "home.pricing"); const plans = (content?.pricingPlans?.length ? content.pricingPlans : fallbackPlans).filter((p) => isVisible(p.visible)).sort((a, b) => Number(a.sortOrder) - Number(b.sortOrder));
