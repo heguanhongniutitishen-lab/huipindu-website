@@ -165,7 +165,7 @@ export const defaultSiteConfig: SiteConfig = {
     title: "7分钟看懂慧拼读如何上课",
     subtitle: "从机构管理、教练上课、学员训练到家长报告，一条完整学习闭环清晰展示。",
     cover: "/images/homepage-system-interface.png",
-    url: ""
+    url: "https://www.bilibili.com/video/BV13RMn6vEde/?vd_source=c2dd79ab0cb7f61a7f5c132de2070d06"
   },
   support: {
     eyebrow: "总部赋能",
