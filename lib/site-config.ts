@@ -162,7 +162,7 @@ export const defaultSiteConfig: SiteConfig = {
   },
   video: {
     eyebrow: "系统演示",
-    title: "3分钟看懂慧拼读如何上课",
+    title: "7分钟看懂慧拼读如何上课",
     subtitle: "从机构管理、教练上课、学员训练到家长报告，一条完整学习闭环清晰展示。",
     cover: "/images/homepage-system-interface.png",
     url: ""

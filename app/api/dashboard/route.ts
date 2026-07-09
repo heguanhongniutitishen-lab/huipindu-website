@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { listEmailOutbox, readLocalAnalytics } from "@/lib/admin/local-db";
 
 export async function GET() {

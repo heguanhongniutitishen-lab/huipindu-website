@@ -1,34 +1,38 @@
-"use client";
+﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, ChevronRight, Plus, Save, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { CheckCircle2, Plus, Save, Trash2, UploadCloud } from "lucide-react";
 import { defaultSiteConfig, type SiteConfig } from "@/lib/site-config";
 
-type PanelKey = "seo" | "brand" | "hero" | "sections" | "media" | "form" | "contacts";
+type TabKey = "overview" | "hero" | "product" | "teaching" | "video" | "support" | "cases" | "form" | "contacts" | "seo";
 
-const panels: Array<{ key: PanelKey; group: string; label: string; desc: string }> = [
-  { key: "seo", group: "基础设置", label: "SEO 设置", desc: "标题、描述、关键词和分享文案" },
-  { key: "brand", group: "基础设置", label: "品牌与页脚", desc: "Logo、品牌介绍和版权信息" },
-  { key: "hero", group: "首页首屏", label: "首屏内容", desc: "首屏文字、按钮、数据和场景标签" },
-  { key: "sections", group: "内容模块", label: "产品/功能/案例/FAQ", desc: "批量维护官网主要内容模块" },
-  { key: "media", group: "媒体资源", label: "图片与视频", desc: "首屏图、演示视频、封面和配图路径" },
-  { key: "form", group: "转化表单", label: "表单字段", desc: "字段名称、是否必填、显示隐藏和增删" },
-  { key: "contacts", group: "联系方式", label: "电话微信二维码", desc: "联系方式可增加、删除、排序和隐藏" }
+type SectionData = { eyebrow: string; title: string; subtitle?: string };
+
+const tabs: Array<{ key: TabKey; label: string; desc: string }> = [
+  { key: "overview", label: "数据总览", desc: "访客、咨询和视频数据" },
+  { key: "hero", label: "首页首屏", desc: "标题、卖点、首图" },
+  { key: "product", label: "产品功能", desc: "四端体系和功能卡片" },
+  { key: "teaching", label: "教学模式", desc: "班型、配图和卖点" },
+  { key: "video", label: "系统演示", desc: "视频、封面和标题" },
+  { key: "support", label: "总部赋能", desc: "支持内容和流程" },
+  { key: "cases", label: "合作案例", desc: "案例图片和成果" },
+  { key: "form", label: "留资表单", desc: "字段增删和文案" },
+  { key: "contacts", label: "联系方式", desc: "电话微信二维码" },
+  { key: "seo", label: "SEO 设置", desc: "标题、描述、关键词" }
 ];
 
+const iconOptions = ["Building2", "Presentation", "GraduationCap", "MonitorSmartphone", "BookOpenCheck", "Repeat2", "ClipboardCheck", "BookText", "Brain", "Mic2", "LineChart", "Headphones", "BarChart3"];
+
 export default function WebsiteEditorPage() {
+  const searchParams = useSearchParams();
   const [config, setConfig] = useState<SiteConfig>(defaultSiteConfig);
-  const [active, setActive] = useState<PanelKey>("seo");
+  const [active, setActive] = useState<TabKey>(searchParams.get("tab") === "media" ? "video" : "overview");
   const [status, setStatus] = useState("正在读取官网配置...");
 
   useEffect(() => {
     fetch("/api/site-config", { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("site config request failed");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((result: { data?: SiteConfig }) => {
         setConfig(isValidSiteConfig(result.data) ? result.data : defaultSiteConfig);
         setStatus("配置已加载，修改后点击右上角保存。");
@@ -47,74 +51,59 @@ export default function WebsiteEditorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(config)
       });
-
-      if (!response.ok) {
-        throw new Error("save failed");
-      }
-
-      setStatus("已保存，刷新官网前台即可看到最新内容。");
+      if (!response.ok) throw new Error("save failed");
+      setStatus("已保存，刷新前台即可看到最新内容。");
     } catch {
-      setStatus("保存失败，请稍后重试。");
+      setStatus("保存失败，请稍后再试。");
     }
   }
 
-  const groups = useMemo(() => {
-    return panels.reduce<Record<string, typeof panels>>((acc, item) => {
-      acc[item.group] = [...(acc[item.group] ?? []), item];
-      return acc;
-    }, {});
-  }, []);
+  const activeInfo = tabs.find((item) => item.key === active) ?? tabs[0];
 
   return (
-    <div className="grid min-h-[calc(100vh-7rem)] gap-5 lg:grid-cols-[290px_1fr]">
-      <aside className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
-        <div className="border-b border-slate-100 px-2 pb-3">
-          <h2 className="text-lg font-black text-slate-950">官网编辑</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-500">左侧选择模块，右侧修改对应内容。</p>
+    <div className="grid gap-5 xl:grid-cols-[300px_1fr]">
+      <aside className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm xl:sticky xl:top-24 xl:self-start">
+        <div className="px-2 pb-3">
+          <p className="text-sm font-black text-blue-600">官网后台</p>
+          <h2 className="mt-1 text-xl font-black text-slate-950">内容编辑中心</h2>
+          <p className="mt-2 text-xs leading-5 text-slate-500">左侧选择模块，右侧修改官网内容。图片、视频和二维码支持本地上传。</p>
         </div>
-        <div className="mt-4 space-y-5">
-          {Object.entries(groups).map(([group, items]) => (
-            <div key={group}>
-              <p className="px-2 text-xs font-black uppercase tracking-[0.16em] text-slate-400">{group}</p>
-              <div className="mt-2 space-y-1">
-                {items.map((item) => (
-                  <button
-                    key={item.key}
-                    onClick={() => setActive(item.key)}
-                    className={`flex w-full items-center justify-between rounded-lg px-3 py-3 text-left transition ${active === item.key ? "bg-blue-600 text-white shadow-sm" : "text-slate-700 hover:bg-slate-50"}`}
-                  >
-                    <span>
-                      <span className="block text-sm font-black">{item.label}</span>
-                      <span className={`mt-0.5 block text-xs ${active === item.key ? "text-blue-100" : "text-slate-400"}`}>{item.desc}</span>
-                    </span>
-                    <ChevronRight className="h-4 w-4 shrink-0" />
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div className="space-y-1">
+          {tabs.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setActive(item.key)}
+              className={`w-full rounded-xl px-3 py-3 text-left transition ${active === item.key ? "bg-blue-600 text-white shadow-sm" : "text-slate-600 hover:bg-blue-50 hover:text-blue-700"}`}
+            >
+              <div className="text-sm font-black">{item.label}</div>
+              <div className={`mt-0.5 text-xs ${active === item.key ? "text-blue-100" : "text-slate-400"}`}>{item.desc}</div>
+            </button>
           ))}
         </div>
       </aside>
 
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-3 border-b border-slate-200 p-5 md:flex-row md:items-center md:justify-between">
+      <section className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex flex-col gap-3 border-b border-slate-100 p-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-xl font-black text-slate-950">{panels.find((item) => item.key === active)?.label}</h1>
-            <p className="mt-1 flex items-center gap-2 text-sm text-slate-500"><CheckCircle2 className="h-4 w-4 text-blue-600" />{status}</p>
+            <h2 className="text-2xl font-black text-slate-950">{activeInfo.label}</h2>
+            <p className="mt-1 text-sm text-slate-500">{status}</p>
           </div>
-          <button onClick={save} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-black text-white shadow-sm transition hover:bg-blue-700">
+          <button onClick={save} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-black text-white shadow-sm hover:bg-blue-700">
             <Save className="h-4 w-4" />
             保存到前台
           </button>
         </div>
         <div className="p-5">
-          {active === "seo" ? <SeoPanel config={config} setConfig={setConfig} /> : null}
-          {active === "brand" ? <BrandPanel config={config} setConfig={setConfig} /> : null}
+          {active === "overview" ? <OverviewPanel /> : null}
           {active === "hero" ? <HeroPanel config={config} setConfig={setConfig} /> : null}
-          {active === "sections" ? <SectionsPanel config={config} setConfig={setConfig} /> : null}
-          {active === "media" ? <MediaPanel config={config} setConfig={setConfig} /> : null}
+          {active === "product" ? <ProductPanel config={config} setConfig={setConfig} /> : null}
+          {active === "teaching" ? <TeachingPanel config={config} setConfig={setConfig} /> : null}
+          {active === "video" ? <VideoPanel config={config} setConfig={setConfig} /> : null}
+          {active === "support" ? <SupportPanel config={config} setConfig={setConfig} /> : null}
+          {active === "cases" ? <CasesPanel config={config} setConfig={setConfig} /> : null}
           {active === "form" ? <FormPanel config={config} setConfig={setConfig} /> : null}
           {active === "contacts" ? <ContactsPanel config={config} setConfig={setConfig} /> : null}
+          {active === "seo" ? <SeoPanel config={config} setConfig={setConfig} /> : null}
         </div>
       </section>
     </div>
@@ -124,216 +113,125 @@ export default function WebsiteEditorPage() {
 function isValidSiteConfig(value: unknown): value is SiteConfig {
   if (!value || typeof value !== "object") return false;
   const config = value as Partial<SiteConfig>;
-  return Boolean(
-    config.seo &&
-    config.brand &&
-    config.hero &&
-    config.productSystem &&
-    config.features &&
-    config.teachingModes &&
-    config.video &&
-    config.support &&
-    config.process &&
-    config.cases &&
-    config.faq &&
-    config.leadForm &&
-    Array.isArray(config.nav) &&
-    Array.isArray(config.contacts)
-  );
+  return Boolean(config.seo && config.brand && config.hero && config.productSystem && config.features && config.teachingModes && config.video && config.support && config.process && config.cases && config.faq && config.leadForm && Array.isArray(config.nav) && Array.isArray(config.contacts));
 }
 
-function SeoPanel({ config, setConfig }: EditorProps) {
-  return (
-    <PanelGrid>
-      <TextInput label="SEO 标题" value={config.seo.title} onChange={(title) => setConfig({ ...config, seo: { ...config.seo, title } })} wide />
-      <Textarea label="SEO 描述" value={config.seo.description} onChange={(description) => setConfig({ ...config, seo: { ...config.seo, description } })} wide />
-      <TextInput label="关键词，用英文逗号分隔" value={config.seo.keywords} onChange={(keywords) => setConfig({ ...config, seo: { ...config.seo, keywords } })} wide />
-      <TextInput label="分享标题" value={config.seo.ogTitle} onChange={(ogTitle) => setConfig({ ...config, seo: { ...config.seo, ogTitle } })} />
-      <TextInput label="分享描述" value={config.seo.ogDescription} onChange={(ogDescription) => setConfig({ ...config, seo: { ...config.seo, ogDescription } })} />
-    </PanelGrid>
-  );
-}
-
-function BrandPanel({ config, setConfig }: EditorProps) {
-  return (
-    <PanelGrid>
-      <TextInput label="Logo 路径" value={config.brand.logo} onChange={(logo) => setConfig({ ...config, brand: { ...config.brand, logo } })} />
-      <TextInput label="品牌名称" value={config.brand.name} onChange={(name) => setConfig({ ...config, brand: { ...config.brand, name } })} />
-      <Textarea label="页脚品牌介绍" value={config.brand.footerIntro} onChange={(footerIntro) => setConfig({ ...config, brand: { ...config.brand, footerIntro } })} wide />
-      <TextInput label="版权信息" value={config.brand.copyright} onChange={(copyright) => setConfig({ ...config, brand: { ...config.brand, copyright } })} wide />
-      <JsonEditor label="导航菜单" value={config.nav} onChange={(nav) => setConfig({ ...config, nav })} />
-    </PanelGrid>
-  );
+function OverviewPanel() {
+  return <div className="grid gap-4 md:grid-cols-3"><InfoCard title="快速编辑" text="从左侧进入首屏、产品、视频、案例、表单等模块。" /><InfoCard title="上传资源" text="图片、视频、二维码上传后会自动写入路径，也可以手动粘贴外链。" /><InfoCard title="前台生效" text="修改完成后点击保存到前台，刷新官网即可看到最新内容。" /></div>;
 }
 
 function HeroPanel({ config, setConfig }: EditorProps) {
-  return (
-    <PanelGrid>
-      <TextInput label="顶部蓝色标签" value={config.hero.badge} onChange={(badge) => setConfig({ ...config, hero: { ...config.hero, badge } })} wide />
-      <TextInput label="主标题" value={config.hero.title} onChange={(title) => setConfig({ ...config, hero: { ...config.hero, title } })} />
-      <TextInput label="副标题" value={config.hero.titleSuffix} onChange={(titleSuffix) => setConfig({ ...config, hero: { ...config.hero, titleSuffix } })} />
-      <TextInput label="价值主张" value={config.hero.slogan} onChange={(slogan) => setConfig({ ...config, hero: { ...config.hero, slogan } })} wide />
-      <Textarea label="首屏说明" value={config.hero.description} onChange={(description) => setConfig({ ...config, hero: { ...config.hero, description } })} wide />
-      <TextInput label="按钮文字" value={config.hero.primaryButton} onChange={(primaryButton) => setConfig({ ...config, hero: { ...config.hero, primaryButton } })} />
-      <TextInput label="按钮跳转模块 ID" value={config.hero.primaryTarget} onChange={(primaryTarget) => setConfig({ ...config, hero: { ...config.hero, primaryTarget } })} />
-      <JsonEditor label="首屏数据卡片" value={config.hero.stats} onChange={(stats) => setConfig({ ...config, hero: { ...config.hero, stats } })} />
-      <JsonEditor label="合作场景标签" value={config.hero.scenes} onChange={(scenes) => setConfig({ ...config, hero: { ...config.hero, scenes } })} />
-    </PanelGrid>
-  );
+  return <PanelGrid><TextInput label="顶部标签" value={config.hero.badge} onChange={(badge) => setConfig({ ...config, hero: { ...config.hero, badge } })} wide /><TextInput label="主标题" value={config.hero.title} onChange={(title) => setConfig({ ...config, hero: { ...config.hero, title } })} /><TextInput label="副标题" value={config.hero.titleSuffix} onChange={(titleSuffix) => setConfig({ ...config, hero: { ...config.hero, titleSuffix } })} /><TextInput label="价值主张" value={config.hero.slogan} onChange={(slogan) => setConfig({ ...config, hero: { ...config.hero, slogan } })} wide /><Textarea label="首屏说明" value={config.hero.description} onChange={(description) => setConfig({ ...config, hero: { ...config.hero, description } })} wide /><TextInput label="按钮文字" value={config.hero.primaryButton} onChange={(primaryButton) => setConfig({ ...config, hero: { ...config.hero, primaryButton } })} /><TextInput label="跳转模块 ID" value={config.hero.primaryTarget} onChange={(primaryTarget) => setConfig({ ...config, hero: { ...config.hero, primaryTarget } })} /><ImageField label="首屏模型图" value={config.hero.image} onChange={(image) => setConfig({ ...config, hero: { ...config.hero, image } })} wide /><StringList label="合作场景" value={config.hero.scenes} onChange={(scenes) => setConfig({ ...config, hero: { ...config.hero, scenes } })} /><StatsEditor value={config.hero.stats} onChange={(stats) => setConfig({ ...config, hero: { ...config.hero, stats } })} /></PanelGrid>;
 }
 
-function SectionsPanel({ config, setConfig }: EditorProps) {
-  return (
-    <div className="grid gap-5">
-      <SectionBlock title="四端产品体系"><SectionHeaderEditor value={config.productSystem} onChange={(productSystem) => setConfig({ ...config, productSystem })} /><JsonEditor label="产品卡片" value={config.productSystem.items} onChange={(items) => setConfig({ ...config, productSystem: { ...config.productSystem, items } })} /></SectionBlock>
-      <SectionBlock title="核心功能"><SectionHeaderEditor value={config.features} onChange={(features) => setConfig({ ...config, features })} /><JsonEditor label="功能卡片" value={config.features.items} onChange={(items) => setConfig({ ...config, features: { ...config.features, items } })} /></SectionBlock>
-      <SectionBlock title="教学模式"><SectionHeaderEditor value={config.teachingModes} onChange={(teachingModes) => setConfig({ ...config, teachingModes })} /><JsonEditor label="模式列表" value={config.teachingModes.items} onChange={(items) => setConfig({ ...config, teachingModes: { ...config.teachingModes, items } })} /></SectionBlock>
-      <SectionBlock title="总部赋能"><SectionHeaderEditor value={config.support} onChange={(support) => setConfig({ ...config, support })} /><JsonEditor label="支持项目" value={config.support.items} onChange={(items) => setConfig({ ...config, support: { ...config.support, items } })} /></SectionBlock>
-      <SectionBlock title="合作流程"><SectionHeaderEditor value={config.process} onChange={(process) => setConfig({ ...config, process })} /><JsonEditor label="流程步骤" value={config.process.items} onChange={(items) => setConfig({ ...config, process: { ...config.process, items } })} /></SectionBlock>
-      <SectionBlock title="案例与 FAQ"><SectionHeaderEditor value={config.cases} onChange={(cases) => setConfig({ ...config, cases })} /><JsonEditor label="案例列表" value={config.cases.items} onChange={(items) => setConfig({ ...config, cases: { ...config.cases, items } })} /><SectionHeaderEditor value={config.faq} onChange={(faq) => setConfig({ ...config, faq })} /><JsonEditor label="FAQ 列表" value={config.faq.items} onChange={(items) => setConfig({ ...config, faq: { ...config.faq, items } })} /></SectionBlock>
-    </div>
-  );
+function ProductPanel({ config, setConfig }: EditorProps) {
+  return <div className="space-y-6"><SectionEditor value={config.productSystem} onChange={(productSystem) => setConfig({ ...config, productSystem })} /><ItemCards title="四端产品体系" items={config.productSystem.items} onChange={(items) => setConfig({ ...config, productSystem: { ...config.productSystem, items } })} /><SectionEditor value={config.features} onChange={(features) => setConfig({ ...config, features })} /><FeatureCards items={config.features.items} onChange={(items) => setConfig({ ...config, features: { ...config.features, items } })} /></div>;
 }
 
-function MediaPanel({ config, setConfig }: EditorProps) {
-  const [uploadStatus, setUploadStatus] = useState("");
+function TeachingPanel({ config, setConfig }: EditorProps) {
+  return <div className="space-y-6"><SectionEditor value={config.teachingModes} onChange={(teachingModes) => setConfig({ ...config, teachingModes })} /><TeachingCards items={config.teachingModes.items} onChange={(items) => setConfig({ ...config, teachingModes: { ...config.teachingModes, items } })} /></div>;
+}
 
-  async function uploadVideo(file?: File) {
-    if (!file) return;
-    setUploadStatus("正在上传视频...");
-    const form = new FormData();
-    form.append("file", file);
+function VideoPanel({ config, setConfig }: EditorProps) {
+  return <PanelGrid><SectionEditor value={config.video} onChange={(video) => setConfig({ ...config, video })} /><ImageField label="视频封面图" value={config.video.cover} onChange={(cover) => setConfig({ ...config, video: { ...config.video, cover } })} wide /><UploadField label="上传演示视频" accept="video/mp4,video/*" onUploaded={(url) => setConfig({ ...config, video: { ...config.video, url } })} wide /><TextInput label="视频地址 MP4 / 外链" value={config.video.url} onChange={(url) => setConfig({ ...config, video: { ...config.video, url } })} wide /></PanelGrid>;
+}
 
-    try {
-      const response = await fetch("/api/local-upload", {
-        method: "POST",
-        body: form
-      });
-      const result = (await response.json()) as { data?: { url: string }; message?: string };
+function SupportPanel({ config, setConfig }: EditorProps) {
+  return <div className="space-y-6"><SectionEditor value={config.support} onChange={(support) => setConfig({ ...config, support })} /><StringList label="总部赋能项目" value={config.support.items} onChange={(items) => setConfig({ ...config, support: { ...config.support, items } })} /><SectionEditor value={config.process} onChange={(process) => setConfig({ ...config, process })} /><StringList label="合作流程" value={config.process.items} onChange={(items) => setConfig({ ...config, process: { ...config.process, items } })} /></div>;
+}
 
-      if (!response.ok || !result.data?.url) {
-        throw new Error(result.message ?? "upload failed");
-      }
-
-      setConfig({ ...config, video: { ...config.video, url: result.data.url } });
-      setUploadStatus(`上传成功：${result.data.url}`);
-    } catch {
-      setUploadStatus("上传失败。线上环境建议使用对象存储或视频外链。");
-    }
-  }
-
-  return (
-    <PanelGrid>
-      <TextInput label="首屏模型图路径" value={config.hero.image} onChange={(image) => setConfig({ ...config, hero: { ...config.hero, image } })} wide />
-      <TextInput label="演示视频地址 MP4 / 外链" value={config.video.url} onChange={(url) => setConfig({ ...config, video: { ...config.video, url } })} wide />
-      <div className="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <label className="block text-sm font-bold text-slate-700">
-          本地上传演示视频
-          <input
-            type="file"
-            accept="video/mp4,video/*"
-            onChange={(event) => void uploadVideo(event.target.files?.[0])}
-            className="mt-2 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-sm file:font-black file:text-white"
-          />
-        </label>
-        <p className="mt-2 text-xs leading-5 text-slate-500">
-          本地上传会保存到项目的 public/uploads，并自动填入视频地址。生产环境建议使用视频外链或对象存储。
-        </p>
-        {uploadStatus ? <p className="mt-2 text-sm font-bold text-blue-600">{uploadStatus}</p> : null}
-      </div>
-      <TextInput label="视频封面图" value={config.video.cover} onChange={(cover) => setConfig({ ...config, video: { ...config.video, cover } })} wide />
-      <SectionHeaderEditor value={config.video} onChange={(video) => setConfig({ ...config, video })} />
-      <JsonEditor label="教学模式配图在这里批量改" value={config.teachingModes.items} onChange={(items) => setConfig({ ...config, teachingModes: { ...config.teachingModes, items } })} />
-      <JsonEditor label="案例配图在这里批量改" value={config.cases.items} onChange={(items) => setConfig({ ...config, cases: { ...config.cases, items } })} />
-    </PanelGrid>
-  );
+function CasesPanel({ config, setConfig }: EditorProps) {
+  return <div className="space-y-6"><SectionEditor value={config.cases} onChange={(cases) => setConfig({ ...config, cases })} /><CaseCards value={config.cases.items} onChange={(items) => setConfig({ ...config, cases: { ...config.cases, items } })} /><SectionEditor value={config.faq} onChange={(faq) => setConfig({ ...config, faq })} /><FaqCards value={config.faq.items} onChange={(items) => setConfig({ ...config, faq: { ...config.faq, items } })} /></div>;
 }
 
 function FormPanel({ config, setConfig }: EditorProps) {
-  const fields = config.leadForm.fields;
-  function update(index: number, patch: Partial<(typeof fields)[number]>) {
-    setConfig({ ...config, leadForm: { ...config.leadForm, fields: fields.map((field, i) => i === index ? { ...field, ...patch } : field) } });
-  }
-  function remove(index: number) {
-    setConfig({ ...config, leadForm: { ...config.leadForm, fields: fields.filter((_, i) => i !== index) } });
-  }
-  function add() {
-    setConfig({ ...config, leadForm: { ...config.leadForm, fields: [...fields, { key: `field_${Date.now()}`, label: "新字段", placeholder: "请输入", type: "text", required: false, visible: true }] } });
-  }
-
-  return (
-    <div className="space-y-5">
-      <PanelGrid>
-        <TextInput label="表单顶部小字" value={config.leadForm.eyebrow} onChange={(eyebrow) => setConfig({ ...config, leadForm: { ...config.leadForm, eyebrow } })} />
-        <TextInput label="表单标题" value={config.leadForm.title} onChange={(title) => setConfig({ ...config, leadForm: { ...config.leadForm, title } })} />
-        <Textarea label="表单说明" value={config.leadForm.subtitle} onChange={(subtitle) => setConfig({ ...config, leadForm: { ...config.leadForm, subtitle } })} wide />
-        <TextInput label="按钮文字" value={config.leadForm.submitText} onChange={(submitText) => setConfig({ ...config, leadForm: { ...config.leadForm, submitText } })} />
-        <TextInput label="成功提示" value={config.leadForm.successText} onChange={(successText) => setConfig({ ...config, leadForm: { ...config.leadForm, successText } })} />
-        <TextInput label="右侧图片" value={config.leadForm.image} onChange={(image) => setConfig({ ...config, leadForm: { ...config.leadForm, image } })} wide />
-      </PanelGrid>
-      <div className="flex items-center justify-between"><h3 className="font-black text-slate-950">字段列表</h3><button onClick={add} className="inline-flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-3 text-sm font-black text-white"><Plus className="h-4 w-4" />新增字段</button></div>
-      <div className="grid gap-4">
-        {fields.map((field, index) => (
-          <div key={field.key} className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-6">
-            <TextInput label="字段 Key" value={field.key} onChange={(key) => update(index, { key })} />
-            <TextInput label="字段名称" value={field.label} onChange={(label) => update(index, { label })} />
-            <TextInput label="占位提示" value={field.placeholder} onChange={(placeholder) => update(index, { placeholder })} />
-            <TextInput label="类型 text/tel/textarea" value={field.type} onChange={(type) => update(index, { type })} />
-            <Toggle label="必填" checked={field.required} onChange={(required) => update(index, { required })} />
-            <div className="flex items-end gap-2"><Toggle label="显示" checked={field.visible} onChange={(visible) => update(index, { visible })} /><button onClick={() => remove(index)} className="grid h-10 w-10 place-items-center rounded-lg border border-red-200 bg-white text-red-600"><Trash2 className="h-4 w-4" /></button></div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="space-y-6"><PanelGrid><TextInput label="表单顶部小字" value={config.leadForm.eyebrow} onChange={(eyebrow) => setConfig({ ...config, leadForm: { ...config.leadForm, eyebrow } })} /><TextInput label="表单标题" value={config.leadForm.title} onChange={(title) => setConfig({ ...config, leadForm: { ...config.leadForm, title } })} /><Textarea label="表单说明" value={config.leadForm.subtitle} onChange={(subtitle) => setConfig({ ...config, leadForm: { ...config.leadForm, subtitle } })} wide /><TextInput label="按钮文字" value={config.leadForm.submitText} onChange={(submitText) => setConfig({ ...config, leadForm: { ...config.leadForm, submitText } })} /><TextInput label="成功提示" value={config.leadForm.successText} onChange={(successText) => setConfig({ ...config, leadForm: { ...config.leadForm, successText } })} /><ImageField label="表单配图" value={config.leadForm.image} onChange={(image) => setConfig({ ...config, leadForm: { ...config.leadForm, image } })} wide /></PanelGrid><LeadFields value={config.leadForm.fields} onChange={(fields) => setConfig({ ...config, leadForm: { ...config.leadForm, fields } })} /></div>;
 }
 
 function ContactsPanel({ config, setConfig }: EditorProps) {
-  const contacts = config.contacts;
-  function update(index: number, patch: Partial<(typeof contacts)[number]>) {
-    setConfig({ ...config, contacts: contacts.map((contact, i) => i === index ? { ...contact, ...patch } : contact) });
-  }
-  function remove(index: number) {
-    setConfig({ ...config, contacts: contacts.filter((_, i) => i !== index) });
-  }
-  function add() {
-    setConfig({ ...config, contacts: [...contacts, { type: "wechat", label: "新联系方式", value: "", image: "", visible: true }] });
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between"><h3 className="font-black text-slate-950">联系方式，可增删电话、微信、二维码、邮箱等</h3><button onClick={add} className="inline-flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-3 text-sm font-black text-white"><Plus className="h-4 w-4" />新增联系方式</button></div>
-      {contacts.map((contact, index) => (
-        <div key={`${contact.type}-${index}`} className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-6">
-          <TextInput label="类型" value={contact.type} onChange={(type) => update(index, { type })} />
-          <TextInput label="显示名称" value={contact.label} onChange={(label) => update(index, { label })} />
-          <TextInput label="电话/微信/邮箱" value={contact.value} onChange={(value) => update(index, { value })} />
-          <TextInput label="二维码/图片路径" value={contact.image ?? ""} onChange={(image) => update(index, { image })} />
-          <Toggle label="显示" checked={contact.visible} onChange={(visible) => update(index, { visible })} />
-          <div className="flex items-end"><button onClick={() => remove(index)} className="inline-flex h-10 items-center gap-2 rounded-lg border border-red-200 bg-white px-3 text-sm font-black text-red-600"><Trash2 className="h-4 w-4" />删除</button></div>
-        </div>
-      ))}
-    </div>
-  );
+  return <ContactCards value={config.contacts} onChange={(contacts) => setConfig({ ...config, contacts })} />;
 }
 
-type EditorProps = {
-  config: SiteConfig;
-  setConfig: (config: SiteConfig) => void;
-};
-
-function SectionHeaderEditor<T extends { eyebrow: string; title: string; subtitle?: string } & Record<string, unknown>>({ value, onChange }: { value: T; onChange: (value: T) => void }) {
-  return (
-    <div className="grid gap-3 md:grid-cols-3">
-      <TextInput label="顶部蓝色小字" value={value.eyebrow} onChange={(eyebrow) => onChange({ ...value, eyebrow })} />
-      <TextInput label="标题" value={value.title} onChange={(title) => onChange({ ...value, title })} />
-      <TextInput label="副标题" value={value.subtitle ?? ""} onChange={(subtitle) => onChange({ ...value, subtitle })} />
-    </div>
-  );
+function SeoPanel({ config, setConfig }: EditorProps) {
+  return <PanelGrid><TextInput label="SEO 标题" value={config.seo.title} onChange={(title) => setConfig({ ...config, seo: { ...config.seo, title } })} wide /><Textarea label="SEO 描述" value={config.seo.description} onChange={(description) => setConfig({ ...config, seo: { ...config.seo, description } })} wide /><Textarea label="关键词" value={config.seo.keywords} onChange={(keywords) => setConfig({ ...config, seo: { ...config.seo, keywords } })} wide /><TextInput label="分享标题" value={config.seo.ogTitle} onChange={(ogTitle) => setConfig({ ...config, seo: { ...config.seo, ogTitle } })} /><TextInput label="分享描述" value={config.seo.ogDescription} onChange={(ogDescription) => setConfig({ ...config, seo: { ...config.seo, ogDescription } })} /></PanelGrid>;
 }
 
-function SectionBlock({ title, children }: { title: string; children: React.ReactNode }) {
-  return <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4"><h3 className="font-black text-slate-950">{title}</h3>{children}</div>;
+type EditorProps = { config: SiteConfig; setConfig: (config: SiteConfig) => void };
+
+function SectionEditor<T extends SectionData>({ value, onChange }: { value: T; onChange: (value: T) => void }) {
+  return <PanelGrid><TextInput label="模块小标题" value={value.eyebrow} onChange={(eyebrow) => onChange({ ...value, eyebrow })} /><TextInput label="模块大标题" value={value.title} onChange={(title) => onChange({ ...value, title })} /><Textarea label="模块说明" value={value.subtitle ?? ""} onChange={(subtitle) => onChange({ ...value, subtitle })} wide /></PanelGrid>;
+}
+
+function ItemCards({ title, items, onChange }: { title: string; items: SiteConfig["productSystem"]["items"]; onChange: (items: SiteConfig["productSystem"]["items"]) => void }) {
+  return <ArrayBlock title={title} onAdd={() => onChange([...items, { title: "新卡片", text: "说明文字", icon: "Building2", points: ["功能点"] }])}>{items.map((item, index) => <EditableCard key={index} onRemove={() => onChange(items.filter((_, i) => i !== index))}><PanelGrid><TextInput label="标题" value={item.title} onChange={(title) => onChange(items.map((row, i) => i === index ? { ...row, title } : row))} /><SelectInput label="图标" value={item.icon} options={iconOptions} onChange={(icon) => onChange(items.map((row, i) => i === index ? { ...row, icon } : row))} /><Textarea label="说明" value={item.text} onChange={(text) => onChange(items.map((row, i) => i === index ? { ...row, text } : row))} wide /><StringList label="功能点" value={item.points} onChange={(points) => onChange(items.map((row, i) => i === index ? { ...row, points } : row))} /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function FeatureCards({ items, onChange }: { items: SiteConfig["features"]["items"]; onChange: (items: SiteConfig["features"]["items"]) => void }) {
+  return <ArrayBlock title="核心功能" onAdd={() => onChange([...items, { title: "新功能", text: "功能说明", icon: "BookOpenCheck" }])}>{items.map((item, index) => <EditableCard key={index} onRemove={() => onChange(items.filter((_, i) => i !== index))}><PanelGrid><TextInput label="功能名称" value={item.title} onChange={(title) => onChange(items.map((row, i) => i === index ? { ...row, title } : row))} /><SelectInput label="图标" value={item.icon} options={iconOptions} onChange={(icon) => onChange(items.map((row, i) => i === index ? { ...row, icon } : row))} /><Textarea label="功能说明" value={item.text} onChange={(text) => onChange(items.map((row, i) => i === index ? { ...row, text } : row))} wide /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function TeachingCards({ items, onChange }: { items: SiteConfig["teachingModes"]["items"]; onChange: (items: SiteConfig["teachingModes"]["items"]) => void }) {
+  return <ArrayBlock title="教学模式列表" onAdd={() => onChange([...items, { title: "新教学模式", text: "模式说明", image: "/images/classroom-realistic.png", points: ["优势点"] }])}>{items.map((item, index) => <EditableCard key={index} onRemove={() => onChange(items.filter((_, i) => i !== index))}><PanelGrid><TextInput label="模式标题" value={item.title} onChange={(title) => onChange(items.map((row, i) => i === index ? { ...row, title } : row))} /><ImageField label="模式配图" value={item.image} onChange={(image) => onChange(items.map((row, i) => i === index ? { ...row, image } : row))} /><Textarea label="说明" value={item.text} onChange={(text) => onChange(items.map((row, i) => i === index ? { ...row, text } : row))} wide /><StringList label="优势点" value={item.points} onChange={(points) => onChange(items.map((row, i) => i === index ? { ...row, points } : row))} /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function CaseCards({ value, onChange }: { value: SiteConfig["cases"]["items"]; onChange: (value: SiteConfig["cases"]["items"]) => void }) {
+  return <ArrayBlock title="合作案例" onAdd={() => onChange([...value, { name: "新合作机构", time: "合作 1 个月", image: "/images/classroom-training-screen.png", metrics: ["招生增长 30%"], quote: "这里填写客户评价。" }])}>{value.map((item, index) => <EditableCard key={index} onRemove={() => onChange(value.filter((_, i) => i !== index))}><PanelGrid><TextInput label="机构名称" value={item.name} onChange={(name) => onChange(value.map((row, i) => i === index ? { ...row, name } : row))} /><TextInput label="合作时间" value={item.time} onChange={(time) => onChange(value.map((row, i) => i === index ? { ...row, time } : row))} /><ImageField label="案例图片" value={item.image} onChange={(image) => onChange(value.map((row, i) => i === index ? { ...row, image } : row))} wide /><StringList label="成果数据" value={item.metrics} onChange={(metrics) => onChange(value.map((row, i) => i === index ? { ...row, metrics } : row))} /><Textarea label="客户评价" value={item.quote} onChange={(quote) => onChange(value.map((row, i) => i === index ? { ...row, quote } : row))} wide /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function FaqCards({ value, onChange }: { value: SiteConfig["faq"]["items"]; onChange: (value: SiteConfig["faq"]["items"]) => void }) {
+  return <ArrayBlock title="FAQ 列表" onAdd={() => onChange([...value, { question: "新问题", answer: "问题回答" }])}>{value.map((item, index) => <EditableCard key={index} onRemove={() => onChange(value.filter((_, i) => i !== index))}><PanelGrid><TextInput label="问题" value={item.question} onChange={(question) => onChange(value.map((row, i) => i === index ? { ...row, question } : row))} wide /><Textarea label="回答" value={item.answer} onChange={(answer) => onChange(value.map((row, i) => i === index ? { ...row, answer } : row))} wide /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function LeadFields({ value, onChange }: { value: SiteConfig["leadForm"]["fields"]; onChange: (value: SiteConfig["leadForm"]["fields"]) => void }) {
+  return <ArrayBlock title="表单字段" onAdd={() => onChange([...value, { key: `field_${Date.now()}`, label: "新字段", placeholder: "请输入", type: "text", required: false, visible: true }])}>{value.map((item, index) => <EditableCard key={item.key} onRemove={() => onChange(value.filter((_, i) => i !== index))}><PanelGrid><TextInput label="字段 Key" value={item.key} onChange={(key) => onChange(value.map((row, i) => i === index ? { ...row, key } : row))} /><TextInput label="字段名称" value={item.label} onChange={(label) => onChange(value.map((row, i) => i === index ? { ...row, label } : row))} /><TextInput label="占位提示" value={item.placeholder} onChange={(placeholder) => onChange(value.map((row, i) => i === index ? { ...row, placeholder } : row))} /><SelectInput label="类型" value={item.type} options={["text", "tel", "textarea"]} onChange={(type) => onChange(value.map((row, i) => i === index ? { ...row, type } : row))} /><Toggle label="必填" checked={item.required} onChange={(required) => onChange(value.map((row, i) => i === index ? { ...row, required } : row))} /><Toggle label="显示" checked={item.visible} onChange={(visible) => onChange(value.map((row, i) => i === index ? { ...row, visible } : row))} /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function ContactCards({ value, onChange }: { value: SiteConfig["contacts"]; onChange: (value: SiteConfig["contacts"]) => void }) {
+  return <ArrayBlock title="联系方式" onAdd={() => onChange([...value, { type: "wechat", label: "新联系方式", value: "", image: "", visible: true }])}>{value.map((item, index) => <EditableCard key={index} onRemove={() => onChange(value.filter((_, i) => i !== index))}><PanelGrid><SelectInput label="类型" value={item.type} options={["phone", "wechat", "email", "qrcode", "other"]} onChange={(type) => onChange(value.map((row, i) => i === index ? { ...row, type } : row))} /><TextInput label="名称" value={item.label} onChange={(label) => onChange(value.map((row, i) => i === index ? { ...row, label } : row))} /><TextInput label="内容" value={item.value} onChange={(nextValue) => onChange(value.map((row, i) => i === index ? { ...row, value: nextValue } : row))} /><Toggle label="显示" checked={item.visible} onChange={(visible) => onChange(value.map((row, i) => i === index ? { ...row, visible } : row))} /><ImageField label="二维码 / 图片" value={item.image ?? ""} onChange={(image) => onChange(value.map((row, i) => i === index ? { ...row, image } : row))} wide /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function StatsEditor({ value, onChange }: { value: SiteConfig["hero"]["stats"]; onChange: (value: SiteConfig["hero"]["stats"]) => void }) {
+  return <ArrayBlock title="首屏数据" onAdd={() => onChange([...value, { value: "100+", label: "新数据" }])}>{value.map((item, index) => <EditableCard key={index} onRemove={() => onChange(value.filter((_, i) => i !== index))}><PanelGrid><TextInput label="数字" value={item.value} onChange={(nextValue) => onChange(value.map((row, i) => i === index ? { ...row, value: nextValue } : row))} /><TextInput label="名称" value={item.label} onChange={(label) => onChange(value.map((row, i) => i === index ? { ...row, label } : row))} /></PanelGrid></EditableCard>)}</ArrayBlock>;
+}
+
+function StringList({ label, value, onChange }: { label: string; value: string[]; onChange: (value: string[]) => void }) {
+  return <Textarea label={`${label}（一行一个）`} value={value.join("\n")} onChange={(text) => onChange(text.split("\n").map((item) => item.trim()).filter(Boolean))} wide />;
+}
+
+function ImageField({ label, value, onChange, wide = false }: { label: string; value: string; onChange: (value: string) => void; wide?: boolean }) {
+  return <div className={wide ? "md:col-span-2" : ""}><TextInput label={label} value={value} onChange={onChange} /><UploadField label={`上传${label}`} accept="image/*" onUploaded={onChange} preview={value} /></div>;
+}
+
+function UploadField({ label, accept, onUploaded, preview, wide = false }: { label: string; accept: string; onUploaded: (url: string) => void; preview?: string; wide?: boolean }) {
+  const [status, setStatus] = useState("");
+  async function upload(file?: File) {
+    if (!file) return;
+    setStatus("正在上传...");
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const response = await fetch("/api/local-upload", { method: "POST", body: form });
+      const result = (await response.json()) as { data?: { url: string }; message?: string };
+      if (!response.ok || !result.data?.url) throw new Error(result.message ?? "upload failed");
+      onUploaded(result.data.url);
+      setStatus(`上传成功：${result.data.url}`);
+    } catch {
+      setStatus("上传失败，线上环境建议使用外链或对象存储。");
+    }
+  }
+  return <div className={`mt-2 rounded-xl border border-slate-200 bg-slate-50 p-3 ${wide ? "md:col-span-2" : ""}`}>{preview ? <img src={preview} alt="预览" className="mb-3 h-28 w-full rounded-lg object-cover" /> : null}<label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-blue-200 bg-white px-3 py-3 text-sm font-black text-blue-700 hover:bg-blue-50"><UploadCloud className="h-4 w-4" />{label}<input type="file" accept={accept} onChange={(event) => void upload(event.target.files?.[0])} className="hidden" /></label>{status ? <p className="mt-2 text-xs font-bold text-blue-600">{status}</p> : null}</div>;
+}
+
+function ArrayBlock({ title, onAdd, children }: { title: string; onAdd: () => void; children: React.ReactNode }) {
+  return <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><div className="mb-4 flex items-center justify-between"><h3 className="text-lg font-black text-slate-950">{title}</h3><button onClick={onAdd} className="inline-flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-3 text-sm font-black text-white"><Plus className="h-4 w-4" />新增</button></div><div className="space-y-4">{children}</div></section>;
+}
+
+function EditableCard({ children, onRemove }: { children: React.ReactNode; onRemove: () => void }) {
+  return <div className="rounded-xl border border-slate-200 bg-white p-4"><div className="mb-4 flex justify-end"><button onClick={onRemove} className="inline-flex h-8 items-center gap-1 rounded-lg bg-red-50 px-2 text-xs font-black text-red-600"><Trash2 className="h-3.5 w-3.5" />删除</button></div>{children}</div>;
+}
+
+function InfoCard({ title, text }: { title: string; text: string }) {
+  return <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><CheckCircle2 className="h-6 w-6 text-blue-600" /><h3 className="mt-4 font-black text-slate-950">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-500">{text}</p></div>;
 }
 
 function PanelGrid({ children }: { children: React.ReactNode }) {
@@ -341,42 +239,17 @@ function PanelGrid({ children }: { children: React.ReactNode }) {
 }
 
 function TextInput({ label, value, onChange, wide = false }: { label: string; value: string; onChange: (value: string) => void; wide?: boolean }) {
-  return <label className={`text-sm font-bold text-slate-700 ${wide ? "md:col-span-2" : ""}`}>{label}<input value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-blue-500" /></label>;
+  return <label className={`block text-sm font-bold text-slate-700 ${wide ? "md:col-span-2" : ""}`}>{label}<input value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-blue-500" /></label>;
 }
 
 function Textarea({ label, value, onChange, wide = false }: { label: string; value: string; onChange: (value: string) => void; wide?: boolean }) {
-  return <label className={`text-sm font-bold text-slate-700 ${wide ? "md:col-span-2" : ""}`}>{label}<textarea value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 min-h-28 w-full rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-950 outline-none focus:border-blue-500" /></label>;
+  return <label className={`block text-sm font-bold text-slate-700 ${wide ? "md:col-span-2" : ""}`}>{label}<textarea value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 min-h-28 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-6 text-slate-950 outline-none focus:border-blue-500" /></label>;
+}
+
+function SelectInput({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
+  return <label className="block text-sm font-bold text-slate-700">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-blue-500">{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>;
 }
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
-  return <label className="flex h-full items-end gap-2 text-sm font-bold text-slate-700"><input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="h-5 w-5 accent-blue-600" />{label}</label>;
-}
-
-function JsonEditor<T>({ label, value, onChange }: { label: string; value: T; onChange: (value: T) => void }) {
-  const [text, setText] = useState(() => JSON.stringify(value, null, 2));
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    setText(JSON.stringify(value, null, 2));
-  }, [value]);
-
-  function applyJson() {
-    try {
-      onChange(JSON.parse(text) as T);
-      setError("");
-    } catch {
-      setError("JSON 格式有误，请检查逗号、引号和括号。");
-    }
-  }
-
-  return (
-    <div className="md:col-span-2">
-      <div className="mb-2 flex items-center justify-between">
-        <label className="text-sm font-bold text-slate-700">{label}</label>
-        <button onClick={applyJson} className="rounded-lg border border-blue-200 bg-white px-3 py-1.5 text-xs font-black text-blue-600">应用此列表</button>
-      </div>
-      <textarea value={text} onChange={(event) => setText(event.target.value)} className="min-h-56 w-full rounded-lg border border-slate-200 bg-slate-950 px-3 py-3 font-mono text-xs leading-5 text-slate-100 outline-none focus:border-blue-500" />
-      {error ? <p className="mt-2 text-sm font-bold text-red-600">{error}</p> : null}
-    </div>
-  );
+  return <label className="flex h-11 items-center gap-2 self-end text-sm font-bold text-slate-700"><input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="h-5 w-5 accent-blue-600" />{label}</label>;
 }

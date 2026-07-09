@@ -165,13 +165,13 @@ function HeroSection({ config }: { config: SiteConfig }) {
             <Sparkles className="h-4 w-4 text-[#2F7BFF]" />
             <span className="truncate">{config.hero.badge}</span>
           </div>
-          <h1 className="mx-auto max-w-4xl font-serif text-[2.8rem] font-black leading-[0.98] tracking-normal text-[#07152D] sm:text-7xl lg:mx-0 lg:text-[5.6rem]">
+          <h1 className="mx-auto max-w-4xl font-serif text-[2.8rem] font-black leading-[1.02] tracking-normal text-[#07152D] sm:text-7xl lg:mx-0 lg:max-w-[760px] lg:text-[4.9rem] xl:text-[5.25rem]">
             <span className="block bg-gradient-to-r from-[#063B7A] via-[#165DFF] to-[#00A3FF] bg-clip-text text-transparent">{config.hero.title}</span>
-            <span className="mt-2 block text-[2.05rem] leading-tight text-[#102A43] sm:text-5xl lg:text-[3.7rem]">{config.hero.titleSuffix}</span>
+            <span className="mt-3 block text-[2.05rem] leading-tight text-[#102A43] sm:text-5xl lg:text-[3.25rem] xl:text-[3.45rem]">{config.hero.titleSuffix}</span>
           </h1>
           <div className="mx-auto mt-5 max-w-2xl rounded-[22px] border border-[#CFE2FF] bg-white/74 px-5 py-4 shadow-[0_18px_48px_rgba(22,93,255,0.10)] backdrop-blur lg:mx-0">
             <p className="text-2xl font-black leading-tight text-[#165DFF] sm:text-3xl">{config.hero.slogan}</p>
-            <p className="mt-3 text-base font-medium leading-7 text-[#385878] sm:text-lg sm:leading-8">{config.hero.description}</p>
+            <p className="mt-3 text-base font-medium leading-7 text-[#385878] sm:text-lg sm:leading-8 lg:max-w-[620px]">{config.hero.description}</p>
           </div>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row lg:justify-start">
             <CtaButton size="lg" onClick={() => scrollTo(config.hero.primaryTarget)}>{config.hero.primaryButton}</CtaButton>
@@ -213,7 +213,7 @@ function ProductSystemSection({ config }: { config: SiteConfig }) {
                 <span className="grid h-11 w-11 place-items-center rounded-lg bg-gradient-to-br from-[#E8F2FF] to-white text-[#165DFF] shadow-inner md:h-14 md:w-14"><Icon className="h-5 w-5 md:h-7 md:w-7" /></span>
                 <span className="text-sm font-black text-[#8FB7FF]">0{index + 1}</span>
               </div>
-              <h3 className="break-words text-xl font-black leading-tight tracking-tight text-[#07152D] md:text-[1.55rem]">{item.title}</h3>
+              <h3 className="break-words text-xl font-black leading-[1.18] tracking-tight text-[#07152D] md:text-[1.45rem]">{item.title}</h3>
               <p className="mt-3 min-h-12 text-sm font-medium leading-6 text-[#526B86]">{item.text}</p>
               <div className="mt-5 grid grid-cols-2 gap-2.5 md:mt-6 md:grid-cols-1">
                 {item.points.map((point) => <span key={point} className="rounded-lg bg-[#F1F6FF] px-3.5 py-2.5 text-sm font-black leading-5 text-[#165DFF]">{point}</span>)}
@@ -250,8 +250,12 @@ function TeachingModesSection({ config }: { config: SiteConfig }) {
       <div className="grid gap-5 lg:grid-cols-2">
         {config.teachingModes.items.map((mode) => (
           <MotionCard key={mode.title} className="overflow-hidden bg-white">
-            <div className="relative aspect-[16/10] overflow-hidden bg-[#EAF3FF]"><img src={mode.image} alt={mode.title} className="h-full w-full object-cover" /><h3 className="absolute bottom-5 left-5 text-2xl font-black tracking-tight text-[#07152D] md:bottom-6 md:left-6 md:text-3xl">{mode.title}</h3></div>
-            <div className="p-5 md:p-6"><p className="text-sm font-medium leading-7 text-[#526B86] md:text-base">{mode.text}</p><div className="mt-5 grid grid-cols-2 gap-3">{mode.points.map((point) => <Bullet key={point}>{point}</Bullet>)}</div></div>
+            <div className="relative aspect-[16/10] overflow-hidden bg-[#EAF3FF]">
+              <img src={mode.image} alt={mode.title} className="h-full w-full object-cover" />
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#07152D]/65 via-[#07152D]/22 to-transparent" />
+              <h3 className="absolute bottom-4 left-4 rounded-xl border border-white/70 bg-white/88 px-4 py-2 text-2xl font-black tracking-tight text-[#07152D] shadow-[0_14px_34px_rgba(7,21,45,0.18)] backdrop-blur md:bottom-6 md:left-6 md:text-3xl">{mode.title}</h3>
+            </div>
+            <div className="p-5 md:p-7"><p className="text-sm font-medium leading-7 text-[#526B86] md:max-w-[560px] md:text-base">{mode.text}</p><div className="mt-5 grid grid-cols-2 gap-3">{mode.points.map((point) => <Bullet key={point}>{point}</Bullet>)}</div></div>
           </MotionCard>
         ))}
       </div>
@@ -302,7 +306,7 @@ function CasesSection({ config }: { config: SiteConfig }) {
         {config.cases.items.map((item) => (
           <MotionCard key={item.name} className="overflow-hidden bg-white">
             <img src={item.image} alt={item.name} className="aspect-[16/9] w-full object-cover" />
-            <div className="p-5 md:p-6"><h3 className="text-xl font-black tracking-tight text-[#07152D]">{item.name}</h3><p className="mt-1 text-sm font-bold text-[#165DFF]">{item.time}</p><div className="mt-5 grid gap-2 sm:grid-cols-3">{item.metrics.map((metric) => <div key={metric} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black text-[#165DFF]">{metric}</div>)}</div><p className="mt-5 text-sm font-medium leading-7 text-[#526B86]">“{item.quote}”</p></div>
+            <div className="p-5 md:p-7"><h3 className="text-xl font-black leading-tight tracking-tight text-[#07152D] md:text-2xl">{item.name}</h3><p className="mt-2 text-sm font-bold text-[#165DFF]">{item.time}</p><div className="mt-5 grid gap-2 sm:grid-cols-3">{item.metrics.map((metric) => <div key={metric} className="rounded-lg bg-[#F1F6FF] px-3 py-2 text-sm font-black leading-5 text-[#165DFF]">{metric}</div>)}</div><p className="mt-5 text-sm font-medium leading-7 text-[#526B86] md:text-[15px]">“{item.quote}”</p></div>
           </MotionCard>
         ))}
       </div>
@@ -387,7 +391,7 @@ function LightSection({ id, data, children }: { id?: string; data: { eyebrow: st
 }
 
 function SectionTitle({ data }: { data: { eyebrow: string; title: string; subtitle?: string } }) {
-  return <div className="mx-auto mb-8 max-w-3xl text-center md:mb-12"><p className="text-base font-black uppercase tracking-[0.12em] text-[#165DFF] md:text-lg">{data.eyebrow}</p><h2 className="mt-2 text-2xl font-black leading-tight tracking-tight text-[#07152D] md:mt-3 md:text-5xl">{data.title}</h2>{data.subtitle ? <p className="mx-auto mt-3 max-w-2xl text-sm font-medium leading-6 text-[#526B86] md:mt-5 md:text-base md:leading-7">{data.subtitle}</p> : null}</div>;
+  return <div className="mx-auto mb-8 max-w-4xl text-center md:mb-12"><p className="text-base font-black uppercase tracking-[0.12em] text-[#165DFF] md:text-lg">{data.eyebrow}</p><h2 className="mx-auto mt-2 max-w-3xl text-2xl font-black leading-[1.16] tracking-tight text-[#07152D] md:mt-3 md:text-[2.8rem] xl:text-5xl">{data.title}</h2>{data.subtitle ? <p className="mx-auto mt-3 max-w-2xl text-sm font-medium leading-6 text-[#526B86] md:mt-5 md:text-base md:leading-7">{data.subtitle}</p> : null}</div>;
 }
 
 function CtaButton({ children, onClick, size = "md" }: { children: React.ReactNode; onClick?: () => void; size?: "md" | "lg" }) {

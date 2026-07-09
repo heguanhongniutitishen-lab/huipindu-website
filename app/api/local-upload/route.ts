@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "fs/promises";
+﻿import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
 
@@ -15,13 +15,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "未找到上传文件" }, { status: 400 });
     }
 
-    if (!file.type.startsWith("video/")) {
-      return NextResponse.json({ message: "请上传视频文件" }, { status: 400 });
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+
+    if (!isVideo && !isImage) {
+      return NextResponse.json({ message: "请上传图片或视频文件" }, { status: 400 });
     }
 
     await mkdir(uploadDir, { recursive: true });
-    const ext = path.extname(file.name) || ".mp4";
-    const safeName = `video-${Date.now()}${ext.toLowerCase()}`;
+    const fallbackExt = isVideo ? ".mp4" : ".png";
+    const prefix = isVideo ? "video" : "image";
+    const ext = path.extname(file.name) || fallbackExt;
+    const safeName = `${prefix}-${Date.now()}${ext.toLowerCase()}`;
     const target = path.join(uploadDir, safeName);
     const buffer = Buffer.from(await file.arrayBuffer());
 
