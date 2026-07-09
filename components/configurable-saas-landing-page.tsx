@@ -184,9 +184,9 @@ function HeroSection({ config }: { config: SiteConfig }) {
               </div>
             ))}
           </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:max-w-[720px]">
             {config.hero.scenes.map((item) => (
-              <div key={item} className="rounded-full border border-[#CFE2FF] bg-white/78 px-4 py-3 text-center text-xs font-black text-[#28517A] shadow-[0_12px_28px_rgba(22,93,255,0.08)] backdrop-blur md:text-sm">{item}</div>
+              <div key={item} className="whitespace-nowrap rounded-full border border-[#CFE2FF] bg-white/78 px-5 py-3 text-center text-xs font-black leading-none text-[#28517A] shadow-[0_12px_28px_rgba(22,93,255,0.08)] backdrop-blur md:text-sm">{item}</div>
             ))}
           </div>
         </motion.div>
