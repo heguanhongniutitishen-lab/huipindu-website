@@ -184,8 +184,8 @@ export const defaultSiteConfig: SiteConfig = {
     title: "真实机构增长案例",
     subtitle: "用标准化课程、可视化学习报告和总部运营支持，帮助机构把单词训练做成可持续项目。",
     items: [
-      { name: "星启点英语成长中心", time: "合作 6 个月", image: "/images/classroom-training-screen.png", metrics: ["招生增长 42%", "续费率 93%", "单词班营收 +18.6w"], quote: "慧拼读把单词课做成标准产品，新老师也能快速交付，家长看到报告后续费沟通顺畅很多。" },
-      { name: "蓝鲸托管学习中心", time: "合作 4 个月", image: "/images/consulting-realistic.png", metrics: ["新增 3 个班", "满班率 86%", "回本 1.2 个班"], quote: "原来托管只是作业辅导，现在有了可售卖的英语训练项目，校区利润结构更健康。" }
+      { name: "成都合作机构", time: "合作 6 个月", image: "/images/case-chengdu-partner.png", metrics: ["招生增长", "统一教学好复制", "续费率提升"], quote: "慧拼读把单词课做成标准产品，新老师也能快速交付，家长看到报告后续费沟通顺畅很多。" },
+      { name: "长沙合作托管机构", time: "合作 4 个月", image: "/images/case-changsha-tutoring.png", metrics: ["新增 3 个班", "满班率高", "家长好评率高"], quote: "原来托管只是作业辅导，现在有了可售卖的英语训练项目，校区利润结构更健康。" }
     ]
   },
   faq: {
