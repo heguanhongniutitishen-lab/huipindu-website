@@ -1,11 +1,28 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
+import { prisma } from "@/lib/prisma";
 import { defaultSiteConfig, type SiteConfig } from "@/lib/site-config";
 
 const dbDir = path.join(process.cwd(), ".data");
 const configPath = path.join(dbDir, "site-config.json");
+const siteConfigKey = "website.siteConfig";
+
+function canUseDatabase() {
+  return Boolean(process.env.DATABASE_URL);
+}
 
 export async function readSiteConfig(): Promise<SiteConfig> {
+  if (canUseDatabase()) {
+    try {
+      const row = await prisma.siteSetting.findUnique({ where: { key: siteConfigKey } });
+      if (row?.value) {
+        return mergeConfig(defaultSiteConfig, JSON.parse(row.value) as Partial<SiteConfig>);
+      }
+    } catch (error) {
+      console.error("Failed to read site config from database", error);
+    }
+  }
+
   try {
     const raw = await readFile(configPath, "utf8");
     return mergeConfig(defaultSiteConfig, JSON.parse(raw) as Partial<SiteConfig>);
@@ -15,6 +32,18 @@ export async function readSiteConfig(): Promise<SiteConfig> {
 }
 
 export async function writeSiteConfig(config: SiteConfig) {
+  if (canUseDatabase()) {
+    return prisma.siteSetting.upsert({
+      where: { key: siteConfigKey },
+      update: { value: JSON.stringify(config), group: "website" },
+      create: { key: siteConfigKey, value: JSON.stringify(config), group: "website" }
+    }).then(() => config);
+  }
+
+  if (process.env.VERCEL) {
+    throw new Error("DATABASE_URL is required to save website content on Vercel.");
+  }
+
   await mkdir(dbDir, { recursive: true });
   await writeFile(configPath, JSON.stringify(config, null, 2), "utf8");
   return config;

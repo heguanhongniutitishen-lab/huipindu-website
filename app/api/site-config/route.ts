@@ -9,6 +9,11 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const config = (await request.json()) as SiteConfig;
-  return NextResponse.json({ data: await writeSiteConfig(config) });
+  try {
+    const config = (await request.json()) as SiteConfig;
+    return NextResponse.json({ data: await writeSiteConfig(config) });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "保存失败";
+    return NextResponse.json({ message }, { status: 500 });
+  }
 }

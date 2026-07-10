@@ -51,10 +51,12 @@ export default function WebsiteEditorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(config)
       });
-      if (!response.ok) throw new Error("save failed");
+      const result = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) throw new Error(result.message ?? "save failed");
       setStatus("已保存，刷新前台即可看到最新内容。");
-    } catch {
-      setStatus("保存失败，请稍后再试。");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "请稍后再试";
+      setStatus(`保存失败：${message}`);
     }
   }
 
